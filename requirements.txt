@@ -1,0 +1,6 @@
+flask
+requests
+iso3166
+google-auth
+google-cloud-storage
+google-api-python-client

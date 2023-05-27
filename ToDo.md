@@ -1,0 +1,6 @@
+- [X] Create frontend API, hosted on Vercel. 
+- [X] Frontend will pull iso3166-2.json from GCP Storage backend.
+- [ ] Implement some sort of update functionality that updates the iso3166-2.json for API every so often, use a CRON scheduler to call this update func every 3 - 6 months etc.
+- [X] Update routes to incorporate path with and without trailing slash.
+- [ ] Remove unicode of brackets from url input when redirecting: https://iso3166-updates-frontend-amckenna41.vercel.app/api/alpha2/%5B'AD,BA'%5D/?query_string=True
+- [ ] Append url to error message.
