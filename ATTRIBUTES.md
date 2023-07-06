@@ -36,6 +36,11 @@
 | startOfWeek            | Day of the start of week (Sunday/Monday) |
 | status                 | ISO 3166-1 assignment status |
 | subdivisions           | List of a country's [ISO3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) subdivision names and codes |
+| subdivisions > name    | Name for subdivision |
+| subdivisions > parent_code | Parent code for subdivision |
+| subdivisions > type    | Parent code for subdivision |
+| subdivisions > flag_url | URL to subdivision's flag on [iso3166-flag-icons](https://github.com/amckenna41/iso3166-flag-icons) repo, if applicable | 
+| subdivisions > latlng | Coordinates for subdivision, using the Google Maps API |
 | subregion              | UN [demographic subregions](https://unstats.un.org/unsd/methodology/m49/) |
 | timezones              | Timezones |
 | topLevelDomain / tld   | Internet top level domains | 

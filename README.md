@@ -40,6 +40,7 @@ An API is available that can be used to extract any applicable updates for a cou
 The paths available in the API are below:
 * https://iso3166-2-api.vercel.app/api/alpha2
 * https://iso3166-2-api.vercel.app/api/name
+* https://iso3166-2-api.vercel.app/api/all
 
 Two query string parameters are available in the API - `alpha2` and `name`. The 2 letter alpha-2 country code can be appeneded to the url as a query string parameter - "/alpha2/JP". A single alpha-2 or list of them can be passed to the API (e.g "FR", "DE", "HU, ID, MA"). The name parameter can be a country name in english as it is most commonly known. A closeness function is utilised so the most approximate name from the input will be used e.g Sweden will be used if the ?name=Swede. 
 

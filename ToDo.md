@@ -1,6 +1,10 @@
 - [X] Create frontend API, hosted on Vercel. 
 - [X] Frontend will pull iso3166-2.json from GCP Storage backend.
-- [ ] Implement some sort of update functionality that updates the iso3166-2.json for API every so often, use a CRON scheduler to call this update func every 3 - 6 months etc.
+- [X] Implement some sort of update functionality that updates the iso3166-2.json for API every so often, use a CRON scheduler to call this update func every 3 - 6 months etc.
 - [X] Update routes to incorporate path with and without trailing slash.
-- [ ] Remove unicode of brackets from url input when redirecting: https://iso3166-updates-frontend-amckenna41.vercel.app/api/alpha2/%5B'AD,BA'%5D/?query_string=True
-- [ ] Append url to error message.
+- [X] Remove unicode of brackets from url input when redirecting: https://iso3166-updates-frontend-amckenna41.vercel.app/api/alpha2/%5B'AD,BA'%5D/?query_string=True
+- [X] Append url to error message.
+- [X] Country names with spaces arent working on API.
+- [X] https://iso3166-2-api-amckenna41.vercel.app/api/name/Bonaire,%20Sint%20Eustatius%20and%20Saba : Not working in API
+- [X] When passing in multiple coutries by name using /name path, need to exclude countries that already have a comma in them e.g Bonaire, Sint Eustatius and Saba, Congo, Democratic Republic of the,  Moldova, Republic of, Palestine, State of, Saint Helena, Ascension and Tristan da Cunha, Taiwan, Province of China, Tanzania, United Republic of.
+- [X] Fix api.md file.

@@ -1,24 +1,14 @@
 from flask import Flask, request, render_template, jsonify, redirect, url_for
 from google.cloud import storage
 from google.oauth2 import service_account
-import requests
 import json 
 import iso3166
 import os
 import re
-import logging
-import getpass
+from difflib import get_close_matches
 
 #initialise Flask app
 app = Flask(__name__)
-
-#initialise logging library 
-__version__ = "0.0.1"
-log = logging.getLogger(__name__)
-
-#initalise User-agent header for requests library 
-USER_AGENT_HEADER = {'User-Agent': 'iso3166-2/{} ({}; {})'.format(__version__,
-                                       'https://github.com/amckenna41/iso3166-2', getpass.getuser())}
 
 #get Cloud Storage specific env vars
 sa_json_str = os.environ["SA_JSON"]
@@ -83,33 +73,36 @@ def home():
     alpha2_code = []
     names = []
     
-    #return error if blob not found in bucket 
-    if not (blob_exists):
-        return jsonify(blob_not_found_error_message), 400
-    
-    #parse alpha-2 code parameter
+    #parse alpha-2 code parameter, if applicable, seperate multiple into list
     if not (request.args.get('alpha2') is None):
         alpha2_code = ','.join(sorted([request.args.get('alpha2').upper()]))
-    
-    #parse name parameter
+
+    #parse name parameter, if applicable, seperate multiple into list
     if not (request.args.get('name') is None):
         names = ','.join(sorted([request.args.get('name').upper()]))
 
     #redirect to api_alpha2 route if alpha2 query string parameter set 
     if (alpha2_code != []):
-        return redirect(url_for('api_alpha2', input_alpha2=alpha2_code))
-    
+        return redirect(url_for('api_alpha2', alpha2=alpha2_code))
+
     #redirect to api_name route if name query string parameter set 
     if (names != []):
-        return redirect(url_for('api_name', input_name=names))
+        return redirect(url_for('api_name', name=names))
+    
+    #return error if blob not found in bucket 
+    if not (blob_exists):
+        return jsonify(blob_not_found_error_message), 400
 
+    #return default index.html page if no query string parameters set
     return render_template('index.html', string=""), 200
 
 @app.route('/all', methods=['GET'])
 @app.route('/all/', methods=['GET'])
+@app.route('/api/all', methods=['GET'])
+@app.route('/api/all/', methods=['GET'])
 def all():
     """
-    Flask route for all path. Return all ISO3166-2 data
+    Flask route for all path. Return all ISO 3166-2 data
     for all countries. This path is not reccommended as
     the file with all ISO 3166-2 data is quite large and
     can take some time to load. Route can accept path with 
@@ -127,7 +120,7 @@ def all():
         response status code. 200 is a successful response, 400 means there was an 
         invalid parameter input. 
     """  
-    #return error if blob not found in bucket 
+    #return error if blob not found in bucket, else return all ISO 3166-2 data
     if not (blob_exists):
         return jsonify(blob_not_found_error_message), 400
     return jsonify(all_iso3166_2), 200
@@ -172,22 +165,89 @@ def api_name(name):
         error_message['path'] = request.base_url
         return jsonify(error_message), 400
 
-    #sort country names, uppercase
-    names = sorted([name])
+    #remove unicode space (%20) from input parameter
+    name = name.replace('%20', ' ').title()
 
+    #path can accept multiple country names, seperated by a comma but several
+    #countries contain a comma already in their name. Seperate multiple country names
+    #by a comma, cast to a sorted list, unless any of the names are in the below list
+    name_comma_exceptions = ["BOLIVIA, PLURINATIONAL STATE OF",
+                    "BONAIRE, SINT EUSTATIUS AND SABA",
+                    "CONGO, DEMOCRATIC REPUBLIC OF THE",
+                    "IRAN, ISLAMIC REPUBLIC OF",
+                    "KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF",
+                    "KOREA, REPUBLIC OF",
+                    "MICRONESIA, FEDERATED STATES OF",
+                    "MOLDOVA, REPUBLIC OF",
+                    "PALESTINE, STATE OF",
+                    "SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA",
+                    "TAIWAN, PROVINCE OF CHINA",
+                    "TANZANIA, UNITED REPUBLIC OF",
+                    "VIRGIN ISLANDS, BRITISH",
+                    "VIRGIN ISLANDS, U.S.",
+                    "VENEZUELA, BOLIVARIAN REPUBLIC OF"]
+    
+    #check if input country is in above list, if not add to sorted comma seperated list    
+    if (name.upper() in name_comma_exceptions):
+        names = [name]
+    else:
+        names = sorted(name.split(','))
+    
+    #list of country name exceptions that are converted into their more common name
+    name_converted = {"UAE": "United Arab Emirates", "Brunei": "Brunei Darussalam", "Bolivia": "Bolivia, Plurinational State of", 
+                      "Bosnia": "Bosnia and Herzegovina", "Bonaire": "Bonaire, Sint Eustatius and Saba", "DR Congo": 
+                      "Congo, the Democratic Republic of the", "Ivory Coast": "Côte d'Ivoire", "Cape Verde": "Cabo Verde", 
+                      "Cocos Islands": "Cocos (Keeling) Islands", "Falkland Islands": "Falkland Islands (Malvinas)", 
+                      "Micronesia": "Micronesia, Federated States of", "United Kingdom": "United Kingdom of Great Britain and Northern Ireland",
+                      "South Georgia": "South Georgia and the South Sandwich Islands", "Iran": "Iran, Islamic Republic of",
+                      "North Korea": "Korea, Democratic People's Republic of", "South Korea": "Korea, Republic of", 
+                      "Laos": "Lao People's Democratic Republic", "Moldova": "Moldova, Republic of", "Saint Martin": "Saint Martin (French part)",
+                      "Macau": "Macao", "Pitcairn Islands": "Pitcairn", "South Georgia": "South Georgia and the South Sandwich Islands",
+                      "Heard Island": "Heard Island and McDonald Islands", "Palestine": "Palestine, State of", 
+                      "Saint Helena": "Saint Helena, Ascension and Tristan da Cunha", "St Helena": "Saint Helena, Ascension and Tristan da Cunha",              
+                      "Saint Kitts": "Saint Kitts and Nevis", "St Kitts": "Saint Kitts and Nevis", "St Vincent": "Saint Vincent and the Grenadines", 
+                      "St Lucia": "Saint Lucia", "Saint Vincent": "Saint Vincent and the Grenadines", "Russia": "Russian Federation", 
+                      "Sao Tome and Principe":" São Tomé and Príncipe", "Sint Maarten": "Sint Maarten (Dutch part)", "Syria": "Syrian Arab Republic", 
+                      "Svalbard": "Svalbard and Jan Mayen", "French Southern and Antarctic Lands": "French Southern Territories", "Turkey": "Türkiye", 
+                      "Taiwan": "Taiwan, Province of China", "Tanzania": "Tanzania, United Republic of", "USA": "United States of America", 
+                      "United States": "United States of America", "Vatican City": "Holy See", "Vatican": "Holy See", "Venezuela": 
+                      "Venezuela, Bolivarian Republic of", "Virgin Islands, British": "British Virgin Islands"}
+    
+    #iterate over list of names, convert country names from name_converted dict, if applicable
+    for name_ in range(0, len(names)):
+        if (names[name_].title() in list(name_converted.keys())):
+            names[name_] = name_converted[names[name_]]
+
+    #remove all whitespace in any of the country names
+    names = [name_.strip(' ') for name_ in names]
+
+    #get list of available country names from iso3166 library, remove whitespace
+    all_names_no_space = [name_.strip(' ') for name_ in list(iso3166.countries_by_name.keys())]
+    
+    #iterate over all input country names, get corresponding 2 letter alpha-2 code
     for name_ in names:
-        #return error if country name not found
-        if not (name_.upper() in list(iso3166.countries_by_name.keys())):
-            error_message["message"] = "Country name not found {} in ISO3166.".format(name_)
+
+        #get list of country name matches from input name using closeness function, using default cutoff parameter value
+        name_matches = get_close_matches(name_.upper(), all_names_no_space)
+        matching_name = ""
+
+        #get highest matching country name from one input (manually set British Virgin Islands vs US Virgin Islands)
+        if (name_matches != []):
+            if (name_ == "British Virgin Islands"):
+                matching_name = name_matches[1]
+            else:
+                matching_name = name_matches[0]
+        else:
+            #return error if country name not found
+            error_message["message"] = "Country name {} not found in the ISO 3166.".format(name_)
             error_message['path'] = request.base_url
             return jsonify(error_message), 400
-        else:
-            #use iso3166 package to find corresponding alpha-2 code from its name
-            alpha2_code.append(iso3166.countries_by_name[name.upper()].alpha2)
+
+        #use iso3166 package to find corresponding alpha-2 code from its name
+        alpha2_code.append(iso3166.countries_by_name[matching_name.upper()].alpha2)
     
-    #create iso3166-2 object from alpha-2 codes
+    #get country data from ISO3166-2 object, using alpha-2 code
     for code in alpha2_code:
-        #get country data from ISO3166-2 object
         iso3166_2[code] = all_iso3166_2[code]
 
     return jsonify(iso3166_2), 200
@@ -196,7 +256,7 @@ def api_name(name):
 @app.route('/api/alpha2/<alpha2>/', methods=['GET'])
 def api_alpha2(alpha2):
     """
-    Flask route for alpha-2 path. Return all ISO3166-2 data
+    Flask route for alpha-2 path. Return all ISO 3166-2 data
     for the inputted alpha-2 code/codes. If invalid alpha-2
     code or no value input then return error. The endpoint
     can also accept a country in its 3 letter alpha-3 code
@@ -228,10 +288,10 @@ def api_alpha2(alpha2):
     if not (blob_exists):
         return jsonify(blob_not_found_error_message), 400
 
-    #sort and uppercase all alpha-2 codes
-    alpha2_code = sorted([alpha2.upper()])
+    #sort and uppercase all alpha-2 codes, remove any unicode spaces (%20)
+    alpha2_code = sorted([alpha2.upper().replace(' ','').replace('%20', '')])
 
-    #if no input parameters set then return all country update iso3166_updates
+    #if no input parameters set then raise and return error
     if (alpha2_code == []):
         error_message["message"] = "The alpha-2 input parameter cannot be empty."
         error_message['path'] = request.base_url
@@ -239,18 +299,18 @@ def api_alpha2(alpha2):
     
     def convert_to_alpha2(alpha3_code):
         """ 
-        Convert an ISO3166 country's 3 letter alpha-3 code into its 2 letter
+        Convert an ISO 3166 country's 3 letter alpha-3 code into its 2 letter
         alpha-2 counterpart. 
 
         Parameters 
         ----------
         :alpha3_code: str
-            3 letter ISO3166 country code.
+            3 letter ISO 3166 country code.
         
         Returns
         -------
         :iso3166.countries_by_alpha3[alpha3_code].alpha2: str
-            2 letter ISO3166 country code. 
+            2 letter ISO 3166 country code. 
         """
         #return error if 3 letter alpha-3 code not found
         if not (alpha3_code in list(iso3166.countries_by_alpha3.keys())):
@@ -287,7 +347,7 @@ def api_alpha2(alpha2):
                     error_message['path'] = request.base_url
                     return jsonify(error_message), 400
                 alpha2_code[0] = temp_code
-            #if single alpha-2 code passed in, validate its correctness
+            #if single alpha-2 code passed in, validate its correctness, raise error if invalid
             if not (bool(re.match(r"^[A-Z]{2}$", alpha2_code[0]))) or \
                 (alpha2_code[0] not in list(iso3166.countries_by_alpha2.keys()) and \
                 alpha2_code[0] not in list(iso3166.countries_by_alpha3.keys())):
@@ -295,7 +355,7 @@ def api_alpha2(alpha2):
                 error_message['path'] = request.base_url
                 return jsonify(error_message), 400
 
-    # #get updates from iso3166_updates object per country using alpha-2 code
+    #get updates from iso3166_updates object per country using alpha-2 code
     for code in alpha2_code:
         iso3166_2[code] = all_iso3166_2[code]
 
@@ -320,8 +380,6 @@ def not_found(e):
         response status code. 404 code implies page not found.
     """
     error_message_ = ""
-    if (request.path.endswith("/") and request.path[:-1] in all_endpoints):
-        return redirect(request.path[:-1]), 302
     if not ("api" in request.path):
         error_message_ = "Path " + request.path + " should have the /api path prefix in it." 
     else:
