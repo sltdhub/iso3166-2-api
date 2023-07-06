@@ -27,7 +27,7 @@ Introduction
 ------------
 This repo forms the front-end of the API created for the `iso3166-2` (https://github.com/amckenna41/iso3166-2) repository. The API returns a plethora of data fields for all countries in the ISO 3166-1 and ISO 3166-2 standards. Utilising the restcountries API (https://restcountries.com/) as well as the custom-built `iso3166-2` software that incorporates data from the ISO 3166-2. Built using the Python [Flask][flask] framework and hosted on the [Vercel][vercel] platform.
 
-`iso3166-2`(https://github.com/amckenna41/iso3166-2) is a lightweight custom-built Python wrapper for RestCountries API (https://restcountries.com/) which includes an abundance of information about all ISO3166 countries. But this package also includes information about all countrys' ISO 3166-2 subdivision codes & names, which is absent from RestCountries. It is available via a Python software package; a demo is available [here][demo].
+`iso3166-2`(https://github.com/amckenna41/iso3166-2) is a lightweight custom-built Python wrapper for RestCountries API (https://restcountries.com/) which includes an abundance of information about all ISO 3166 countries. But this package also includes information about all countrys' ISO 3166-2 subdivision codes & names, which is absent from RestCountries. It is available via a Python software package; a demo is available [here][demo].
 
 The ISO 3166 standard by the ISO defines codes for the names of countries, dependent territories, special areas of geographical interest, consolidated into the ISO 3166-1 standard [[1]](#references), and their principal subdivisions (e.g., provinces, states, departments, regions), which comprise the ISO 3166-2 standard [[2]](#references). The ISO 3166-1 was first published in 1974 and currently comprises 249 countries, 193 of which are sovereign states that are members of the United Nations [[1]](#references). The ISO 3166-2 was first published in 1998 and as of 29 November 2022 there are 5,043 codes defined in it [[2]](#references).
 
@@ -42,7 +42,7 @@ The paths available in the API are below:
 * https://iso3166-2-api.vercel.app/api/name
 * https://iso3166-2-api.vercel.app/api/all
 
-Two query string parameters are available in the API - `alpha2` and `name`. The 2 letter alpha-2 country code can be appeneded to the url as a query string parameter - "/alpha2/JP". A single alpha-2 or list of them can be passed to the API (e.g "FR", "DE", "HU, ID, MA"). The name parameter can be a country name in english as it is most commonly known. A closeness function is utilised so the most approximate name from the input will be used e.g Sweden will be used if the ?name=Swede. 
+Two query string parameters are available in the API - `alpha2` and `name`. The 2 letter alpha-2 country code can be appeneded to the url as a query string parameter to the main endpoint - "?alpha2=JP" - or added to the alpha2 endpoint - "/alpha2/JP". A single alpha-2 or list of them can be passed to the API (e.g "FR", "DE", "HU, ID, MA"). The name parameter can be a country name in english as it is most commonly known. The name can similarly be added as a query string parameter to the main endpoint - "?name="Denmark" - or added to the name endpoint - "/name/Denmark". A closeness function is utilised so the most approximate name from the input will be used e.g Sweden will be used if "?name=Swede". 
 
 The API was hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an api gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON with all ISO 3166 updates. A complete diagram of the architecture is shown below. Although, due to the cost of infrastructure the hosting was switched to Vercel (https://vercel.com/).
 
@@ -50,7 +50,7 @@ The API documentation and usage with all useful commands and examples to the API
 
 Staying up to date
 ------------------
-The ISO is a very dynamic organisation and regularly change/update/remove entries within its library of standards, including the ISO 3166. Additions/changes/deletions to country/territorial codes occur less often in the ISO 3166-1, but changes are more frequent for the ISO 3166-2 codes due to there being thousands more entries, thus it can be difficult to keep up with any changes to these codes. These changes can occur for a variety of geopolitical and bureaucratic reasons and are usually communicated via Newsletters on the ISO platform, their Online Browsing Platform (OBP) or via a database, which usually costs money to subscribe to [3]. Usually these updates are conveyed at the end of the year, with amendments and updates occasionally published at various times throughout the year [4].
+The ISO is a very dynamic organisation and regularly change/update/remove entries within its library of standards, including the ISO 3166. Additions/changes/deletions to country/territorial codes occur less often in the ISO 3166-1, but changes are more frequent for the ISO 3166-2 codes due to there being thousands more entries, thus it can be difficult to keep up with any changes to these codes. These changes can occur for a variety of geopolitical and bureaucratic reasons and are usually communicated via Newsletters on the ISO platform, their Online Browsing Platform (OBP) or via a database, which usually costs money to subscribe to [[3]](#references). Usually these updates are conveyed at the end of the year, with amendments and updates occasionally published at various times throughout the year [[4]](#references).
 
 A custom-built software `iso3166-updates` was created to track and maintain these changes/updates that are made to the ISO 3166, specifically the ISO 3166-2. The software and accompanying API (https://iso3166-updates.com) makes it extremely easy to check for any new or historic updates to a country or set of country's ISO 3166-2 codes for free, with an easy-to-use interface and Python package and API, ensuring that you get the most up-to-date and accurate ISO 3166-2 codes and naming conventions. A custom script is run periodically (every 3-6 months) that uses the `iso3166-updates` software to check for any updates. If updates are found then a GitHub Issue is automatically raised on the `iso3166-2` repository, communicating all updates/changes that need to be implemented into the `iso3166-2` repo's software and JSONs.
 
@@ -89,6 +89,7 @@ Support
 
 [Back to top](#TOP)
 
+[demo]: https://colab.research.google.com/drive/1btfEx23bgWdkUPiwdwlDqKkmUp1S-_7U?usp=sharing
 [flask]: https://flask.palletsprojects.com/en/2.3.x/
 [python]: https://www.python.org/downloads/release/python-360/
 [requests]: https://requests.readthedocs.io/

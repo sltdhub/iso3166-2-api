@@ -1,4 +1,4 @@
-# iso3166-2 Flask templates <a name="TOP"></a>
+# iso3166-2-api Flask templates <a name="TOP"></a>
 
 ## Templates:
 * `index.html` - html template for main homepage.

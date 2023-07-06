@@ -1,6 +1,8 @@
 # ISO3166-2 API
 
-As well as the Python software package, this API is also available to access a plethora of the latest data for all countries included in the ISO 3166-1. You can search for a particular country via it's name or its 2 letter alpha 2 code (e.g EG, FR, DE) via the 'name' and 'alpha2' query parameters appended to the API URL. The full list of fields/attributes available for each country is in the [ATTRIBUTES.md][attributes] file.
+Two query string parameters are available in the API - `alpha2` and `name`. The 2 letter alpha-2 country code can be appeneded to the url as a query string parameter to the main endpoint - "?alpha2=JP" - or added to the alpha2 endpoint - "/alpha2/JP". A single alpha-2 or list of them can be passed to the API (e.g "FR", "DE", "HU, ID, MA"). The name parameter can be a country name in english as it is most commonly known. The name can similarly be added as a query string parameter to the main endpoint - "?name="Denmark" - or added to the name endpoint - "/name/Denmark". A closeness function is utilised so the most approximate name from the input will be used e.g Sweden will be used if "?name=Swede". 
+
+The API documentation and usage with all useful commands and examples to the API is available on the [API.md](https://github.com/amckenna41/iso3166-2-api/API.md) file. The full list of attributes/fields available in `iso3166-2` can be viewed in the [ATTRIBUTES.md][attributes] file.
 
 The main API endpoint is:
 
@@ -48,8 +50,8 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get all country and ISO 3166-2 data for a specific country e.g France, Germany, Hondurus, using alpha-2 code
-------------------------------------------------------------------------------------------------------------
+Get all country and ISO 3166-2 data for a specific country, using its 2 letter alpha-2 code e.g FR, DE, HN
+----------------------------------------------------------------------------------------------------------
 
 ### Request
 `GET /alpha2/FR`
@@ -196,3 +198,5 @@ function getData() {
 // Begin accessing JSON data here
 var data = JSON.parse(this.response)
 ```
+
+[attributes]: https://github.com/amckenna41/iso3166-2-api/ATTRIBUTES.md 
