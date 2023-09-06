@@ -121,7 +121,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(test_request_lu["LU"]["cca3"], "LUX", "")
         self.assertEqual(test_request_lu["LU"]["currencies"]["EUR"]['name'], "Euro", "")        
         self.assertEqual(list(test_request_lu["LU"]["languages"].keys()), ["deu", "fra", "ltz"], "")        
-        self.assertEqual(test_request_lu["LU"]["latlng"], [49.75, 6.16666666], "")        
+        self.assertEqual(test_request_lu["LU"]["latlng"], [49.75, 6.167], "")        
         self.assertEqual(test_request_lu["LU"]["population"], 632275, "")        
         self.assertEqual(test_request_lu["LU"]["region"], "Europe", "")
         self.assertEqual(list(test_request_lu["LU"]["subdivisions"].keys()), 
@@ -186,7 +186,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(test_request_mac_mys["MO"]["cca3"], "MAC", "")
         self.assertEqual(test_request_mac_mys["MO"]["currencies"]["MOP"]['name'], "Macanese pataca", "")        
         self.assertEqual(list(test_request_mac_mys["MO"]["languages"].keys()), ["por", "zho"], "")        
-        self.assertEqual(test_request_mac_mys["MO"]["latlng"], [22.16666666, 113.55], "")        
+        self.assertEqual(test_request_mac_mys["MO"]["latlng"], [22.167, 113.55], "")        
         self.assertEqual(test_request_mac_mys["MO"]["population"], 649342, "")        
         self.assertEqual(test_request_mac_mys["MO"]["region"], "Asia", "")
         self.assertEqual(test_request_mac_mys["MO"]["subdivisions"], {}, "")
