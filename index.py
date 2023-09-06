@@ -62,7 +62,7 @@ def home():
     Returns
     -------
     :render_template : html
-      Flask html template for index.html page.
+        Flask html template for index.html page.
     :status_code : int
         response status code. 200 is a successful response, 400 means there was an 
         invalid parameter input. 
@@ -81,7 +81,7 @@ def home():
     if not (request.args.get('name') is None):
         names = ','.join(sorted([request.args.get('name').upper()]))
 
-    #redirect to api_alpha2 route if alpha2 query string parameter set 
+    #redirect to api_alpha2 route if alpha-2 query string parameter set 
     if (alpha2_code != []):
         return redirect(url_for('api_alpha2', alpha2=alpha2_code))
 
@@ -115,7 +115,7 @@ def all():
     Returns
     -------
     :jsonify(all_iso3166_2) : json
-      jsonified ISO 3166-2 data.
+        jsonified ISO 3166-2 data.
     :status_code : int
         response status code. 200 is a successful response, 400 means there was an 
         invalid parameter input. 
@@ -130,22 +130,21 @@ def all():
 def api_name(name):
     """
     Flask route for name path. Return all ISO 3166-2 data
-    for input country name/names. A closeness function is used
-    on the input countries, the closest match, to a high degree,
-    for the input country from the list of available countries 
-    will be used. Return error if invalid country name input. 
-    Route can accept path with or without trailing slash.
+    for inputted country name/names. A closeness function is used
+    on the input country name to get the closest match, to a high degree,
+    from the list of available countries. Return error if invalid country 
+    name input. Route can accept path with or without trailing slash.
 
     Parameters
     ----------
     :name : str/list
         one or more names for countries as they are commonly known in
-        english. 
+        English. 
 
     Returns
     -------
     :iso3166_2 : json
-      jsonified response of iso3166-2 data per input country name.
+        jsonified response of iso3166-2 data per input country name.
     :status_code : int
         response status code. 200 is a successful response, 400 means there was an 
         invalid parameter input. 
@@ -246,7 +245,7 @@ def api_name(name):
         #use iso3166 package to find corresponding alpha-2 code from its name
         alpha2_code.append(iso3166.countries_by_name[matching_name.upper()].alpha2)
     
-    #get country data from ISO3166-2 object, using alpha-2 code
+    #get country data from ISO 3166-2 object, using alpha-2 code
     for code in alpha2_code:
         iso3166_2[code] = all_iso3166_2[code]
 
@@ -254,6 +253,7 @@ def api_name(name):
 
 @app.route('/api/alpha2/<alpha2>', methods=['GET'])
 @app.route('/api/alpha2/<alpha2>/', methods=['GET'])
+@app.route('/api/<alpha2>/', methods=['GET'])
 def api_alpha2(alpha2):
     """
     Flask route for alpha-2 path. Return all ISO 3166-2 data
@@ -273,7 +273,7 @@ def api_alpha2(alpha2):
     Returns
     -------
     :iso3166_2 : json
-      jsonified response of iso3166-2 data per input alpha-2 code.
+        jsonified response of iso3166-2 data per input alpha-2 code.
     :blob_not_found_error_message : dict 
         error message if issue finding iso3166-2 object json.  
     :status_code : int

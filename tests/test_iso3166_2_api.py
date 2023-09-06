@@ -4,12 +4,9 @@ import getpass
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
-__version__ = "1.0.2"
-
 class ISO3166_2_API_Tests(unittest.TestCase):
     """
-    Test suite for testing ISO 3166-2 api created to accompany
-    the iso3166-2 Python software package. 
+    Test suite for testing ISO 3166-2 api created to accompany the iso3166-2 Python software package. 
 
     Test Cases
     ----------
@@ -24,12 +21,13 @@ class ISO3166_2_API_Tests(unittest.TestCase):
     def setUp(self):
         """ Initialise test variables, import json. """
         #initalise User-agent header for requests library 
-        self.user_agent_header = {'User-Agent': 'iso3166-2/{} ({}; {})'.format(__version__,
+        self.__version__ = "1.1.0"
+        self.user_agent_header = {'User-Agent': 'iso3166-2/{} ({}; {})'.format(self.__version__,
                                             'https://github.com/amckenna41/iso3166-2', getpass.getuser())}
 
         #url endpoints for API
         self.api_base_url = "https://iso3166-2-api.vercel.app/api/"
-        # self.api_base_url = "https://iso3166-2-api-amckenna41.vercel.app/api/"
+        self.api_base_url = "https://iso3166-2-api-amckenna41.vercel.app/api/"
         self.alpha2_base_url = self.api_base_url + "alpha2/"
         self.name_base_url = self.api_base_url + "name/"
         self.all_base_url = self.api_base_url + "all"
@@ -51,8 +49,8 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         test_alpha2_au = "AU" #Australia
         test_alpha2_cy = "CY" #Cyprus
         test_alpha2_lu = "LU" #Luxembourg
-        test_alpha2_mac = "MAC" #Macau
         test_alpha2_pa_rw = "PA, RW" #Panama, Rwanda
+        test_alpha2_mac_mys = "MAC, MYS" #Macau, Malaysia
         test_alpha2_error_1 = "ABCDE"
         test_alpha2_error_2 = "12345"
 #1.)
@@ -68,8 +66,8 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(len(test_request_au), 1, "Expected output object of API to be of length 1, got {}.".format(len(test_request_au)))
         self.assertEqual(list(test_request_au.keys()), ["AU"], "Expected output object of API to contain only the AU key, got {}.".format(list(test_request_au.keys())))
 
-        self.assertEqual(test_request_au["AU"]["area"], 7692024, "")        
-        self.assertEqual(test_request_au["AU"]["name"]["common"], "Australia", "")        
+        self.assertEqual(test_request_au["AU"]["area"], 7692024, "Expected area to be 7692024, got {}.".format(test_request_au["AU"]["area"]))        
+        self.assertEqual(test_request_au["AU"]["name"]["common"], "Australia", "Expected country name to be Australis, got {}.".format(test_request_au["AU"]["name"]["common"]))        
         self.assertEqual(test_request_au["AU"]["capital"][0], "Canberra", "")
         self.assertEqual(test_request_au["AU"]["cca2"], "AU", "")
         self.assertEqual(test_request_au["AU"]["cca3"], "AUS", "")
@@ -82,9 +80,9 @@ class ISO3166_2_API_Tests(unittest.TestCase):
             ["AU-ACT", "AU-NSW", "AU-NT", "AU-QLD", "AU-SA", "AU-TAS", "AU-VIC", "AU-WA"], "")     
         for subd in test_request_au["AU"]["subdivisions"]:
             for key in list(test_request_au["AU"]["subdivisions"][subd].keys()):
-                self.assertIn(key, self.correct_subdivision_keys, "Key {} not found in list of correct keys:\n{}".format(key, self.correct_subdivision_keys))
+                self.assertIn(key, self.correct_subdivision_keys, "Key {} not found in list of correct keys:\n{}.".format(key, self.correct_subdivision_keys))
         for col in list(test_request_au["AU"].keys()):
-            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}".format(col, self.correct_output_cols))
+            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}.".format(col, self.correct_output_cols))
 #3.)
         test_request_cy = requests.get(self.alpha2_base_url + test_alpha2_cy, headers=self.user_agent_header).json() #Cyprus
 
@@ -92,13 +90,13 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(len(test_request_cy), 1, "Expected output object of API to be of length 1, got {}.".format(len(test_request_cy)))
         self.assertEqual(list(test_request_cy.keys()), ["CY"], "Expected output object of API to contain only the CY key, got {}.".format(list(test_request_cy.keys())))
 
-        self.assertEqual(test_request_cy["CY"]["area"], 9251, "")        
+        self.assertEqual(test_request_cy["CY"]["area"], 9251, "Expected area to be 9251, got {}.".format(test_request_cy["CY"]["area"]))              
         self.assertEqual(test_request_cy["CY"]["name"]["common"], "Cyprus", "")       
         self.assertEqual(test_request_cy["CY"]["capital"][0], "Nicosia", "")
         self.assertEqual(test_request_cy["CY"]["cca2"], "CY", "")
         self.assertEqual(test_request_cy["CY"]["cca3"], "CYP", "")
         self.assertEqual(test_request_cy["CY"]["currencies"]["EUR"]['name'], "Euro", "")          
-        self.assertEqual(list(test_request_cy["CY"]["languages"].keys())[0], "ell", "")          
+        self.assertEqual(list(test_request_cy["CY"]["languages"].keys()), ["ell", "tur"], "")          
         self.assertEqual(test_request_cy["CY"]["latlng"], [35, 33], "")        
         self.assertEqual(test_request_cy["CY"]["population"], 1207361, "")          
         self.assertEqual(test_request_cy["CY"]["region"], "Europe", "")
@@ -106,9 +104,9 @@ class ISO3166_2_API_Tests(unittest.TestCase):
             ["CY-01", "CY-02", "CY-03", "CY-04", "CY-05", "CY-06"], "")     
         for subd in test_request_cy["CY"]["subdivisions"]:
             for key in list(test_request_cy["CY"]["subdivisions"][subd].keys()):
-                self.assertIn(key, self.correct_subdivision_keys, "Key {} not found in list of correct keys:\n{}".format(key, self.correct_subdivision_keys))
+                self.assertIn(key, self.correct_subdivision_keys, "Key {} not found in list of correct keys:\n{}.".format(key, self.correct_subdivision_keys))
         for col in list(test_request_cy["CY"].keys()):
-            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}".format(col, self.correct_output_cols))
+            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}.".format(col, self.correct_output_cols))
 #4.)
         test_request_lu = requests.get(self.alpha2_base_url + test_alpha2_lu, headers=self.user_agent_header).json() #Luxembourg
 
@@ -116,13 +114,13 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(len(test_request_lu), 1, "Expected output object of API to be of length 1, got {}.".format(len(test_request_lu)))
         self.assertEqual(list(test_request_lu.keys()), ["LU"], "Expected output object of API to contain only the LU key, got {}.".format(list(test_request_lu.keys())))
 
-        self.assertEqual(test_request_lu["LU"]["area"], 2586.0, "")        
+        self.assertEqual(test_request_lu["LU"]["area"], 2586, "Expected area to be 2586, got {}.".format(test_request_lu["LU"]["area"]))             
         self.assertEqual(test_request_lu["LU"]["name"]["common"], "Luxembourg", "")        
         self.assertEqual(test_request_lu["LU"]["capital"][0], "Luxembourg", "")
         self.assertEqual(test_request_lu["LU"]["cca2"], "LU", "")
         self.assertEqual(test_request_lu["LU"]["cca3"], "LUX", "")
         self.assertEqual(test_request_lu["LU"]["currencies"]["EUR"]['name'], "Euro", "")        
-        self.assertEqual(list(test_request_lu["LU"]["languages"].keys())[0], "deu", "")        
+        self.assertEqual(list(test_request_lu["LU"]["languages"].keys()), ["deu", "fra", "ltz"], "")        
         self.assertEqual(test_request_lu["LU"]["latlng"], [49.75, 6.16666666], "")        
         self.assertEqual(test_request_lu["LU"]["population"], 632275, "")        
         self.assertEqual(test_request_lu["LU"]["region"], "Europe", "")
@@ -130,43 +128,23 @@ class ISO3166_2_API_Tests(unittest.TestCase):
             ["LU-CA", "LU-CL", "LU-DI", "LU-EC", "LU-ES", "LU-GR", "LU-LU", "LU-ME", "LU-RD", "LU-RM", "LU-VD", "LU-WI"], "")     
         for subd in test_request_lu["LU"]["subdivisions"]:
             for key in list(test_request_lu["LU"]["subdivisions"][subd].keys()):
-                self.assertIn(key, self.correct_subdivision_keys, "Key {} not found in list of correct keys:\n{}".format(key, self.correct_subdivision_keys))    
+                self.assertIn(key, self.correct_subdivision_keys, "Key {} not found in list of correct keys:\n{}.".format(key, self.correct_subdivision_keys))    
         for col in list(test_request_lu["LU"].keys()):
-            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}".format(col, self.correct_output_cols))
+            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}.".format(col, self.correct_output_cols))
 #5.)
-        test_request_mac = requests.get(self.alpha2_base_url + test_alpha2_mac, headers=self.user_agent_header).json() #Macau
-
-        self.assertIsInstance(test_request_mac, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_mac)))
-        self.assertEqual(len(test_request_mac), 1, "Expected output object of API to be of length 1, got {}.".format(len(test_request_mac)))
-        self.assertEqual(list(test_request_mac.keys()), ["MO"], "Expected output object of API to contain only the MO key, got {}.".format(list(test_request_mac.keys())))
-
-        self.assertEqual(test_request_mac["MO"]["area"], 30, "")        
-        self.assertEqual(test_request_mac["MO"]["name"]["common"], "Macau", "")        
-        self.assertEqual(test_request_mac["MO"]["capitalInfo"], {}, "")
-        self.assertEqual(test_request_mac["MO"]["cca2"], "MO", "")
-        self.assertEqual(test_request_mac["MO"]["cca3"], "MAC", "")
-        self.assertEqual(test_request_mac["MO"]["currencies"]["MOP"]['name'], "Macanese pataca", "")        
-        self.assertEqual(list(test_request_mac["MO"]["languages"].keys())[0], "por", "")        
-        self.assertEqual(test_request_mac["MO"]["latlng"], [22.16666666, 113.55], "")        
-        self.assertEqual(test_request_mac["MO"]["population"], 649342, "")        
-        self.assertEqual(test_request_mac["MO"]["region"], "Asia", "")
-        self.assertEqual(test_request_mac["MO"]["subdivisions"], {}, "")
-        for col in list(test_request_mac["MO"].keys()):
-            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}".format(col, self.correct_output_cols))
-#6.)
         test_request_pa_rw = requests.get(self.alpha2_base_url + test_alpha2_pa_rw, headers=self.user_agent_header).json() #Panama and Rwanda
 
         self.assertIsInstance(test_request_pa_rw, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_pa_rw)))
         self.assertEqual(len(test_request_pa_rw), 2, "Expected output object of API to be of length 2, got {}.".format(len(test_request_pa_rw)))
         self.assertEqual(list(test_request_pa_rw.keys()), ["PA", "RW"], "Expected output object of API to contain only the PA and RW keys, got {}.".format(list(test_request_pa_rw.keys())))
 
-        self.assertEqual(test_request_pa_rw["PA"]["area"], 75417, "")        
+        self.assertEqual(test_request_pa_rw["PA"]["area"], 75417, "Expected area to be 75417, got {}.".format(test_request_pa_rw["PA"]["area"]))        
         self.assertEqual(test_request_pa_rw["PA"]["name"]["common"], "Panama", "")        
         self.assertEqual(test_request_pa_rw["PA"]["capital"][0], "Panama City", "")
         self.assertEqual(test_request_pa_rw["PA"]["cca2"], "PA", "")
         self.assertEqual(test_request_pa_rw["PA"]["cca3"], "PAN", "")
         self.assertEqual(test_request_pa_rw["PA"]["currencies"]["PAB"]['name'], "Panamanian balboa", "")        
-        self.assertEqual(list(test_request_pa_rw["PA"]["languages"].keys())[0], "spa", "")        
+        self.assertEqual(list(test_request_pa_rw["PA"]["languages"].keys()), ["spa"], "")        
         self.assertEqual(test_request_pa_rw["PA"]["latlng"], [9, -80], "")        
         self.assertEqual(test_request_pa_rw["PA"]["population"], 4314768, "")        
         self.assertEqual(test_request_pa_rw["PA"]["region"], "Americas", "")
@@ -174,17 +152,17 @@ class ISO3166_2_API_Tests(unittest.TestCase):
             ["PA-1", "PA-10", "PA-2", "PA-3", "PA-4", "PA-5", "PA-6", "PA-7", "PA-8", "PA-9", "PA-EM", "PA-KY", "PA-NB"], "")     
         for subd in test_request_pa_rw["PA"]["subdivisions"]:
             for key in list(test_request_pa_rw["PA"]["subdivisions"][subd].keys()):
-                self.assertIn(key, self.correct_subdivision_keys, "Key {} not found in list of correct keys:\n{}".format(key, self.correct_subdivision_keys))    
+                self.assertIn(key, self.correct_subdivision_keys, "Key {} not found in list of correct keys:\n{}.".format(key, self.correct_subdivision_keys))    
         for col in list(test_request_pa_rw["PA"].keys()):
-            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}".format(col, self.correct_output_cols))
+            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}.".format(col, self.correct_output_cols))
 
-        self.assertEqual(test_request_pa_rw["RW"]["area"], 26338, "")        
+        self.assertEqual(test_request_pa_rw["RW"]["area"], 26338, "Expected area to be 26338, got {}.".format(test_request_pa_rw["RW"]["area"]))        
         self.assertEqual(test_request_pa_rw["RW"]["name"]["common"], "Rwanda", "")        
         self.assertEqual(test_request_pa_rw["RW"]["capital"][0], "Kigali", "")
         self.assertEqual(test_request_pa_rw["RW"]["cca2"], "RW", "")
         self.assertEqual(test_request_pa_rw["RW"]["cca3"], "RWA", "")
         self.assertEqual(test_request_pa_rw["RW"]["currencies"]["RWF"]['name'], "Rwandan franc", "")        
-        self.assertEqual(list(test_request_pa_rw["RW"]["languages"].keys())[0], "eng", "")        
+        self.assertEqual(list(test_request_pa_rw["RW"]["languages"].keys()), ["eng", "fra", "kin"], "")        
         self.assertEqual(test_request_pa_rw["RW"]["latlng"], [-2, 30], "")        
         self.assertEqual(test_request_pa_rw["RW"]["population"], 12952209, "")        
         self.assertEqual(test_request_pa_rw["RW"]["region"], "Africa", "")
@@ -192,31 +170,69 @@ class ISO3166_2_API_Tests(unittest.TestCase):
             ["RW-01", "RW-02", "RW-03", "RW-04", "RW-05"], "")     
         for subd in test_request_pa_rw["RW"]["subdivisions"]:
             for key in list(test_request_pa_rw["RW"]["subdivisions"][subd].keys()):
-                self.assertIn(key, self.correct_subdivision_keys, "Key {} not found in list of correct keys:\n{}".format(key, self.correct_subdivision_keys))    
+                self.assertIn(key, self.correct_subdivision_keys, "Key {} not found in list of correct keys:\n{}.".format(key, self.correct_subdivision_keys))    
         for col in list(test_request_pa_rw["RW"].keys()):
-            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}".format(col, self.correct_output_cols))
-#7.)
-        test_request_error1 = requests.get(self.alpha2_base_url + test_alpha2_error_1, headers=self.user_agent_header).json()
+            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}.".format(col, self.correct_output_cols))
+#6.)
+        test_request_mac_mys = requests.get(self.alpha2_base_url + test_alpha2_mac_mys, headers=self.user_agent_header).json() #Macau, Malaysia
+
+        self.assertIsInstance(test_request_mac_mys, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_mac_mys)))
+        self.assertEqual(len(test_request_mac_mys), 2, "Expected output object of API to be of length 2, got {}.".format(len(test_request_mac_mys)))
+        self.assertEqual(list(test_request_mac_mys.keys()), ["MO", "MY"], "Expected output object of API to contain only the MO and MY keys, got {}.".format(list(test_request_mac_mys.keys())))
+
+        self.assertEqual(test_request_mac_mys["MO"]["area"], 30, "Expected area to be 30, got {}.".format(test_request_mac_mys["MO"]["area"]))                
+        self.assertEqual(test_request_mac_mys["MO"]["name"]["common"], "Macau", "")        
+        self.assertEqual(test_request_mac_mys["MO"]["cca2"], "MO", "")
+        self.assertEqual(test_request_mac_mys["MO"]["cca3"], "MAC", "")
+        self.assertEqual(test_request_mac_mys["MO"]["currencies"]["MOP"]['name'], "Macanese pataca", "")        
+        self.assertEqual(list(test_request_mac_mys["MO"]["languages"].keys()), ["por", "zho"], "")        
+        self.assertEqual(test_request_mac_mys["MO"]["latlng"], [22.16666666, 113.55], "")        
+        self.assertEqual(test_request_mac_mys["MO"]["population"], 649342, "")        
+        self.assertEqual(test_request_mac_mys["MO"]["region"], "Asia", "")
+        self.assertEqual(test_request_mac_mys["MO"]["subdivisions"], {}, "")
+        for col in list(test_request_mac_mys["MO"].keys()):
+            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}.".format(col, self.correct_output_cols))
+
+        self.assertEqual(test_request_mac_mys["MY"]["area"], 330803, "Expected area to be 330803, got {}.".format(test_request_mac_mys["MY"]["area"]))                        
+        self.assertEqual(test_request_mac_mys["MY"]["name"]["common"], "Malaysia", "")        
+        self.assertEqual(test_request_mac_mys["MY"]["capital"][0], "Kuala Lumpur", "")
+        self.assertEqual(test_request_mac_mys["MY"]["cca2"], "MY", "")
+        self.assertEqual(test_request_mac_mys["MY"]["cca3"], "MYS", "")
+        self.assertEqual(test_request_mac_mys["MY"]["currencies"]["MYR"]['name'], "Malaysian ringgit", "")        
+        self.assertEqual(list(test_request_mac_mys["MY"]["languages"].keys()), ["eng", "msa"] , "")        
+        self.assertEqual(test_request_mac_mys["MY"]["latlng"], [2.5, 112.5], "")        
+        self.assertEqual(test_request_mac_mys["MY"]["population"], 32365998, "")        
+        self.assertEqual(test_request_mac_mys["MY"]["region"], "Asia", "")
+        self.assertEqual(list(test_request_mac_mys["MY"]["subdivisions"].keys()), 
+                         ["MY-01", "MY-02", "MY-03", "MY-04", "MY-05", "MY-06", "MY-07", "MY-08", "MY-09", \
+                          "MY-10", "MY-11", "MY-12", "MY-13", "MY-14", "MY-15", "MY-16"], "")
+        for subd in test_request_mac_mys["MY"]["subdivisions"]:
+            for key in list(test_request_mac_mys["MY"]["subdivisions"][subd].keys()):
+                self.assertIn(key, self.correct_subdivision_keys, "Key {} not found in list of correct keys:\n{}.".format(key, self.correct_subdivision_keys))      
+        for col in list(test_request_mac_mys["MY"].keys()):
+            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}.".format(col, self.correct_output_cols))
+#7.) 
+        test_request_error1 = requests.get(self.alpha2_base_url + test_alpha2_error_1, headers=self.user_agent_header).json() #ABCDE
 
         self.assertIsInstance(test_request_error1, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_error1)))
         self.assertEqual(len(test_request_error1), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_error1)))
         self.assertEqual(test_request_error1["message"], 'Invalid 2 letter alpha-2 code input: ' + test_alpha2_error_1 + ".", 
                 "Error message does not match expected:\n{}".format(test_request_error1["message"]))
         self.assertEqual(test_request_error1["path"], self.alpha2_base_url + test_alpha2_error_1, 
-                "Error path does not match expected:\n{}".format(test_request_error1["path"]))
+                "Error path does not match expected:\n{}.".format(test_request_error1["path"]))
         self.assertEqual(test_request_error1["status"], 400, 
-                "Error status does not match expected:\n{}".format(test_request_error1["status"]))
+                "Error status does not match expected:\n{}.".format(test_request_error1["status"]))
 #8.)
-        test_request_error2 = requests.get(self.alpha2_base_url + test_alpha2_error_2, headers=self.user_agent_header).json()
+        test_request_error2 = requests.get(self.alpha2_base_url + test_alpha2_error_2, headers=self.user_agent_header).json() #12345
 
         self.assertIsInstance(test_request_error2, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_error2)))
         self.assertEqual(len(test_request_error2), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_error2)))
         self.assertEqual(test_request_error2["message"], 'Invalid 2 letter alpha-2 code input: ' + test_alpha2_error_2 + ".", 
                 "Error message does not match expected:\n{}".format(test_request_error2["message"]))
         self.assertEqual(test_request_error2["path"], self.alpha2_base_url + test_alpha2_error_2, 
-                "Error path does not match expected:\n{}".format(test_request_error2["path"]))
+                "Error path does not match expected:\n{}.".format(test_request_error2["path"]))
         self.assertEqual(test_request_error2["status"], 400, 
-                "Error status does not match expected:\n{}".format(test_request_error2["status"]))
+                "Error status does not match expected:\n{}.".format(test_request_error2["status"]))
 
     # @unittest.skip("Skipping to not overload API endpoint on test suite run.")
     def test_name(self):
@@ -240,11 +256,11 @@ class ISO3166_2_API_Tests(unittest.TestCase):
                                      "Holy See": "Vatican City", "Venezuela, Bolivarian Republic of": "Venezuela", "Virgin Islands, British": "British Virgin Islands",
                                      "Virgin Islands, U.S.": "United States Virgin Islands", "Viet Nam": "Vietnam"}
 #1.)    
-        #for each country name, test API returns correct object, test using common.name attribute
+        #for each country name, test API returns correct object, test using common.name attribute 
         for alpha2 in sorted(list(iso3166.countries_by_alpha2.keys())):
             country_name = iso3166.countries_by_alpha2[alpha2].name
             test_request_name = requests.get(self.name_base_url + country_name, headers=self.user_agent_header).json()
-            #convert country name to its more comon name
+            #convert country name to its more common name
             if (country_name in list(name_exceptions_converted.keys())):
                 country_name = name_exceptions_converted[country_name]
             self.assertEqual(test_request_name[alpha2]["name"]["common"], country_name, 
@@ -365,7 +381,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         for col in list(test_request_ml_ni["NI"].keys()):
                 self.assertIn(col, self.correct_output_cols, "")
 #6.)
-        test_request_error = requests.get(self.name_base_url + test_name_error1, headers=self.user_agent_header).json() 
+        test_request_error = requests.get(self.name_base_url + test_name_error1, headers=self.user_agent_header).json() #ABCDEF
 
         self.assertIsInstance(test_request_error, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_error)))
         self.assertEqual(len(test_request_error), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_error)))
@@ -376,7 +392,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(test_request_error["status"], 400, 
                 "Error status does not match expected:\n{}".format(test_request_error["status"]))
 #7.)
-        test_request_error = requests.get(self.name_base_url + test_name_error2, headers=self.user_agent_header).json() 
+        test_request_error = requests.get(self.name_base_url + test_name_error2, headers=self.user_agent_header).json() #12345
 
         self.assertIsInstance(test_request_error, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_error)))
         self.assertEqual(len(test_request_error), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_error)))
@@ -394,7 +410,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         test_request_all = requests.get(self.all_base_url, headers=self.user_agent_header).json()
 
         self.assertIsInstance(test_request_all, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_all)))
-        self.assertEqual(len(test_request_all), 200, "Expected output object of API to be of length 200, got {}.".format(len(test_request_all)))
+        self.assertEqual(len(test_request_all), 250, "Expected output object of API to be of length 250, got {}.".format(len(test_request_all)))
         for alpha2 in list(test_request_all.keys()):
             self.assertIn(alpha2, iso3166.countries_by_alpha2, "Alpha-2 code {} not found in list of available codes.".format(alpha2))
 

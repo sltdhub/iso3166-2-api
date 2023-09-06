@@ -3,7 +3,7 @@
 | alpha2Code / cca2      | ISO 3166-1 alpha-2 two-letter country codes |
 | alpha3Code / cca3      | ISO 3166-1 alpha-3 three-letter country codes |
 | altSpellings           | Alternate spellings of the country name |
-| area                   | Geographical size |
+| area                   | Geographical size (km^2) |
 | borders                | Border countries |
 | callingCodes / idd     | International dialing codes |
 | capital                | Capital cities |
@@ -14,13 +14,13 @@
 | coatOfArms             | [MainFacts.com](https://mainfacts.com/coat-of-arms-countries-world) links to svg and png images |
 | continents             | List of continents the country is on |
 | currencies             | List of all currencies |
-| demonym                | Inhabitants of the country |
+| demonym                | Name for the inhabitants of the country |
 | demonyms (m/f)         | Genderized inhabitants of the country |
 | independent            | ISO 3166-1 independence status (the country is considered a sovereign state) |
 | fifa                   | FIFA code |
 | flag                   | v2: Link to the svg flag on [Flagpedia](https://flagpedia.net/), v3: flag emoji |
 | flags                  | [Flagpedia](https://flagpedia.net/) links to svg and png flags |
-| gini                   | Worldbank [Gini](https://data.worldbank.org/indicator/SI.POV.GINI) index     |
+| gini                   | Worldbank [Gini](https://data.worldbank.org/indicator/SI.POV.GINI) index  |
 | landlocked             | Landlocked country |
 | languages              | List of official languages |
 | latlng                 | Latitude and longitude |

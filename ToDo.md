@@ -8,4 +8,7 @@
 - [X] https://iso3166-2-api-amckenna41.vercel.app/api/name/Bonaire,%20Sint%20Eustatius%20and%20Saba : Not working in API
 - [X] When passing in multiple coutries by name using /name path, need to exclude countries that already have a comma in them e.g Bonaire, Sint Eustatius and Saba, Congo, Democratic Republic of the,  Moldova, Republic of, Palestine, State of, Saint Helena, Ascension and Tristan da Cunha, Taiwan, Province of China, Tanzania, United Republic of.
 - [X] Fix api.md file.
-- [ ] Add workflow badge to readme.
+- [X] Add workflow badge to readme.
+- [X] Go through attributes.md fields, see if can add more info to field description, e.g adding "(km^2)" to area field.
+- [X] Go through all unit tests, any tests that are wrapped in with.selfAssertRaises()... , remove var assignment and just call function.
+- [X] Update API path so that https://iso3166-2-api.vercel.app/api/dk will not return error but return DK data.

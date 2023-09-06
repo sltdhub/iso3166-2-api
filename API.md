@@ -1,6 +1,6 @@
 # ISO3166-2 API
 
-Two query string parameters are available in the API - `alpha2` and `name`. The 2 letter alpha-2 country code can be appeneded to the url as a query string parameter to the main endpoint - "?alpha2=JP" - or added to the alpha2 endpoint - "/alpha2/JP". A single alpha-2 or list of them can be passed to the API (e.g "FR", "DE", "HU, ID, MA"). The name parameter can be a country name in english as it is most commonly known. The name can similarly be added as a query string parameter to the main endpoint - "?name="Denmark" - or added to the name endpoint - "/name/Denmark". A closeness function is utilised so the most approximate name from the input will be used e.g Sweden will be used if "?name=Swede". 
+Two query string parameters are available in the API - `alpha2` and `name`. The 2 letter alpha-2 country code can be appeneded to the url as a query string parameter to the main endpoint - ?alpha2=JP - or added to the alpha2 endpoint - /alpha2/JP. A single alpha-2 or list of them can be passed to the API (e.g "FR, DE, HU, ID, MA"). The name parameter can be a country name in english as it is most commonly known, according to the ISO 3166-1. The name can similarly be added as a query string parameter to the main endpoint - ?name=Denmark - or added to the name endpoint - /name/Denmark. A closeness function is utilised so the most approximate name from the input will be used e.g Sweden will be used if ?name=Swede. The main API endpoint will return the landing page and API documentation, the /all endpoint returns all the ISO 3166-2 data for all countries.   
 
 The API documentation and usage with all useful commands and examples to the API is available on the [API.md](https://github.com/amckenna41/iso3166-2-api/API.md) file. The full list of attributes/fields available in `iso3166-2` can be viewed in the [ATTRIBUTES.md][attributes] file.
 
@@ -12,6 +12,16 @@ The other endpoints available in the API are:
 * https://iso3166-2-api.vercel.app/api/all
 * https://iso3166-2-api.vercel.app/api/alpha2/<input_alpha2>
 * https://iso3166-2-api.vercel.app/api/name/<input_name>
+
+Requirements
+------------
+* [python][python] >= 3.8
+* [flask][flask] >= 2.3.2
+* [requests][requests] >= 2.28.1
+* [iso3166][iso3166] >= 2.1.1
+* [google-auth][google-auth] >= 2.17.3
+* [google-cloud-storage][google-cloud-storage] >= 2.8.0
+* [google-api-python-client][google-api-python-client] >= 2.86.0
 
 Get All ISO 3166-2 updates for all countries
 -------------------------------------------
@@ -117,7 +127,9 @@ function getData() {
     await fetch('https://iso3166-2-api.vercel.app/api?' + 
         new URLSearchParams({
             alpha2: 'FR'
-  }));
+            // alpha2: 'DE'
+            // alpha2: 'HN'
+}));
   const data = await response.json()
 }
 
@@ -191,7 +203,9 @@ function getData() {
     await fetch('https://iso3166-2-api.vercel.app/api?' + 
         new URLSearchParams({
             name: 'Tajikistan'
-  }));
+            // name: 'Seychelles'
+            // name: 'Uganda'
+}));
   const data = await response.json()
 }
 
