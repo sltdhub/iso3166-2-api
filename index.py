@@ -358,7 +358,7 @@ def api_alpha2(alpha2):
     #get updates from iso3166_updates object per country using alpha-2 code
     for code in alpha2_code:
         iso3166_2[code] = all_iso3166_2[code]
-
+    
     return jsonify(iso3166_2), 200
 
 @app.errorhandler(404)
