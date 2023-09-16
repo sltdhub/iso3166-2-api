@@ -56,11 +56,11 @@ def home():
     purpose of API and its documentation. 
 
     Parameters
-    ----------
+    ==========
     None
 
     Returns
-    -------
+    =======
     :render_template : html
         Flask html template for index.html page.
     :status_code : int
@@ -109,11 +109,11 @@ def all():
     or without trailing slash.
 
     Parameters
-    ----------
+    ==========
     None
 
     Returns
-    -------
+    =======
     :jsonify(all_iso3166_2) : json
         jsonified ISO 3166-2 data.
     :status_code : int
@@ -136,13 +136,13 @@ def api_name(name):
     name input. Route can accept path with or without trailing slash.
 
     Parameters
-    ----------
+    ==========
     :name : str/list
         one or more names for countries as they are commonly known in
         English. 
 
     Returns
-    -------
+    =======
     :iso3166_2 : json
         jsonified response of iso3166-2 data per input country name.
     :status_code : int
@@ -265,13 +265,13 @@ def api_alpha2(alpha2):
     without trailing slash.
 
     Parameters
-    ----------
+    ==========
     :alpha2 : str
         2 letter alpha-2 country code or list of codes. Function 
         can also accept 3 letter alpha-3 code.
 
     Returns
-    -------
+    =======
     :iso3166_2 : json
         jsonified response of iso3166-2 data per input alpha-2 code.
     :blob_not_found_error_message : dict 
@@ -303,12 +303,12 @@ def api_alpha2(alpha2):
         alpha-2 counterpart. 
 
         Parameters 
-        ----------
+        ==========
         :alpha3_code: str
             3 letter ISO 3166 country code.
         
         Returns
-        -------
+        =======
         :iso3166.countries_by_alpha3[alpha3_code].alpha2: str
             2 letter ISO 3166 country code. 
         """
@@ -368,12 +368,12 @@ def not_found(e):
     Flask app.
 
     Parameters
-    ----------
+    ==========
     :e : int
         error code.
 
     Returns
-    -------
+    =======
     :render_template : html
       Flask html template for error.html page.
     :status_code : int

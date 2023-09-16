@@ -12,3 +12,4 @@
 - [X] Go through attributes.md fields, see if can add more info to field description, e.g adding "(km^2)" to area field.
 - [X] Go through all unit tests, any tests that are wrapped in with.selfAssertRaises()... , remove var assignment and just call function.
 - [X] Update API path so that https://iso3166-2-api.vercel.app/api/dk will not return error but return DK data.
+- [ ] Change all comment underlining from "------" to "=======".
