@@ -2,4 +2,4 @@
 
 ## Templates:
 * `index.html` - html template for main homepage.
-* `error.html` - html template when page is not found (404 error).
+* `404.html` - html template when page is not found (404 error).

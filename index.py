@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify, redirect, url_for
+from flask import Flask, request, render_template, jsonify
 from google.cloud import storage
 from google.oauth2 import service_account
 import json 
@@ -15,8 +15,9 @@ sa_json_str = os.environ["SA_JSON"]
 project_id = os.environ["PROJECT_ID"]
 bucket_name = os.environ["BUCKET_NAME"]
 blob_name = os.environ["BLOB_NAME"]
+blob_path = "gs://" + bucket_name + "/" + blob_name
 
-##### Import ISO 3166-2 JSON from GCP Storage bucket #####
+##### Import ISO 3166 data JSON from GCP Storage bucket #####
 #convert str of service account from env var into json 
 sa_json = json.loads(sa_json_str)
 #pass service account json into credentials object
@@ -26,9 +27,7 @@ storage_client = storage.Client(project=project_id, credentials=credentials)
 #initialise bucket object
 bucket = storage_client.bucket(bucket_name)
 #get blob from bucket
-blob = bucket.blob(os.environ["BLOB_NAME"])      
-#get path to json blob in bucket
-blob_path = "gs://" + bucket_name + "/" + blob_name
+blob = bucket.blob(blob_name)
 #bool to track if blob exists
 blob_exists = True
 #return error if object not found in bucket
@@ -41,15 +40,15 @@ else:
 #error message returned if issue retrieving updates json
 blob_not_found_error_message = {}
 blob_not_found_error_message["status_code"] = 400
-blob_not_found_error_message["message"] = "Error finding ISO 3166-2 object in GCP Storage Bucket."
+blob_not_found_error_message["message"] = "Error finding updates object in GCP Storage Bucket."
 
-#json object storing the error message and status code 
+#json object storing the error message, route and status code 
 error_message = {}
 error_message["status"] = 400
 
 @app.route('/')
-@app.route('/api', methods=['GET'])
-@app.route('/api/', methods=['GET'])
+@app.route('/api')
+@app.route('/api/')
 def home():
     """
     Default route for https://iso3166-2-api.vercel.app/. Main homepage for API displaying the 
@@ -61,40 +60,10 @@ def home():
 
     Returns
     =======
-    :render_template : html
-        Flask html template for index.html page.
-    :status_code : int
-        response status code. 200 is a successful response, 400 means there was an 
-        invalid parameter input. 
-    :Flask.redirect : app.route
-        Flask route redirected using the redirect function, specific route and URL
-        used is determined by input parameters. 
-    """  
-    alpha2_code = []
-    names = []
-    
-    #parse alpha-2 code parameter, if applicable, seperate multiple into list
-    if not (request.args.get('alpha2') is None):
-        alpha2_code = ','.join(sorted([request.args.get('alpha2').upper()]))
-
-    #parse name parameter, if applicable, seperate multiple into list
-    if not (request.args.get('name') is None):
-        names = ','.join(sorted([request.args.get('name').upper()]))
-
-    #redirect to api_alpha2 route if alpha-2 query string parameter set 
-    if (alpha2_code != []):
-        return redirect(url_for('api_alpha2', alpha2=alpha2_code))
-
-    #redirect to api_name route if name query string parameter set 
-    if (names != []):
-        return redirect(url_for('api_name', name=names))
-    
-    #return error if blob not found in bucket 
-    if not (blob_exists):
-        return jsonify(blob_not_found_error_message), 400
-
-    #return default index.html page if no query string parameters set
-    return render_template('index.html', string=""), 200
+    :flask.render_template : html
+      Flask html template for index.html page.
+    """
+    return render_template('index.html')
 
 @app.route('/all', methods=['GET'])
 @app.route('/all/', methods=['GET'])
@@ -102,11 +71,9 @@ def home():
 @app.route('/api/all/', methods=['GET'])
 def all():
     """
-    Flask route for all path. Return all ISO 3166-2 data
-    for all countries. This path is not reccommended as
-    the file with all ISO 3166-2 data is quite large and
-    can take some time to load. Route can accept path with 
-    or without trailing slash.
+    Flask route for '/api/all' path/endpoint. Return all ISO 3166-2 data for all countries. This 
+    path can take some time to load due to the large amount of ISO 3166 data. Route can accept 
+    path with or without trailing slash.
 
     Parameters
     ==========
@@ -129,17 +96,16 @@ def all():
 @app.route('/api/name/<name>/', methods=['GET'])
 def api_name(name):
     """
-    Flask route for name path. Return all ISO 3166-2 data
-    for inputted country name/names. A closeness function is used
-    on the input country name to get the closest match, to a high degree,
-    from the list of available countries. Return error if invalid country 
-    name input. Route can accept path with or without trailing slash.
+    Flask route for 'api/name' path/endpoint. Return all ISO 3166-2 data for inputted country 
+    name/names. A closeness function is used on the input country name to get the closest match, 
+    to a high degree, from the list of available countries, e.g if Swede is input then the data
+    for Sweden will be returned. Return error if invalid country name input. Route can accept 
+    path with or without trailing slash.
 
     Parameters
     ==========
     :name : str/list
-        one or more names for countries as they are commonly known in
-        English. 
+        one or more country names as they are commonly known in English. 
 
     Returns
     =======
@@ -169,7 +135,7 @@ def api_name(name):
 
     #path can accept multiple country names, seperated by a comma but several
     #countries contain a comma already in their name. Seperate multiple country names
-    #by a comma, cast to a sorted list, unless any of the names are in the below list
+    #by comma, cast to a sorted list, unless any of the names are in the below list
     name_comma_exceptions = ["BOLIVIA, PLURINATIONAL STATE OF",
                     "BONAIRE, SINT EUSTATIUS AND SABA",
                     "CONGO, DEMOCRATIC REPUBLIC OF THE",
@@ -249,26 +215,27 @@ def api_name(name):
     for code in alpha2_code:
         iso3166_2[code] = all_iso3166_2[code]
 
+    #filter object to include only attributes specified by 'filter' query parameter, if applicable     
+    iso3166_2 = filter_attributes(iso3166_2) 
+
     return jsonify(iso3166_2), 200
 
 @app.route('/api/alpha2/<alpha2>', methods=['GET'])
 @app.route('/api/alpha2/<alpha2>/', methods=['GET'])
+@app.route('/alpha2/<alpha2>', methods=['GET'])
+@app.route('/alpha2/<alpha2>/', methods=['GET'])
 @app.route('/api/<alpha2>/', methods=['GET'])
 def api_alpha2(alpha2):
     """
-    Flask route for alpha-2 path. Return all ISO 3166-2 data
-    for the inputted alpha-2 code/codes. If invalid alpha-2
-    code or no value input then return error. The endpoint
-    can also accept a country in its 3 letter alpha-3 code
-    form, which will then be converted into its 2 letter
-    alpha-2 counterpart. Route can accept path with or 
-    without trailing slash.
+    Flask route for '/api/alpha2' path/endpoint. Return all ISO 3166-2 data for the inputted alpha-2 
+    code/codes. If invalid alpha-2 code or no value input then return error. The endpoint can also 
+    accept a country in its 3 letter alpha-3 code form, which will then be converted into its 2 letter
+    alpha-2 counterpart. Route can accept path with or without trailing slash.
 
     Parameters
     ==========
-    :alpha2 : str
-        2 letter alpha-2 country code or list of codes. Function 
-        can also accept 3 letter alpha-3 code.
+    :alpha2 : str/list
+        2 letter alpha-2 country code or list of codes. Function can also accept 3 letter alpha-3 code.
 
     Returns
     =======
@@ -355,17 +322,19 @@ def api_alpha2(alpha2):
                 error_message['path'] = request.base_url
                 return jsonify(error_message), 400
 
-    #get updates from iso3166_updates object per country using alpha-2 code
+    #get updates from iso3166_2 object per country using alpha-2 code
     for code in alpha2_code:
         iso3166_2[code] = all_iso3166_2[code]
-    
+
+    #filter object to include only attributes specified by 'filter' query parameter, if applicable     
+    iso3166_2 = filter_attributes(iso3166_2) 
+
     return jsonify(iso3166_2), 200
 
 @app.errorhandler(404)
 def not_found(e):
     """
-    Return html template for 404.html when page/path not found in 
-    Flask app.
+    Return html template for 404.html when page/path not found in  Flask app.
 
     Parameters
     ==========
@@ -374,19 +343,64 @@ def not_found(e):
 
     Returns
     =======
-    :render_template : html
-      Flask html template for error.html page.
+    :flask.render_template : html
+      Flask html template for 404.html page.
     :status_code : int
         response status code. 404 code implies page not found.
     """
-    error_message_ = ""
-    if not ("api" in request.path):
-        error_message_ = "Path " + request.path + " should have the /api path prefix in it." 
-    else:
-        error_message_ = "ISO 3166-2: Page not found: " + request.path
+    return render_template("404.html", path=request.url), 404
 
-    return render_template("404.html", path=error_message_), 404
+def filter_attributes(iso3166_2):
+    """
+    Filter ISO 3166 object to just contain the sought attributes listed in the 'filter'
+    query string parameter. If query parameter not specified then return object as is. 
+    Return error if invalid attribute name input.
 
+    Parameters
+    ==========
+    :iso3166_2 : dict
+        unfiltered object containing all the ISO 3166 data for inputted county/countries.
+    
+    Returns
+    =======
+    :filtered_iso3166_2 : dict
+        filtered object containing all the ISO 3166 data for inputted county/countries. If
+        attributes parameter input and valid then filter all other attributes out.  
+    """ 
+    #filtered object to contain filtered attributes data
+    filtered_iso3166_2 = {}  
+    
+    #get attributes value from query string parameter
+    attributes = request.args.get('filter')
+
+    #return original unfiltered data object if parameter value is None
+    if (attributes is None):
+        return iso3166_2
+
+    #split attributes into comma seperated list
+    attributes = attributes.replace(' ', '').split(',')
+    
+    #get correct attribute list from original json
+    attribute_list = list(iso3166_2[next(iter(iso3166_2))].keys())
+
+    #remove attribute from input list if invalid
+    for attr in attributes:
+        if not (attr in attribute_list):
+            attributes.remove(attr)
+
+    #return original object if no attributes present after validation 
+    if (attributes == []):
+        return iso3166_2
+    
+    #iterate through alpha-2 codes in object, filter out attributes not specified in query parameter, if applicable
+    for code in iso3166_2:
+        filtered_iso3166_2[code] = {}
+        for key in iso3166_2[code]:
+            if (key in attributes):
+                filtered_iso3166_2[code][key] = iso3166_2[code][key]
+
+    return filtered_iso3166_2
+    
 if __name__ == '__main__':
     #run Flask app 
     app.run(debug=True)

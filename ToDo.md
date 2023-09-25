@@ -12,4 +12,21 @@
 - [X] Go through attributes.md fields, see if can add more info to field description, e.g adding "(km^2)" to area field.
 - [X] Go through all unit tests, any tests that are wrapped in with.selfAssertRaises()... , remove var assignment and just call function.
 - [X] Update API path so that https://iso3166-2-api.vercel.app/api/dk will not return error but return DK data.
-- [ ] Change all comment underlining from "------" to "=======".
+- [X] Change all comment underlining from "------" to "=======".
+- [X] Add link in documenation to list of countries supported, ISO 3166-1.
+- [X] Be able to return all country's that match a particular attribute value - update API unit tests to test such and update API.md. Return error message if attribute not valid.
+- [X] Update error.html.
+- [ ] /list endpoint that returns list of all codes and their names.
+- [X] Validate that .vercelignore is being executed.
+- [X] Update api unit tests to incorporate '/' and '/api' index.html return.
+- [X] Change filter query parameter from "attributes=" to "filter=".
+- [X] Update API.md.
+- [X] In Api.md and readme, change reference of query string parameters to endpoints/paths, mention "filter" query parameter.
+- [X] In index.html, change css imports from relative to absolute.
+- [X] Unit test to test the current version on the API, last updated and author/maintainer.
+- [X] Read over index.py.
+- [X] Rename index.py to app.py - change env var on Vercel.
+- [X] Add copy icon/button that copies API request to clipboard.
+- [X] Add comments to js file.
+- [X] Indent All, name and alpha2.
+- [X] Change all relative imports.

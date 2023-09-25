@@ -47,7 +47,7 @@ Two query string parameters are available in the API - `alpha2` and `name`. The 
 
 The API was hosted and built using GCP, with a Cloud Function being used in the backend which is fronted by an API gateway and load balancer. The function calls a GCP Storage bucket to access the back-end JSON with all ISO 3166 updates. Although, due to the cost of infrastructure the hosting was switched to Vercel (https://vercel.com/).
 
-The API documentation and usage with all useful commands and examples to the API is available on the [API.md](https://github.com/amckenna41/iso3166-2-api/API.md) file. The full list of attributes/fields available in `iso3166-2` can be viewed in the [ATTRIBUTES.md][attributes] file.
+The API documentation and usage with all useful commands and examples to the API is available on the [API.md](https://github.com/amckenna41/iso3166-2-api/API.md) file. The full list of 36 attributes/fields that are supported in `iso3166-2` can be viewed in the [ATTRIBUTES.md][attributes] file.
 
 Staying up to date
 ------------------
@@ -61,7 +61,6 @@ Requirements
 * [flask][flask] >= 2.3.2
 * [requests][requests] >= 2.28.1
 * [iso3166][iso3166] >= 2.1.1
-* [python-dateutil][python-dateutil] >= 2.8.2
 * [google-auth][google-auth] >= 2.17.3
 * [google-cloud-storage][google-cloud-storage] >= 2.8.0
 * [google-api-python-client][google-api-python-client] >= 2.86.0
@@ -94,7 +93,6 @@ Support
 [python]: https://www.python.org/downloads/release/python-360/
 [requests]: https://requests.readthedocs.io/
 [iso3166]: https://github.com/deactivated/python-iso3166
-[python-dateutil]: https://pypi.org/project/python-dateutil/
 [google-auth]: https://cloud.google.com/python/docs/reference
 [google-cloud-storage]: https://cloud.google.com/python/docs/reference
 [google-api-python-client]: https://cloud.google.com/python/docs/reference

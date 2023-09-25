@@ -1,6 +1,7 @@
 import iso3166
 import requests
 import getpass
+from bs4 import BeautifulSoup
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
@@ -10,13 +11,18 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
     Test Cases
     ==========
-    test_alpha2:
+    test_homepage_endpoint:
+        testing main endpoint that returns the homepage and API documentation. 
+    test_alpha2_endpoint:
         testing correct objects are returned from /alpha2 API endpoint using a variety of inputs.
-    test_name:
+    test_name_endpoint:
         testing correct objects are returned from /name API endpoint using a variety of inputs.
-    test_all:
+    test_all_endpoint:
         testing correct objects are returned from /name API endpoint, which returns all the available 
         ISO 3166-2 data.    
+    test_filter_output:
+        testing filter_attributes function that filters output object to include only sought after
+        attributes.
     """
     def setUp(self):
         """ Initialise test variables, import json. """
@@ -27,7 +33,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
         #url endpoints for API
         self.api_base_url = "https://iso3166-2-api.vercel.app/api/"
-        self.api_base_url = "https://iso3166-2-api-amckenna41.vercel.app/api/"
+        # self.api_base_url = "https://iso3166-2-api-amckenna41.vercel.app/api/" 
         self.alpha2_base_url = self.api_base_url + "alpha2/"
         self.name_base_url = self.api_base_url + "name/"
         self.all_base_url = self.api_base_url + "all"
@@ -43,8 +49,25 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         #list of keys that should be in subdivisions key of output object
         self.correct_subdivision_keys = ["flag_url", "latlng", "name", "parent_code", "type"]
 
-    # @unittest.skip("Skipping to not overload API endpoint on test suite run.")
-    def test_alpha2(self):
+    def test_homepage_endpoint(self):
+        """ Testing contents of main "/api" endpoint that returns the homepage and API documentation. """
+        test_request_main = requests.get(self.api_base_url, headers=self.user_agent_header)
+        soup = BeautifulSoup(test_request_main.content, 'html.parser')
+#1.)
+        version = soup.find(id='version').text.split(': ')[1]
+        last_updated = soup.find(id='last-updated').text.split(': ')[1]
+        author = soup.find(id='author').text.split(': ')[1]
+
+        self.assertEqual(version, "1.2.1", "Expected API version to be 1.2.1, got {}.".format(version))
+        self.assertEqual(last_updated, "October 2023", "Expected last updated data to be October 2023, got {}.".format(last_updated))
+        self.assertEqual(author, "AJ", "Expected author to be AJ, got {}.".format(author))
+#2.)
+        section_list_menu = soup.find(id='section-list-menu').find_all('li')
+        correct_section_menu = ["About", "Attributes", "Endpoints", "All", "Alpha-2 Code", "Name", "Filter Output", "Credits", "Contributing"]
+        for li in section_list_menu:
+            self.assertIn(li.text.strip(), correct_section_menu, "Expected list element {} to be in list.".format(li))
+            
+    def test_alpha2_endpoint(self):
         """ Testing alpha-2 endpoint, return all ISO 3166 data from input alpha-2 code/codes. """
         test_alpha2_au = "AU" #Australia
         test_alpha2_cy = "CY" #Cyprus
@@ -234,7 +257,6 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(test_request_error2["status"], 400, 
                 "Error status does not match expected:\n{}.".format(test_request_error2["status"]))
 
-    # @unittest.skip("Skipping to not overload API endpoint on test suite run.")
     def test_name(self):
         """ Testing name endpoint, return all ISO 3166 data from input alpha-2 name/names. """
         test_name_bj = "Benin"
@@ -403,7 +425,102 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(test_request_error["status"], 400, 
                 "Error status does not match expected:\n{}".format(test_request_error["status"]))
 
-    @unittest.skip("Skipping to not overload server as this test returns all data.")
+    def test_filter_output(self):
+        """ Testing filter_output function that filters out attributes from output object. """
+        test_attribute_capital = "capital"
+        test_attribute_population = "population"
+        test_attribute_region = "region"
+        test_attribute_cca2_cca3_landlocked = "cca2, cca3, landlocked"
+        test_attribute_languages_subregion_timezones = "languages, subregion, timezones"
+        test_attribute_error1 = "invalidAttribute"
+        test_attribute_error2 = "12345"
+#1.)
+        test_request_attribute_capital = requests.get(self.alpha2_base_url + "DK" + "?filter=" + test_attribute_capital, headers=self.user_agent_header).json() #Denmark
+
+        self.assertIsInstance(test_request_attribute_capital, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_attribute_capital)))
+        self.assertEqual(len(test_request_attribute_capital), 1, "Expected output object of API to be of length 1, got {}.".format(len(test_request_attribute_capital)))
+        self.assertEqual(list(test_request_attribute_capital.keys()), ["DK"], "Expected output object of API to contain only the DK key, got {}.".format(list(test_request_attribute_capital.keys())))
+        self.assertEqual(list(test_request_attribute_capital["DK"].keys()), ["capital"], "Expected only capital city attribute to be in output object, got {}\n.".format(list(test_request_attribute_capital["DK"].keys())))
+        self.assertEqual(test_request_attribute_capital["DK"]["capital"][0], "Copenhagen", "Expected capital city attribute value to be Copenhagen, got {}\n.".format(test_request_attribute_capital["DK"]['capital']))
+#2.)
+        test_request_attribute_population = requests.get(self.alpha2_base_url + "GH" + "?filter=" + test_attribute_population, headers=self.user_agent_header).json() #Ghana
+
+        self.assertIsInstance(test_request_attribute_population, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_attribute_population)))
+        self.assertEqual(len(test_request_attribute_population), 1, "Expected output object of API to be of length 1, got {}.".format(len(test_request_attribute_population)))
+        self.assertEqual(list(test_request_attribute_population.keys()), ["GH"], "Expected output object of API to contain only the GH key, got {}.".format(list(test_request_attribute_population.keys())))
+        self.assertEqual(list(test_request_attribute_population["GH"].keys()), ["population"], "Expected only population attribute to be in output object, got {}\n.".format(list(test_request_attribute_population["GH"].keys())))
+        self.assertEqual(test_request_attribute_population["GH"]["population"], 31072945, "Expected population attribute value to be 31072945, got {}\n.".format(test_request_attribute_population["GH"]['population']))
+#3.)
+        test_request_attribute_region = requests.get(self.alpha2_base_url + "IM,MQ" + "?filter=" + test_attribute_region, headers=self.user_agent_header).json() #Isle of Man, Martinique
+
+        self.assertIsInstance(test_request_attribute_region, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_attribute_region)))
+        self.assertEqual(len(test_request_attribute_region), 2, "Expected output object of API to be of length 2, got {}.".format(len(test_request_attribute_region)))
+        self.assertEqual(list(test_request_attribute_region.keys()), ["IM", "MQ"], "Expected output object of API to contain only the IM and MQ keys, got {}.".format(list(test_request_attribute_region.keys())))
+        self.assertEqual(list(test_request_attribute_region["IM"].keys()), ["region"], "Expected only region attribute to be in output object, got {}\n.".format(list(test_request_attribute_region["IM"].keys())))
+        self.assertEqual(list(test_request_attribute_region["MQ"].keys()), ["region"], "Expected only region attribute to be in output object, got {}\n.".format(list(test_request_attribute_region["MQ"].keys())))
+        self.assertEqual(test_request_attribute_region["IM"]["region"], "Europe", "Expected region attribute value to be Europe, got {}\n.".format(test_request_attribute_region["IM"]['region']))
+        self.assertEqual(test_request_attribute_region["MQ"]["region"], "Americas", "Expected region attribute value to be Americas, got {}\n.".format(test_request_attribute_region["MQ"]['region']))
+#4.)
+        test_request_attribute_cca2_cca3_landlocked = requests.get(self.alpha2_base_url + "NU,PK,PL" + "?filter=" + test_attribute_cca2_cca3_landlocked, headers=self.user_agent_header).json() #Niue, Pakistan, Poland
+
+        self.assertIsInstance(test_request_attribute_cca2_cca3_landlocked, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_attribute_cca2_cca3_landlocked)))
+        self.assertEqual(len(test_request_attribute_cca2_cca3_landlocked), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_attribute_cca2_cca3_landlocked)))
+        self.assertEqual(list(test_request_attribute_cca2_cca3_landlocked.keys()), ["NU", "PK", "PL"], "Expected output object of API to contain only the NU, PL and PK keys, got {}.".format(list(test_request_attribute_cca2_cca3_landlocked.keys())))
+        self.assertEqual(list(test_request_attribute_cca2_cca3_landlocked["NU"].keys()), ["cca2", "cca3", "landlocked"], "Expected only cca2, cca3 and landlocked attributes to be in output object, got {}\n.".format(list(test_request_attribute_cca2_cca3_landlocked["NU"].keys())))
+        self.assertEqual(list(test_request_attribute_cca2_cca3_landlocked["PL"].keys()), ["cca2", "cca3", "landlocked"], "Expected only cca2, cca3 and landlocked attributes to be in output object, got {}\n.".format(list(test_request_attribute_cca2_cca3_landlocked["NU"].keys())))
+        self.assertEqual(list(test_request_attribute_cca2_cca3_landlocked["PK"].keys()), ["cca2", "cca3", "landlocked"], "Expected only cca2, cca3 and landlocked attributes to be in output object, got {}\n.".format(list(test_request_attribute_cca2_cca3_landlocked["NU"].keys())))
+        self.assertEqual(test_request_attribute_cca2_cca3_landlocked["NU"]["cca2"], "NU", "Expected cca2 attribute value to be NU, got {}\n.".format(test_request_attribute_cca2_cca3_landlocked["NU"]['cca2']))
+        self.assertEqual(test_request_attribute_cca2_cca3_landlocked["PL"]["cca2"], "PL", "Expected cca2 attribute value to be PL, got {}\n.".format(test_request_attribute_cca2_cca3_landlocked["PL"]['cca2']))
+        self.assertEqual(test_request_attribute_cca2_cca3_landlocked["PK"]["cca2"], "PK", "Expected cca2 attribute value to be PK, got {}\n.".format(test_request_attribute_cca2_cca3_landlocked["PK"]['cca2']))
+        self.assertEqual(test_request_attribute_cca2_cca3_landlocked["NU"]["cca3"], "NIU", "Expected cca3 attribute value to be NIU, got {}\n.".format(test_request_attribute_cca2_cca3_landlocked["NU"]['cca3']))
+        self.assertEqual(test_request_attribute_cca2_cca3_landlocked["PL"]["cca3"], "POL", "Expected cca3 attribute value to be POL, got {}\n.".format(test_request_attribute_cca2_cca3_landlocked["PL"]['cca3']))
+        self.assertEqual(test_request_attribute_cca2_cca3_landlocked["PK"]["cca3"], "PAK", "Expected cca3 attribute value to be PAK, got {}\n.".format(test_request_attribute_cca2_cca3_landlocked["PK"]['cca3']))
+        self.assertEqual(test_request_attribute_cca2_cca3_landlocked["NU"]["landlocked"], False, "Expected landlocked attribute value to be False, got {}\n.".format(test_request_attribute_cca2_cca3_landlocked["NU"]['landlocked']))
+        self.assertEqual(test_request_attribute_cca2_cca3_landlocked["PL"]["landlocked"], False, "Expected landlocked attribute value to be False, got {}\n.".format(test_request_attribute_cca2_cca3_landlocked["PL"]['landlocked']))
+        self.assertEqual(test_request_attribute_cca2_cca3_landlocked["PK"]["landlocked"], False, "Expected landlocked attribute value to be False, got {}\n.".format(test_request_attribute_cca2_cca3_landlocked["PK"]['landlocked']))
+#5.)
+        test_request_attribute_languages_subregion_timezones = requests.get(self.alpha2_base_url + "SA,SH,SR,SS" + "?filter=" + test_attribute_languages_subregion_timezones, headers=self.user_agent_header).json() #Saudi Arabia, Saint Helena, Suriname, South Sudan 
+
+        self.assertIsInstance(test_request_attribute_languages_subregion_timezones, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_attribute_languages_subregion_timezones)))
+        self.assertEqual(len(test_request_attribute_languages_subregion_timezones), 4, "Expected output object of API to be of length 4, got {}.".format(len(test_request_attribute_languages_subregion_timezones)))
+        self.assertEqual(list(test_request_attribute_languages_subregion_timezones.keys()), ["SA", "SH", "SR", "SS"], "Expected output object of API to contain only the SA, SH, SR and SS keys, got {}.".format(list(test_request_attribute_languages_subregion_timezones.keys())))
+        self.assertEqual(list(test_request_attribute_languages_subregion_timezones["SA"].keys()), ["languages", "subregion", "timezones"], "Expected only languages, subregion and timezones attributes to be in output object, got {}\n.".format(list(test_request_attribute_languages_subregion_timezones["SA"].keys())))
+        self.assertEqual(list(test_request_attribute_languages_subregion_timezones["SH"].keys()), ["languages", "subregion", "timezones"], "Expected only languages, subregion and timezones attributes to be in output object, got {}\n.".format(list(test_request_attribute_languages_subregion_timezones["SH"].keys())))
+        self.assertEqual(list(test_request_attribute_languages_subregion_timezones["SR"].keys()), ["languages", "subregion", "timezones"], "Expected only languages, subregion and timezones attributes to be in output object, got {}\n.".format(list(test_request_attribute_languages_subregion_timezones["SR"].keys())))
+        self.assertEqual(list(test_request_attribute_languages_subregion_timezones["SS"].keys()), ["languages", "subregion", "timezones"], "Expected only languages, subregion and timezones attributes to be in output object, got {}\n.".format(list(test_request_attribute_languages_subregion_timezones["SS"].keys())))
+
+        self.assertEqual(list(test_request_attribute_languages_subregion_timezones["SA"]["languages"].values())[0], "Arabic", "Expected language attribute value to be Arabic, got {}\n.".format(test_request_attribute_languages_subregion_timezones["SA"]['languages']))
+        self.assertEqual(list(test_request_attribute_languages_subregion_timezones["SH"]["languages"].values())[0], "English", "Expected language attribute value to be English, got {}\n.".format(test_request_attribute_languages_subregion_timezones["SH"]['languages']))
+        self.assertEqual(list(test_request_attribute_languages_subregion_timezones["SR"]["languages"].values())[0], "Dutch", "Expected language attribute value to be Dutch, got {}\n.".format(test_request_attribute_languages_subregion_timezones["SR"]['languages']))
+        self.assertEqual(list(test_request_attribute_languages_subregion_timezones["SS"]["languages"].values())[0], "English", "Expected language attribute value to be English, got {}\n.".format(test_request_attribute_languages_subregion_timezones["SS"]['languages']))
+        self.assertEqual(test_request_attribute_languages_subregion_timezones["SA"]["subregion"], "Western Asia", "Expected subregion attribute value to be Western Asia, got {}\n.".format(test_request_attribute_languages_subregion_timezones["SA"]['subregion']))
+        self.assertEqual(test_request_attribute_languages_subregion_timezones["SH"]["subregion"], "Western Africa", "Expected subregion attribute value to be Western Africa, got {}\n.".format(test_request_attribute_languages_subregion_timezones["SH"]['subregion']))
+        self.assertEqual(test_request_attribute_languages_subregion_timezones["SR"]["subregion"], "South America", "Expected subregion attribute value to be South America, got {}\n.".format(test_request_attribute_languages_subregion_timezones["SR"]['subregion']))
+        self.assertEqual(test_request_attribute_languages_subregion_timezones["SS"]["subregion"], "Middle Africa", "Expected subregion attribute value to be English, got {}\n.".format(test_request_attribute_languages_subregion_timezones["SS"]['subregion']))
+        self.assertEqual(test_request_attribute_languages_subregion_timezones["SA"]["timezones"][0], "UTC+03:00", "Expected timezones attribute value to be UTC+03:00, got {}\n.".format(test_request_attribute_languages_subregion_timezones["SA"]['timezones'][0]))
+        self.assertEqual(test_request_attribute_languages_subregion_timezones["SH"]["timezones"][0], "UTC+00:00", "Expected timezones attribute value to be UTC+00:00, got {}\n.".format(test_request_attribute_languages_subregion_timezones["SH"]['timezones'][0]))
+        self.assertEqual(test_request_attribute_languages_subregion_timezones["SR"]["timezones"][0], "UTC-03:00", "Expected timezones attribute value to be UTC-03:00, got {}\n.".format(test_request_attribute_languages_subregion_timezones["SR"]['timezones'][0]))
+        self.assertEqual(test_request_attribute_languages_subregion_timezones["SS"]["timezones"][0], "UTC+03:00", "Expected timezones attribute value to be UTC+03:00, got {}\n.".format(test_request_attribute_languages_subregion_timezones["SS"]['timezones'][0]))
+#6.)
+        test_request_attribute_error1 = requests.get(self.alpha2_base_url + "TN" + "?filter=" + test_attribute_error1, headers=self.user_agent_header).json() #Tunisia
+
+        self.assertIsInstance(test_request_attribute_error1, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_attribute_error1)))
+        self.assertEqual(len(test_request_attribute_error1), 1, "Expected output object of API to be of length 1, got {}.".format(len(test_request_attribute_error1)))
+        self.assertEqual(list(test_request_attribute_error1.keys()), ["TN"], "Expected output object of API to contain only the TN key, got {}.".format(list(test_request_attribute_error1.keys())))
+        for col in list(test_request_attribute_error1["TN"].keys()):
+            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}.".format(col, self.correct_output_cols))
+#7.)
+        test_request_attribute_error2 = requests.get(self.alpha2_base_url + "TV,UG" + "?filter=" + test_attribute_error2, headers=self.user_agent_header).json() #Tuvalu, Uganda
+
+        self.assertIsInstance(test_request_attribute_error2, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_attribute_error2)))
+        self.assertEqual(len(test_request_attribute_error2), 2, "Expected output object of API to be of length 2, got {}.".format(len(test_request_attribute_error2)))
+        self.assertEqual(list(test_request_attribute_error2.keys()), ["TV", "UG"], "Expected output object of API to contain only the TV and UG keys, got {}.".format(list(test_request_attribute_error2.keys())))
+        for col in list(test_request_attribute_error2["TV"].keys()):
+            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}.".format(col, self.correct_output_cols))
+        for col in list(test_request_attribute_error2["UG"].keys()):
+            self.assertIn(col, self.correct_output_cols, "Column {} not found in list of correct columns:\n{}.".format(col, self.correct_output_cols))
+
+    @unittest.skip("Skipping /all endpoint tests to overload server.")
     def test_all(self):
         """ Test 'all' endpoint which returns all data for all ISO 3166 countries. """
 #1.)
