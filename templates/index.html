@@ -73,10 +73,10 @@
                 <p> 
                     The ISO 3166-2 API is a custom-built, open-source and free to use RESTful API that provides programmatic access to a plethora of data attributes for all ISO 3166 countries/territories.
                     The project was inspired by <a href="https://restcountries.com/">Rest Countries</a> but includes additional subdivison/regional related data from the ISO 3166-2 of each country. Built 
-                    using the Python Flask framework and hosted on the Vercel platform. <br>A demo of the API and Python software it's built using is available 
+                    using the Python Flask framework and hosted on the Vercel platform. <br><br>A demo of the API and Python software are available 
                     <a href="https://colab.research.google.com/drive/1btfEx23bgWdkUPiwdwlDqKkmUp1S-_7U?usp=sharing">here</a>. <br>Source code available <a href="https://github.com/amckenna41/iso3166-2-api">here</a>. <br><br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api</code>
-                    <button style="cursor: pointer;" id="copy-text-btn1" data-api-url="https://iso3166-2-api.vercel.app/api"><i class="fa fa-clone"></i></button>
+                    <!-- <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api</code> -->
+                    <!-- <button style="cursor: pointer;" id="copy-text-btn1" data-api-url="https://iso3166-2-api.vercel.app/api"><i class="fa fa-clone"></i></button> -->
                 </p>
             </div>
 
@@ -107,7 +107,7 @@
                         <tr>
                             <td>https://iso3166-2-api.vercel.app/api/all</td>
                             <td>
-                            Return all data attributes for all countries in the ISO 3166 (this takes some time for the page to load due to the large amount of data).
+                            Return all data attributes for all countries in the ISO 3166 (this takes a little time for the page to load due to the large amount of data).
                             </td>
                         </tr>
                         <tr>
@@ -132,7 +132,7 @@
                 <h1>all</h1>
                 <p>
                     The /all endpoint returns all the data attribute values for all ISO 3166 countries. The list of countries supported is according to the 
-                    <a href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes">ISO 3166-1 standard</a>. This endpoint can take some time to load
+                    <a href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes">ISO 3166-1 standard</a>. This endpoint can take a little time to load
                     and return a response due to the large amount of data. <br><br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/all</code>
                     <button style="cursor: pointer;" id="copy-text-btn2" data-api-url="https://iso3166-2-api.vercel.app/api/all"><i class="fa fa-clone"></i></button>
@@ -175,9 +175,9 @@
                     query string parameter to the API URL at any of the above endpoints and pass in a list of one or more attribute names. The full list of attributes
                     available in the API can be viewed on the <a href="https://github.com/amckenna41/iso3166-2-api/blob/main/ATTRIBUTES.md">ATTRIBUTES.md</a> file on 
                     the repository. <br> <br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/FR?filter=name,languages,region</code> 
+                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/{alpha2}?filter={attribute},{attribute},{attribute}</code> 
                     <button style="cursor: pointer;" id="copy-text-btn5" data-api-url="https://iso3166-2-api.vercel.app/api/alpha2/FR?filter=name,languages,region"><i class="fa fa-clone"></i></button> <br><br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/LA?filter=capital,cioc,demonyms</code> <br>
+                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/FR?filter=name,languages,region</code> <br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Namibia?filter=continents,fifa,timezones</code> <br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/all?filter=gini,landlocked,startOfWeek</code> 
                 </p>
@@ -195,7 +195,7 @@
             <div class="overflow-hidden content-section" id="content-contributing">
                 <h1>Contributing</h1>
                 <p>
-                    Contributions to the software and or API are more than welcome! You can raise an Issue or make a pull request on the <a href="https://github.com/amckenna41/iso3166-2">GitHub Repo</a> or
+                    Contributions, enhancements or feedback to the software and or API are more than welcome! You can raise an Issue or make a pull request on the <a href="https://github.com/amckenna41/iso3166-2">GitHub Repo</a> or
                     email <a href= "mailto: amckenna41@qub.ac.uk">amckenna41@qub.ac.uk</a>.
                 </p>
             </div>
