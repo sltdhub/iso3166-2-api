@@ -6,7 +6,6 @@
 - [X] Append url to error message.
 - [X] Country names with spaces arent working on API.
 - [X] https://iso3166-2-api-amckenna41.vercel.app/api/name/Bonaire,%20Sint%20Eustatius%20and%20Saba : Not working in API
-- [X] When passing in multiple coutries by name using /name path, need to exclude countries that already have a comma in them e.g Bonaire, Sint Eustatius and Saba, Congo, Democratic Republic of the,  Moldova, Republic of, Palestine, State of, Saint Helena, Ascension and Tristan da Cunha, Taiwan, Province of China, Tanzania, United Republic of.
 - [X] Fix api.md file.
 - [X] Add workflow badge to readme.
 - [X] Go through attributes.md fields, see if can add more info to field description, e.g adding "(km^2)" to area field.
@@ -16,7 +15,6 @@
 - [X] Add link in documenation to list of countries supported, ISO 3166-1.
 - [X] Be able to return all country's that match a particular attribute value - update API unit tests to test such and update API.md. Return error message if attribute not valid.
 - [X] Update error.html.
-- [ ] /list endpoint that returns list of all codes and their names.
 - [X] Validate that .vercelignore is being executed.
 - [X] Update api unit tests to incorporate '/' and '/api' index.html return.
 - [X] Change filter query parameter from "attributes=" to "filter=".
@@ -30,3 +28,14 @@
 - [X] Add comments to js file.
 - [X] Indent All, name and alpha2.
 - [X] Change all relative imports.
+- [X] In main readme, add link to API further up.
+- [X] Update demo notebook with new API examples - add API example for using /name endpoint. Read over demos.
+- [X] Use f string literasl for javascript and Python examples in api.md: https://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format
+- [X] Read over readmes.
+- [X] Further highlight the addition of subdivion-related data etc in reamde and demo.
+- [X] Mention in readme and iso3166-2 readme that "subdivision can be used interachangably with states/regions/provinces etc".
+- [X] Mention that the library contains the flag info for each - from iso3166-flag-icons repo.
+
+Future Additions
+----------------
+- [ ] /list endpoint that returns list of all codes and their names.

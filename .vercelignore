@@ -1,4 +1,5 @@
 #ignore below files and folders from vercel deployment
 .github
+.githubignore
 ToDo.md
 tests

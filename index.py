@@ -334,7 +334,7 @@ def api_alpha2(alpha2):
 @app.errorhandler(404)
 def not_found(e):
     """
-    Return html template for 404.html when page/path not found in  Flask app.
+    Return html template for 404.html when page/path not found in Flask app.
 
     Parameters
     ==========

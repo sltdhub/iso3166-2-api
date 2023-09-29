@@ -4,24 +4,23 @@
     <!-- page metadata -->
     <title>ISO 3166-2 API Documentation 🌎</title>
     <meta charset="utf-8">
-    <meta name="description" content="">
     <meta name="author" content="AJ McKenna">
-    <meta content="Get latest data fields to all ISO 3166 countries via a RESTful API." name="description">
+    <meta content="Get latest data fields for all ISO 3166 countries via a RESTful API." name="description">
     <meta name="keywords" content="iso,iso3166,iso3166-2,rest,api,countries,subdivisions,world,json">
     <meta http-equiv="cleartype" content="on">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- import external css and js libraries -->
-    <link rel="icon" href="{{ url_for('static',filename='images/iso-logo.svg') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/iso-logo.svg') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;1,300&family=Source+Code+Pro:wght@300&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href= "{{ url_for('static',filename='css/style.css') }}">
-    <link rel="stylesheet" type="text/css" href= "{{ url_for('static',filename='css/hightlightjs-dark.css') }}">
+    <link rel="stylesheet" type="text/css" href= "{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href= "{{ url_for('static', filename='css/hightlightjs-dark.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
-    <script src= "{{ url_for('static',filename='js/script.js') }}"></script>
+    <script src= "{{ url_for('static', filename='js/script.js') }}"></script>
 
     <!-- highlight syntax on page load -->
     <script>hljs.initHighlightingOnLoad();</script>
@@ -33,7 +32,7 @@
         <div class="content-logo">
             <div class="logo" style="display: flex;">
                 <!-- ISO logo and title -->
-                <img alt="API logo" title="ISO 3166-2 API Documentation" src= "{{ url_for('static',filename='images/iso-logo.svg') }}" height="32" />
+                <img alt="API logo" title="ISO 3166-2 API Documentation" src= "{{ url_for('static', filename='images/iso-logo.svg') }}" height="32" />
                 <span>ISO 3166-2 API Documentation</span>
             </div>
             <!-- menu button icon -->
@@ -72,9 +71,10 @@
             <div class="overflow-hidden content-section" id="content-about" style="font-size: 1.333em;">
                 <h1>About</h1>
                 <p> 
-                    The ISO 3166-2 API is an open-source and free to use RESTful API that provides programmatic access to a plethora of data attributes for all ISO 3166 countries/territories.
-                    The project was inspired by <a href="https://restcountries.com/">Rest Countries</a> but includes additional subdivison/regional related data from the ISO 3166-2 of each country.
-                    Built using the Python Flask framework and hosted on the Vercel platform. Source code available <a href="https://github.com/amckenna41/iso3166-2-api">here</a>. <br><br>
+                    The ISO 3166-2 API is a custom-built, open-source and free to use RESTful API that provides programmatic access to a plethora of data attributes for all ISO 3166 countries/territories.
+                    The project was inspired by <a href="https://restcountries.com/">Rest Countries</a> but includes additional subdivison/regional related data from the ISO 3166-2 of each country. Built 
+                    using the Python Flask framework and hosted on the Vercel platform. <br>A demo of the API and Python software it's built using is available 
+                    <a href="https://colab.research.google.com/drive/1btfEx23bgWdkUPiwdwlDqKkmUp1S-_7U?usp=sharing">here</a>. <br>Source code available <a href="https://github.com/amckenna41/iso3166-2-api">here</a>. <br><br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api</code>
                     <button style="cursor: pointer;" id="copy-text-btn1" data-api-url="https://iso3166-2-api.vercel.app/api"><i class="fa fa-clone"></i></button>
                 </p>
@@ -111,16 +111,16 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>https://iso3166-2-api.vercel.app/api/name/{input_name}</td>
-                            <td>
-                                Return all data attributes for input country name, as it is commonly known in English. A comma seperated list of country names can also be input.
-                            </td>
-                        </tr>
-                        <tr>
                             <td>https://iso3166-2-api.vercel.app/api/alpha2/{input_alpha2}</td>
                             <td>
                                 Return all data attributes for country with matching 2 letter alpha-2 country code. A comma seperated
                                 list of country codes can also be input. For redundancy the 3 letter alpha-3 code can also be accepted as input.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>https://iso3166-2-api.vercel.app/api/name/{input_name}</td>
+                            <td>
+                                Return all data attributes for input country name, as it is commonly known in English. A comma seperated list of country names can also be input.
                             </td>
                         </tr>
                         </tbody>
