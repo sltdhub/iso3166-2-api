@@ -35,7 +35,16 @@
 - [X] Further highlight the addition of subdivion-related data etc in reamde and demo.
 - [X] Mention in readme and iso3166-2 readme that "subdivision can be used interachangably with states/regions/provinces etc".
 - [X] Mention that the library contains the flag info for each - from iso3166-flag-icons repo.
+- [X] Pass in nested dict of attribute filter values to API: https://stackoverflow.com/questions/73800401/how-to-send-nested-dictionary-as-params-in-python-requests-get. E.g https://iso3166-2-api-amckenna41.vercel.app/api/all?filter=%7Bindependent:true%7D
+- [X] Add more filter attribute unit tests for when dict of keys/vals passed in.
+- [X] Not working: https://iso3166-2-api-amckenna41.vercel.app/api/alpha2/DK?filter=capital - returns {}.
+- [X] Add nested dict of filter attribute values but allow for gt/lt or range of values to be input/returned - area and population - add unit tests.
+- [X] Split up 'filter' section in api.md into 3 sections.
+- [X] Add app.url_map.strict_slashes = False
+- [X] Update comments to include v1/v2. 
 
 Future Additions
 ----------------
 - [ ] /list endpoint that returns list of all codes and their names.
+- [ ] Create frontend with jsvectormap
+- [ ] Add population & area per subdivision.

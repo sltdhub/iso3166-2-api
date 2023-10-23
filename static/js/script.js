@@ -114,8 +114,6 @@ window.onload = function(){
     let copyTextBtn1 = document.querySelector("#copy-text-btn1");
     let copyTextBtn2 = document.querySelector("#copy-text-btn2");
     let copyTextBtn3 = document.querySelector("#copy-text-btn3");
-    let copyTextBtn4 = document.querySelector("#copy-text-btn4");
-    let copyTextBtn5 = document.querySelector("#copy-text-btn5");
 
     copyTextBtn1.addEventListener("click", function () {
         let apiURL = copyTextBtn1.getAttribute('data-api-url')
@@ -131,18 +129,6 @@ window.onload = function(){
 
     copyTextBtn3.addEventListener("click", function () {
         let apiURL = copyTextBtn3.getAttribute('data-api-url')
-        navigator.clipboard.writeText(apiURL);
-        console.log('API URL copied to clipboard: ' + apiURL);
-    });
-
-    copyTextBtn4.addEventListener("click", function () {
-        let apiURL = copyTextBtn4.getAttribute('data-api-url')
-        navigator.clipboard.writeText(apiURL);
-        console.log('API URL copied to clipboard: ' + apiURL);
-    });
-    
-    copyTextBtn5.addEventListener("click", function () {
-        let apiURL = copyTextBtn5.getAttribute('data-api-url')
         navigator.clipboard.writeText(apiURL);
         console.log('API URL copied to clipboard: ' + apiURL);
     });

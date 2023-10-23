@@ -18,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;1,300&family=Source+Code+Pro:wght@300&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href= "{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" type="text/css" href= "{{ url_for('static', filename='css/hightlightjs-dark.css') }}">
+    <link rel="stylesheet" type="text/css" href= "{{ url_for('static', filename='css/hightlightjs-dark.css') }}">    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
     <script src= "{{ url_for('static', filename='js/script.js') }}"></script>
 
@@ -44,9 +44,9 @@
         <div class="content-menu">
             <div class="content-infos">
                 <!-- version and last updated info -->
-                <div class="info" id="version"><b>Version:</b> 1.2.1</div>
+                <div class="info" id="version"><b>Version:</b> 1.3.0</div>
                 <div class="info" id="last-updated"><b>Last Updated:</b> October 2023</div>
-                <div class="info" id="author"><b>Author/Maintainer:</b> <a href="https://github.com/amckenna41/">AJ</a></div>
+                <div class="info" id="author"><b>Author/Maintainer:</b> <a href="https://github.com/amckenna41/" target="_blank">AJ</a></div>
             </div>
             <!-- list of available sections in API documentation -->
             <ul id="section-list-menu">
@@ -56,7 +56,6 @@
                 <li class="scroll-to-link" data-target="content-all" style="padding-left: 5%;"><a>All</a></li>
                 <li class="scroll-to-link" data-target="content-code" style="padding-left: 5%;"><a>Alpha-2 Code</a></li>
                 <li class="scroll-to-link" data-target="content-name" style="padding-left: 5%;"><a>Name</a></li>
-                <li class="scroll-to-link" data-target="content-filter"><a>Filter Output</a></li>
                 <li class="scroll-to-link" data-target="content-credits"><a>Credits</a></li>
                 <li class="scroll-to-link" data-target="content-contributing"><a>Contributing</a></li>
             </ul>
@@ -71,12 +70,10 @@
             <div class="overflow-hidden content-section" id="content-about" style="font-size: 1.333em;">
                 <h1>About</h1>
                 <p> 
-                    The ISO 3166-2 API is a custom-built, open-source and free to use RESTful API that provides programmatic access to a plethora of data attributes for all ISO 3166 countries/territories.
-                    The project was inspired by <a href="https://restcountries.com/">Rest Countries</a> but includes additional subdivison/regional related data from the ISO 3166-2 of each country. Built 
-                    using the Python Flask framework and hosted on the Vercel platform. <br><br>A demo of the API and Python software are available 
-                    <a href="https://colab.research.google.com/drive/1btfEx23bgWdkUPiwdwlDqKkmUp1S-_7U?usp=sharing">here</a>. <br>Source code available <a href="https://github.com/amckenna41/iso3166-2-api">here</a>. <br><br>
-                    <!-- <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api</code> -->
-                    <!-- <button style="cursor: pointer;" id="copy-text-btn1" data-api-url="https://iso3166-2-api.vercel.app/api"><i class="fa fa-clone"></i></button> -->
+                    The ISO 3166-2 API is a custom-built, open-source and free to use RESTful API that provides programmatic access to a plethora of subdivision data attributes for all ISO 3166-2 countries/territories.
+                    For each country, the API returns its subdivision names, codes, types, parent codes, latitude/longitude and flag, where applicable.
+                    <br><br>A demo of the API and Python software are available <a href="https://colab.research.google.com/drive/1btfEx23bgWdkUPiwdwlDqKkmUp1S-_7U?usp=sharing" target="_blank">here</a>.<br>
+                    Source code available <a href="https://github.com/amckenna41/iso3166-2-api" target="_blank">here</a>. 
                 </p>
             </div>
 
@@ -85,7 +82,7 @@
                 <h1>Attributes</h1>
                 <p>
                     The list of data attributes supported by the API, along with a description of each can be viewed in the 
-                    <a href="https://github.com/amckenna41/iso3166-2-api/blob/main/ATTRIBUTES.md">ATTRIBUTES.md</a> file on the repository.
+                    <a href="https://github.com/amckenna41/iso3166-2-api/blob/main/ATTRIBUTES.md" target="_blank">ATTRIBUTES.md</a> file on the repository.
                 </p>
             </div>
 
@@ -107,20 +104,20 @@
                         <tr>
                             <td>https://iso3166-2-api.vercel.app/api/all</td>
                             <td>
-                            Return all data attributes for all countries in the ISO 3166 (this takes a little time for the page to load due to the large amount of data).
+                            Return all suddivision data attributes for all countries in the ISO 3166-2.
                             </td>
                         </tr>
                         <tr>
                             <td>https://iso3166-2-api.vercel.app/api/alpha2/{input_alpha2}</td>
                             <td>
-                                Return all data attributes for country with matching 2 letter alpha-2 country code. A comma seperated
+                                Return all subdivision data attributes for country/countries with matching 2 letter alpha-2 country code. A comma seperated
                                 list of country codes can also be input. For redundancy the 3 letter alpha-3 code can also be accepted as input.
                             </td>
                         </tr>
                         <tr>
                             <td>https://iso3166-2-api.vercel.app/api/name/{input_name}</td>
                             <td>
-                                Return all data attributes for input country name, as it is commonly known in English. A comma seperated list of country names can also be input.
+                                Return all subdivision data attributes for input country name, as it is commonly known in English. A comma seperated list of country names can also be input.
                             </td>
                         </tr>
                         </tbody>
@@ -131,11 +128,10 @@
             <div class="overflow-hidden content-section" id="content-all">
                 <h1>all</h1>
                 <p>
-                    The /all endpoint returns all the data attribute values for all ISO 3166 countries. The list of countries supported is according to the 
-                    <a href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes">ISO 3166-1 standard</a>. This endpoint can take a little time to load
-                    and return a response due to the large amount of data. <br><br>
+                    The /all endpoint returns all the subdivision data attribute values for all ISO 3166-2 countries. The list of countries supported is according to the 
+                    <a href="https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes" target="_blank">ISO 3166-1 standard</a>. <br><br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/all</code>
-                    <button style="cursor: pointer;" id="copy-text-btn2" data-api-url="https://iso3166-2-api.vercel.app/api/all"><i class="fa fa-clone"></i></button>
+                    <button style="cursor: pointer;" id="copy-text-btn1" data-api-url="https://iso3166-2-api.vercel.app/api/all"><i class="fa fa-clone"></i></button>
                 </p>
             </div>
 
@@ -143,10 +139,10 @@
             <div class="overflow-hidden content-section" id="content-code">
                 <h1>alpha-2</h1>
                 <p>
-                    The /alpha2 endpoint returns all the data attribute values for the country with the matching 2 letter alpha-2 country code. A comma seperated
+                    The /alpha2 endpoint returns all the subdivision data attribute values for the country with the matching 2 letter alpha-2 country code. A comma seperated
                     list of country codes can also be input. For redundancy the 3 letter alpha-3 code can also be accepted as input. <br><br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/{alpha2}</code>
-                    <button style="cursor: pointer;" id="copy-text-btn3" data-api-url="https://iso3166-2-api.vercel.app/api/alpha2/"><i class="fa fa-clone"></i></button> <br><br>
+                    <button style="cursor: pointer;" id="copy-text-btn2" data-api-url="https://iso3166-2-api.vercel.app/api/alpha2/"><i class="fa fa-clone"></i></button> <br><br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/AD</code> <br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/DE</code> <br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/ZA</code> 
@@ -157,29 +153,13 @@
             <div class="overflow-hidden content-section" id="content-name">
                 <h1>name</h1>
                 <p>
-                    The /name endpoint returns all the data attribute values for a country according to its name as it is commonly known in English. A comma 
+                    The /name endpoint returns all the subdivision data attribute values for a country according to its name as it is commonly known in English. A comma 
                     seperated list of country names can also be input. <br> <br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/{name}</code> 
-                    <button style="cursor: pointer;" id="copy-text-btn4" data-api-url="https://iso3166-2-api.vercel.app/api/name/"><i class="fa fa-clone"></i></button> <br><br>
+                    <button style="cursor: pointer;" id="copy-text-btn3" data-api-url="https://iso3166-2-api.vercel.app/api/name/"><i class="fa fa-clone"></i></button> <br><br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Ireland</code> <br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Jamaica</code> <br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Panama,Rwanda,Zambia</code> 
-                </p>
-            </div>
-
-            <!-- Filter output section -->
-            <div class="overflow-hidden content-section" id="content-filter">
-                <h1>Filter Output</h1>
-                <p>
-                    The output of an API request can be filtered to include only the sought attributes for the input country/countries. To do this, append the 'filter'
-                    query string parameter to the API URL at any of the above endpoints and pass in a list of one or more attribute names. The full list of attributes
-                    available in the API can be viewed on the <a href="https://github.com/amckenna41/iso3166-2-api/blob/main/ATTRIBUTES.md">ATTRIBUTES.md</a> file on 
-                    the repository. <br> <br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/{alpha2}?filter={attribute},{attribute},{attribute}</code> 
-                    <button style="cursor: pointer;" id="copy-text-btn5" data-api-url="https://iso3166-2-api.vercel.app/api/alpha2/FR?filter=name,languages,region"><i class="fa fa-clone"></i></button> <br><br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/FR?filter=name,languages,region</code> <br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Namibia?filter=continents,fifa,timezones</code> <br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/all?filter=gini,landlocked,startOfWeek</code> 
                 </p>
             </div>
 
@@ -187,7 +167,7 @@
             <div class="overflow-hidden content-section" id="content-credits">
                 <h1>Credits</h1>
                 <p>
-                    The Python software and accompanying API were solely developed by <a href="https://github.com/amckenna41/">me</a> : ). 
+                    The Python software and accompanying API were solely developed by <a href="https://github.com/amckenna41/" target="_blank">me</a> : ). 
                 </p>
             </div>
 
@@ -195,13 +175,13 @@
             <div class="overflow-hidden content-section" id="content-contributing">
                 <h1>Contributing</h1>
                 <p>
-                    Contributions, enhancements or feedback to the software and or API are more than welcome! You can raise an Issue or make a pull request on the <a href="https://github.com/amckenna41/iso3166-2">GitHub Repo</a> or
+                    Contributions, enhancements or feedback to the software and or API are more than welcome! You can raise an Issue or make a pull request on the <a href="https://github.com/amckenna41/iso3166-2" target="_blank">GitHub Repo</a> or
                     email <a href= "mailto: amckenna41@qub.ac.uk">amckenna41@qub.ac.uk</a>.
                 </p>
             </div>
         </div>
     </div>
     <!-- GitHub corner ribbon (http://tholman.com/github-corners/) -->
-    <a href="https://github.com/amckenna41/iso3166-2" class="github-corner" aria-label="View source on GitHub" title="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="z-index:99999; fill:#70B7FD; color:#fff; position: fixed; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}@media only screen and (max-width:680px){ .github-corner > svg { right: auto!important; left: 0!important; transform: rotate(270deg)!important;}}</style>
+    <a href="https://github.com/amckenna41/iso3166-2" target="_blank" class="github-corner" aria-label="View source on GitHub" title="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="z-index:99999; fill:#70B7FD; color:#fff; position: fixed; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}@media only screen and (max-width:680px){ .github-corner > svg { right: auto!important; left: 0!important; transform: rotate(270deg)!important;}}</style>
 </body>
 </html>

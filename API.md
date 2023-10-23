@@ -13,7 +13,7 @@ The other endpoints available in the API are:
 
 Three paths/endpoints are available in the API - `/api/all`, `/api/alpha2` and `/api/name`.
 
-* The `/api/all` path/endpoint returns all of the ISO 3166 country data for all countries (due to the size of the object this can take some time to load). 
+* The `/api/all` path/endpoint returns all of the ISO 3166 subdivision data for all countries.
 
 * The 2 letter alpha-2 country code can be appended to the **alpha2** path/endpoint e.g <i>/api/alpha2/JP</i>. A single alpha-2 or list of them can be passed to the API e.g <i>/api/alpha2/FR,DE,HU,ID,MA</i>. For redudancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be appened to the path e.g <i>/api/alpha2/FRA,DEU,HUN,IDN,MAR</i>. If an invalid alpha-2 code is input then an error will be returned.
 
@@ -21,11 +21,9 @@ Three paths/endpoints are available in the API - `/api/all`, `/api/alpha2` and `
 
 * The main API endpoint (`/` or `/api`) will return the homepage and API documentation.
 
-The `filter` query string parameter can be appended to any of the endpoints. It accepts a string of one or more attributes that the user wants to only be returned from their request e.g  <i>/api/alpha2/IE?filter=capital,currencies,languages,region</i>. This example means that only the capital city, currencies, languages and region data for Ireland will be returned. If an invalid attribute name is input then it will be removed from the request.
-
 The full list of attributes available for each country are available in the [ATTRIBUTES.md][attributes] file.
 
-The API documentation and usage with all useful commands and examples to the API is available below. A demo of the software and API are available [here][demo].
+The API documentation and usage with all useful commands and examples to the API is available on the [API.md][api_md] file. A demo of the software and API are available [here][demo].
 
 Get All ISO 3166-2 updates for all countries
 -------------------------------------------
@@ -39,7 +37,7 @@ Get All ISO 3166-2 updates for all countries
     content-type: application/json
     date: Tue, 20 Dec 2022 17:29:39 GMT
     server: Vercel
-    content-length: 202273
+    content-length: 837958
 
     {"AD":..., "AE":...}
 
@@ -66,7 +64,7 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get all country and ISO 3166-2 data for a specific country, using its 2 letter alpha-2 code e.g FR, DE, HN
+Get all ISO 3166-2 subdivision data for a specific country, using its 2 letter alpha-2 code e.g FR, DE, HN
 ----------------------------------------------------------------------------------------------------------
 
 ### Request
@@ -79,9 +77,9 @@ Get all country and ISO 3166-2 data for a specific country, using its 2 letter a
     content-type: application/json
     date: Tue, 20 Dec 2022 17:30:27 GMT
     server: Vercel
-    content-length: 4513
+    content-length: 26298
 
-    {"FR":[{"altSpellings":"", "area": "", "borders": ""...}]}
+    {"FR":{"FR-01":{...}}}
 
 ### Request
 `GET /api/alpha2/DE`
@@ -93,9 +91,9 @@ Get all country and ISO 3166-2 data for a specific country, using its 2 letter a
     content-type: application/json
     date: Tue, 20 Dec 2022 17:31:19 GMT
     server: Vercel
-    content-length: 10
+    content-length: 3053
 
-    {"DE":[{"altSpellings":"", "area": "", "borders": ""...}]}
+    {"DE":{"DE-BB":{...}}}
 
 ### Request
 `GET /api/alpha2/HN`
@@ -107,9 +105,9 @@ Get all country and ISO 3166-2 data for a specific country, using its 2 letter a
     content-type: application/json
     date: Tue, 20 Dec 2022 17:31:53 GMT
     server: Vercel
-    content-length: 479
+    content-length: 2708
 
-    {"HN":[{"altSpellings":"", "area": "", "borders": ""...}]}
+    {"HN":{"HN-AT":{...}}}
 
 ### Python
 ```python
@@ -138,7 +136,7 @@ function getData() {
 var data = JSON.parse(this.response)
 ```
 
-Get all country and ISO 3166-2 data for a specific country, using country name, e.g. Tajikistan, Seychelles, Uganda 
+Get all ISO 3166-2 subdivision data for a specific country, using country name, e.g. Tajikistan, Seychelles, Uganda 
 -------------------------------------------------------------------------------------------------------------------
 
 ### Request
@@ -151,9 +149,9 @@ Get all country and ISO 3166-2 data for a specific country, using country name, 
     content-type: application/json
     date: Tue, 20 Dec 2022 17:40:19 GMT
     server: Vercel
-    content-length: 10
+    content-length: 701
 
-    {"TJ":[{"altSpellings":"", "area": "", "borders": ""...}]}
+    {"TJ":{"TJ-DU":{...}}}
 
 ### Request
 `GET /api/name/Seychelles`
@@ -165,9 +163,9 @@ Get all country and ISO 3166-2 data for a specific country, using country name, 
     content-type: application/json
     date: Tue, 20 Dec 2022 17:41:53 GMT
     server: Vercel
-    content-length: 479
+    content-length: 5085
 
-    {"SC":[{"altSpellings":"", "area": "", "borders": ""...}]}
+    {"SC":{"SC-01":{...}}}
 
 ### Request
 `GET /api/name/Uganda`
@@ -179,9 +177,9 @@ Get all country and ISO 3166-2 data for a specific country, using country name, 
     content-type: application/json
     date: Tue, 21 Dec 2022 19:43:19 GMT
     server: Vercel
-    content-length: 10
+    content-length: 14965
 
-    {"UG":[{"altSpellings":"", "area": "", "borders": ""...}]}
+    {"UG":{"UG-101":{...}}}
 
 ### Python
 ```python
@@ -203,81 +201,6 @@ let input_name = "Tajikistan"; //Seychelles, Uganda
 function getData() {
   const response = 
     await fetch(`https://iso3166-updates.com/api/name/${input_name}`); 
-  const data = await response.json()
-}
-
-// Begin accessing JSON data here
-var data = JSON.parse(this.response)
-```
-
-Get area, population and timezones attributes for a specific country, using its 2 letter alpha-2 code e.g LA, PA, RO
---------------------------------------------------------------------------------------------------------------------
-
-### Request
-`GET /api/alpha2/LA?filter=area,population,timezones`
-
-    curl -i https://iso3166-2-api.vercel.app/api/alpha2/LA?filter=area,population,timezones
-
-### Response
-    HTTP/2 200 
-    content-type: application/json
-    date: Sat, 23 Sep 2023 12:56:44 GMT
-    server: Vercel
-    content-length: 70
-
-    {"LA":{"area":236800,"population":7275556,"timezones":["UTC+07:00"]}}
-
-### Request
-`GET /api/alpha2/PA?filter=area,population,timezones`
-
-    curl -i https://iso3166-2-api.vercel.app/api/alpha2/PA?filter=area,population,timezones
-
-### Response
-    HTTP/2 200 
-    content-type: application/json
-    date: Sat, 23 Sep 2023 12:57:34 GMT
-    server: Vercel
-    content-length: 70
-
-    {"PA":{"area":75417,"population":4314768,"timezones":["UTC-05:00"]}}
-
-### Request
-`GET /api/alpha2/RO`
-
-    curl -i https://iso3166-2-api.vercel.app/api/alpha2/RO?filter=area,population,timezones
-
-### Response
-    HTTP/2 200 
-    content-type: application/json
-    date: Sat, 23 Sep 2023 12:58:54 GMT
-    server: Vercel
-    content-length: 71
-
-    {"RO":{"area":238391,"population":19286123,"timezones":["UTC+02:00"]}}
-
-### Python
-```python
-import requests
-
-base_url = "https://iso3166-2-api.vercel.app/api/"
-input_alpha2 = "LA" #PA, RO
-
-request_url = base_url + f"alpha2/{input_alpha2}"
-
-all_request = requests.get(request_url, params={"filter": "area,population,timezones"})
-all_request.json() 
-```
-
-### Javascript
-```javascript
-let input_alpha2 = "LA"; //PA, RO
-
-function getData() {
-  const response = 
-    await fetch(`https://iso3166-updates.com/api/alpha2/${input_alpha2}` + 
-        new URLSearchParams({
-            filter: "area,population,timezones"
-    })); 
   const data = await response.json()
 }
 

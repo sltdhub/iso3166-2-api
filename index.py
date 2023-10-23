@@ -10,6 +10,9 @@ from difflib import get_close_matches
 #initialise Flask app
 app = Flask(__name__)
 
+#register routes/endpoints with or without trailing slash
+app.url_map.strict_slashes = False
+
 #get Cloud Storage specific env vars
 sa_json_str = os.environ["SA_JSON"]
 project_id = os.environ["PROJECT_ID"]
@@ -48,7 +51,8 @@ error_message["status"] = 400
 
 @app.route('/')
 @app.route('/api')
-@app.route('/api/')
+@app.route('/api/v1')
+@app.route('/api/v2')
 def home():
     """
     Default route for https://iso3166-2-api.vercel.app/. Main homepage for API displaying the 
@@ -65,15 +69,12 @@ def home():
     """
     return render_template('index.html')
 
-@app.route('/all', methods=['GET'])
-@app.route('/all/', methods=['GET'])
+@app.route('/v1/all', methods=['GET'])
 @app.route('/api/all', methods=['GET'])
-@app.route('/api/all/', methods=['GET'])
-def all():
+def all_v1():
     """
-    Flask route for '/api/all' path/endpoint. Return all ISO 3166-2 data for all countries. This 
-    path can take some time to load due to the large amount of ISO 3166 data. Route can accept 
-    path with or without trailing slash.
+    Flask route for '/api/all' path/endpoint. Return all ISO 3166-2 subdivision data attributes and 
+    values for all countries. Route can accept path with or without trailing slash.
 
     Parameters
     ==========
@@ -82,25 +83,26 @@ def all():
     Returns
     =======
     :jsonify(all_iso3166_2) : json
-        jsonified ISO 3166-2 data.
+        jsonified version 1 ISO 3166-2 subdivision data.
     :status_code : int
         response status code. 200 is a successful response, 400 means there was an 
         invalid parameter input. 
     """  
-    #return error if blob not found in bucket, else return all ISO 3166-2 data
+    #return error if blob not found in bucket, else return all ISO 3166-2 subdivision data
     if not (blob_exists):
         return jsonify(blob_not_found_error_message), 400
+    
     return jsonify(all_iso3166_2), 200
 
 @app.route('/api/name/<name>', methods=['GET'])
-@app.route('/api/name/<name>/', methods=['GET'])
+@app.route('/name/<name>', methods=['GET'])
 def api_name(name):
     """
-    Flask route for 'api/name' path/endpoint. Return all ISO 3166-2 data for inputted country 
-    name/names. A closeness function is used on the input country name to get the closest match, 
-    to a high degree, from the list of available countries, e.g if Swede is input then the data
-    for Sweden will be returned. Return error if invalid country name input. Route can accept 
-    path with or without trailing slash.
+    Flask route for 'api/name' path/endpoint. Return all ISO 3166-2 subdivision data attributes and 
+    values for inputted country name/names. A closeness function is used on the input country name 
+    to get the closest match, to a high degree, from the list of available countries, e.g if Swede 
+    is input then the data for Sweden will be returned. Return error if invalid country name input. 
+    Route can accept path with or without trailing slash.
 
     Parameters
     ==========
@@ -215,22 +217,17 @@ def api_name(name):
     for code in alpha2_code:
         iso3166_2[code] = all_iso3166_2[code]
 
-    #filter object to include only attributes specified by 'filter' query parameter, if applicable     
-    iso3166_2 = filter_attributes(iso3166_2) 
-
     return jsonify(iso3166_2), 200
 
 @app.route('/api/alpha2/<alpha2>', methods=['GET'])
-@app.route('/api/alpha2/<alpha2>/', methods=['GET'])
+@app.route('/api/<alpha2>', methods=['GET'])
 @app.route('/alpha2/<alpha2>', methods=['GET'])
-@app.route('/alpha2/<alpha2>/', methods=['GET'])
-@app.route('/api/<alpha2>/', methods=['GET'])
-def api_alpha2(alpha2):
+def api_alpha2_v1(alpha2):
     """
-    Flask route for '/api/alpha2' path/endpoint. Return all ISO 3166-2 data for the inputted alpha-2 
-    code/codes. If invalid alpha-2 code or no value input then return error. The endpoint can also 
-    accept a country in its 3 letter alpha-3 code form, which will then be converted into its 2 letter
-    alpha-2 counterpart. Route can accept path with or without trailing slash.
+    Flask route for '/api/alpha2' path/endpoint. Return all version 1 ISO 3166-2 subdivision data for 
+    the inputted alpha-2 code/codes. If invalid alpha-2 code or no value input then return error. The 
+    endpoint can also accept a country in its 3 letter alpha-3 code form, which will then be converted 
+    into its 2 letter alpha-2 counterpart. Route can accept path with or without trailing slash.
 
     Parameters
     ==========
@@ -326,9 +323,6 @@ def api_alpha2(alpha2):
     for code in alpha2_code:
         iso3166_2[code] = all_iso3166_2[code]
 
-    #filter object to include only attributes specified by 'filter' query parameter, if applicable     
-    iso3166_2 = filter_attributes(iso3166_2) 
-
     return jsonify(iso3166_2), 200
 
 @app.errorhandler(404)
@@ -350,57 +344,6 @@ def not_found(e):
     """
     return render_template("404.html", path=request.url), 404
 
-def filter_attributes(iso3166_2):
-    """
-    Filter ISO 3166 object to just contain the sought attributes listed in the 'filter'
-    query string parameter. If query parameter not specified then return object as is. 
-    Return error if invalid attribute name input.
-
-    Parameters
-    ==========
-    :iso3166_2 : dict
-        unfiltered object containing all the ISO 3166 data for inputted county/countries.
-    
-    Returns
-    =======
-    :filtered_iso3166_2 : dict
-        filtered object containing all the ISO 3166 data for inputted county/countries. If
-        attributes parameter input and valid then filter all other attributes out.  
-    """ 
-    #filtered object to contain filtered attributes data
-    filtered_iso3166_2 = {}  
-    
-    #get attributes value from query string parameter
-    attributes = request.args.get('filter')
-
-    #return original unfiltered data object if parameter value is None
-    if (attributes is None):
-        return iso3166_2
-
-    #split attributes into comma seperated list
-    attributes = attributes.replace(' ', '').split(',')
-    
-    #get correct attribute list from original json
-    attribute_list = list(iso3166_2[next(iter(iso3166_2))].keys())
-
-    #remove attribute from input list if invalid
-    for attr in attributes:
-        if not (attr in attribute_list):
-            attributes.remove(attr)
-
-    #return original object if no attributes present after validation 
-    if (attributes == []):
-        return iso3166_2
-    
-    #iterate through alpha-2 codes in object, filter out attributes not specified in query parameter, if applicable
-    for code in iso3166_2:
-        filtered_iso3166_2[code] = {}
-        for key in iso3166_2[code]:
-            if (key in attributes):
-                filtered_iso3166_2[code][key] = iso3166_2[code][key]
-
-    return filtered_iso3166_2
-    
 if __name__ == '__main__':
     #run Flask app 
     app.run(debug=True)
