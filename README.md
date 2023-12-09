@@ -32,15 +32,18 @@ Introduction
 ------------
 This repo contains the front and backend of the API created for the [`iso3166-2`](https://github.com/amckenna41/iso3166-2) repository. The API returns a plethora of subdivison data for all countries in the ISO 3166-2 standard. Utilising the custom-built [`iso3166-2`](https://github.com/amckenna41/iso3166-2) software that incorporates data from the ISO 3166-2. Built using the Python [Flask][flask] framework and hosted on the [Vercel][vercel] platform.
 
-[`iso3166-2`](https://github.com/amckenna41/iso3166-2) is a lightweight custom-built Python wrapper that includes information about all countrys' ISO 3166-2 subdivision codes & names. Here, subdivision can be used interchangably with regions/states/provinces etc. The full list of additional subdivision data attributes supported are:
-* Name
-* Code
-* Parent Code
-* Type
-* Latitude/Longitude
-* Flag (from [iso3166-flag-icons](flag_icons_repo) repo)
+[`iso3166-2`](https://github.com/amckenna41/iso3166-2) is a lightweight custom-built Python package, and accompanying API, that can be used to access all of the world's ISO 3166-2 subdivision data. Here, subdivision can be used interchangably with regions/states/provinces etc. Currently, the package and API supports data from 250 countries/territories, according to the ISO 3166-1 standard. The full list of additional subdivision data attributes supported are:
+* Name (subdivsion name)
+* Local name (subdivision name in local language)
+* Code (subdivision code)
+* Parent Code (subdivision parent code)
+* Type (subdivision type, e.g. region, state, canton, parish etc)
+* Latitude/Longitude (subdivision coordinates)
+* Flag (subdivsion flag from [`iso3166-flag-icons`](https://github.com/amckenna41/iso3166-flag-icons) repo)
 
-The ISO 3166 standard by the ISO defines codes for the names of countries, dependent territories, special areas of geographical interest, consolidated into the ISO 3166-1 standard [[1]](#references), and their principal subdivisions (e.g., provinces, states, departments, regions), which comprise the ISO 3166-2 standard [[2]](#references). The ISO 3166-1 was first published in 1974 and currently comprises 249 countries, 193 of which are sovereign states that are members of the United Nations [[1]](#references). The ISO 3166-2 was first published in 1998 and as of 29 November 2022 there are 5,043 codes defined in it [[2]](#references).
+The ISO 3166 standard by the ISO defines codes for the names of countries, dependent territories, special areas of geographical interest, consolidated into the ISO 3166-1 standard [[1]](#references), and their principal subdivisions (e.g., provinces, states, departments, regions), which comprise the ISO 3166-2 standard [[2]](#references). The ISO 3166-1 was first published in 1974 and currently comprises 249 countries, 193 of which are sovereign states that are members of the United Nations [[1]](#references). 
+
+The ISO 3166-2 was first published in 1998 and as of November 2023 there are 5,039 codes defined in it [[2]](#references).
 
 API
 ---
@@ -53,27 +56,27 @@ The other endpoints available in the API are:
 * https://iso3166-2-api.vercel.app/api/alpha2/<input_alpha2>
 * https://iso3166-2-api.vercel.app/api/name/<input_name>
 
-Three paths/endpoints are available in the API - `/api/all`, `/api/alpha2` and `/api/name`.           
+Three paths/endpoints are available in the API - `/api/all`, `/api/alpha2` and `/api/name`.
 
 * The `/api/all` path/endpoint returns all of the ISO 3166 subdivision data for all countries.
 
-* The 2 letter alpha-2 country code can be appended to the **alpha2** path/endpoint e.g <i>/api/alpha2/JP</i>. A single alpha-2 or list of them can be passed to the API e.g <i>/api/alpha2/FR,DE,HU,ID,MA</i>. For redudancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be appened to the path e.g <i>/api/alpha2/FRA,DEU,HUN,IDN,MAR</i>. If an invalid alpha-2 code is input then an error will be returned.
+* The `/api/alpha2` endpoint accepts the 2 letter alpha-2 country code appended to the path/endpoint e.g. <i>/api/alpha2/JP</i>. A single alpha-2 code or list of them can be passed to the API e.g. <i>/api/alpha2/FR,DE,HU,ID,MA</i>. For redundancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be appended to the path e.g. <i>/api/alpha2/FRA,DEU,HUN,IDN,MAR</i>. If an invalid alpha-2 code is input then an error will be returned.
 
-* The name parameter can be a country name as it is most commonly known in english, according to the ISO 3166-1. The name can similarly be appended to the **name** path/endpoint e.g <i>/api/name/Denmark</i>. A single country name or list of them can be passed into the API e.g <i>/name/France,Moldova,Benin</i>. A closeness function is utilised so the most approximate name from the input will be used e.g Sweden will be used if <i>/api/name/Swede</i>. If no country is found from the closeness function or an invalid name is input then an error will be returned.
+* The `/api/name` endpoint accepts the country/territory name as it is most commonly known in english, according to the ISO 3166-1. The name can similarly be appended to the **name** path/endpoint e.g. <i>/api/name/Denmark</i>. A single country name or list of them can be passed into the API e.g. <i>/name/France,Moldova,Benin</i>. A closeness function is utilised so the most approximate name from the input will be used e.g. Sweden will be used if input is <i>/api/name/Swede</i>. If no country is found from the closeness function or an invalid name is input then an error will be returned.
 
 * The main API endpoint (`/` or `/api`) will return the homepage and API documentation.
 
-The full list of attributes available for each country are available in the [ATTRIBUTES.md][attributes] file.
+The API documentation and usage with all useful commands and examples to the API is available on the [API.md][api_md] file.
 
-The API documentation and usage with all useful commands and examples to the API is available on the [API.md][api_md] file. A demo of the software and API are available [here][demo].
+A demo of the software and API is available [here][demo].
 
 Staying up to date
 ------------------
-The ISO is a very dynamic organisation and regularly change/update/remove entries within its library of standards, including the ISO 3166. Additions/changes/deletions to country/territorial codes and attributes vary and update occassioanlly. On the main [`iso3166-2`](https://github.com/amckenna41/iso3166-2) repo a Cloud Function is periodically called periodically that pulls all the latest subdivision data and attributes for all ISO 3166 countries, ultimately updating the backend JSON file that the iso3166-2-api uses. This ensures that the object and its data stay up-to-date and accurate.  
+An important thing to note about the ISO 3166-2 and its subdivision codes/names is that changes are made consistently to it, from a small subdivision name change to an addition/deletion of a whole subdivision. These changes can happen due to a variety of geopolitical and administrative reasons. Therefore, it's important that the [`iso3166-2`](https://github.com/amckenna41/iso3166-2) library and its JSON have the most up-to-date, accurate and reliable data. To achieve this, the custom-built [`iso3166-updates`](https://github.com/amckenna41/iso3166-updates) repo was created.
 
-Additionally, as the software and API include data from the ISO 3166-2 which includes country subdivison codes and data, a custom-built software [`iso3166-updates`](https://github.com/amckenna41/iso3166-updates) was created. Compared to the ISO 3166-1, changes are more frequent for the ISO 3166-2 codes due to there being thousands more entries, thus it can be difficult to keep up with any changes to these codes. These changes can occur for a variety of geopolitical and administrative reasons and are usually communicated via Newsletters on the ISO platform, their Online Browsing Platform (OBP) or via a database, which usually costs money to subscribe to [[3]](#references). Usually these updates are conveyed at the end of the year, with amendments and updates occasionally published at various times throughout the year [[4]](#references). 
+The [`iso3166-updates`](https://github.com/amckenna41/iso3166-updates) repo is another open-source software package and accompanying API that pulls the latest updates and changes for any and all countries in the ISO 3166 from a variety of data sources including the ISO website itself. A script is called every few months to check for any updates/changes to the subdivisions, which are communicated via the ISO's Online Browsing Platform [[4]](#references), and will then be manually incorporated into the [`iso3166-2`](https://github.com/amckenna41/iso3166-2) and dataset. Please visit the repository home page for more info about the purpose and process of the software and API - [`iso3166-updates`][https://github.com/amckenna41/iso3166-updates].
 
-The [`iso3166-updates`](https://github.com/amckenna41/iso3166-updates) software tracks and maintain these changes/updates that are made. The software and accompanying API (https://iso3166-updates.com) make it extremely easy to check for any new or historic updates to a country or set of country's ISO 3166-2 codes for free, with an easy-to-use interface and Python package and API, ensuring that you get the most up-to-date and accurate ISO 3166-2 codes and naming conventions. A custom script is run periodically (every 3-6 months) that uses the [`iso3166-updates`](https://github.com/amckenna41/iso3166-updates) software to check for any updates. If updates are found then a GitHub Issue is automatically raised on the `iso3166-2` repository, communicating all updates/changes that need to be implemented into the `iso3166-2` repo's software and JSONs.
+The list of ISO 3166 updates was last updated on <strong>Nov 2023</strong>. A log of the latest ISO 3166 updates can be seen in the [UPDATES.md][updates_md].
 
 Requirements
 ------------
@@ -120,3 +123,4 @@ Support
 [vercel]: https://vercel.com/
 [attributes]: https://github.com/amckenna41/iso3166-2-api/ATTRIBUTES.md 
 [api_md]: https://github.com/amckenna41/iso3166-2-api/API.md 
+[updates_md]: https://github.com/amckenna41/iso3166-2/blob/main/UPDATES.md

@@ -38,7 +38,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.all_base_url = self.api_base_url + "all"
 
         #list of keys that should be in subdivisions key of output object
-        self.correct_subdivision_keys = ["flag_url", "latlng", "name", "parent_code", "type"]
+        self.correct_subdivision_keys = ["name", "localName", "type", "parentCode", "latLng", "flagUrl"]
 
         #base url for subdivision flag icons
         self.flag_base_url = "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/"
@@ -79,36 +79,45 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         for subd in test_request_au["AU"]:
             self.assertIsNot(test_request_au["AU"][subd]["name"], None, 
                 "Expected subdivision name to not be None, got {}.".format(test_request_au["AU"][subd]["name"]))
-            if not (test_request_au["AU"][subd]["flag_url"] is None):
-                self.assertEqual(os.path.splitext(test_request_au["AU"][subd]["flag_url"])[0], self.flag_base_url + "AU/" + subd, 
-                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "AU/" + subd, os.path.splitext(test_request_au["AU"][subd]["flag_url"])[0])) 
-                self.assertEqual(requests.get(test_request_au["AU"][subd]["flag_url"], headers=self.user_agent_header).status_code, 200, 
-                    "Flag URL invalid: {}.".format(test_request_au["AU"][subd]["flag_url"]))
+            self.assertEqual(test_request_au["AU"][subd]["name"], test_request_au["AU"][subd]["localName"],
+                "Expected subdivision's name and local name to be the same.")
+            if not (test_request_au["AU"][subd]["parentCode"] is None):
+                self.assertIn(test_request_au["AU"][subd]["parentCode"], list(test_request_au["AU"][subd].keys()), 
+                    "Parent code {} not found in list of subdivision codes.".format(test_request_au["AU"][subd]["parentCode"]))
+            if not (test_request_au["AU"][subd]["flagUrl"] is None):
+                self.assertEqual(os.path.splitext(test_request_au["AU"][subd]["flagUrl"])[0], self.flag_base_url + "AU/" + subd, 
+                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "AU/" + subd, os.path.splitext(test_request_au["AU"][subd]["flagUrl"])[0])) 
+                self.assertEqual(requests.get(test_request_au["AU"][subd]["flagUrl"], headers=self.user_agent_header).status_code, 200, 
+                    "Flag URL invalid: {}.".format(test_request_au["AU"][subd]["flagUrl"]))
             for key in list(test_request_au["AU"][subd].keys()):
                 self.assertIn(key, self.correct_subdivision_keys, "Attribute {} not found in list of correct attributes:\n{}.".format(key, self.correct_subdivision_keys))
 
         #AU-NSW - New South Wales 
         self.assertEqual(test_request_au["AU"]["AU-NSW"]["name"], "New South Wales", 
             "Expected subdivsion name to be New South Wales, got {}.".format(test_request_au["AU"]["AU-NSW"]["name"]))  
-        self.assertEqual(test_request_au["AU"]["AU-NSW"]["parent_code"], None, 
-            "Expected subdivision parent code to be None, got {}.".format(test_request_au["AU"]["AU-NSW"]["parent_code"]))
+        self.assertEqual(test_request_au["AU"]["AU-NSW"]["localName"], "New South Wales", 
+            "Expected subdivsion local name to be New South Wales, got {}.".format(test_request_au["AU"]["AU-NSW"]["localName"]))  
+        self.assertEqual(test_request_au["AU"]["AU-NSW"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_au["AU"]["AU-NSW"]["parentCode"]))
         self.assertEqual(test_request_au["AU"]["AU-NSW"]["type"], "State", 
             "Expected subdivision type to be State, got {}.".format(test_request_au["AU"]["AU-NSW"]["type"]))
-        self.assertEqual(test_request_au["AU"]["AU-NSW"]["latlng"], [-31.253, 146.921],
-            "Expected subdivision latlng to be [-31.253, 146.921], got {}.".format(test_request_au["AU"]["AU-NSW"]["latlng"]))
-        self.assertEqual(test_request_au["AU"]["AU-NSW"]["flag_url"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/AU/AU-NSW.svg",
-            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/AU/AU-NSW.svg, got {}.".format(test_request_au["AU"]["AU-NSW"]["flag_url"]))
+        self.assertEqual(test_request_au["AU"]["AU-NSW"]["latLng"], [-31.253, 146.921],
+            "Expected subdivision latLng to be [-31.253, 146.921], got {}.".format(test_request_au["AU"]["AU-NSW"]["latLng"]))
+        self.assertEqual(test_request_au["AU"]["AU-NSW"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/AU/AU-NSW.svg",
+            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/AU/AU-NSW.svg, got {}.".format(test_request_au["AU"]["AU-NSW"]["flagUrl"]))
         #AU-QLD - Queensland
         self.assertEqual(test_request_au["AU"]["AU-QLD"]["name"], "Queensland", 
             "Expected subdivsion name to be Queensland, got {}.".format(test_request_au["AU"]["AU-QLD"]["name"]))  
-        self.assertEqual(test_request_au["AU"]["AU-QLD"]["parent_code"], None,
-            "Expected subdivision parent code to be None got {}.".format(test_request_au["AU"]["AU-QLD"]["parent_code"]))
+        self.assertEqual(test_request_au["AU"]["AU-QLD"]["localName"], "Queensland", 
+            "Expected subdivsion local name to be Queensland, got {}.".format(test_request_au["AU"]["AU-QLD"]["localName"]))  
+        self.assertEqual(test_request_au["AU"]["AU-QLD"]["parentCode"], None,
+            "Expected subdivision parent code to be None got {}.".format(test_request_au["AU"]["AU-QLD"]["parentCode"]))
         self.assertEqual(test_request_au["AU"]["AU-QLD"]["type"], "State",
             "Expected subdivision type to be State, got {}.".format(test_request_au["AU"]["AU-QLD"]["type"]))
-        self.assertEqual(test_request_au["AU"]["AU-QLD"]["latlng"], [-22.575, 144.085],
-            "Expected subdivision latlng to be [-22.575, 144.085], got {}.".format(test_request_au["AU"]["AU-NSW"]["latlng"]))
-        self.assertEqual(test_request_au["AU"]["AU-QLD"]["flag_url"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/AU/AU-QLD.svg",
-            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/AU/AU-QLD.svg, got {}.".format(test_request_au["AU"]["AU-QLD"]["flag_url"]))
+        self.assertEqual(test_request_au["AU"]["AU-QLD"]["latLng"], [-22.575, 144.085],
+            "Expected subdivision latLng to be [-22.575, 144.085], got {}.".format(test_request_au["AU"]["AU-NSW"]["latLng"]))
+        self.assertEqual(test_request_au["AU"]["AU-QLD"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/AU/AU-QLD.svg",
+            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/AU/AU-QLD.svg, got {}.".format(test_request_au["AU"]["AU-QLD"]["flagUrl"]))
 #2.) 
         test_request_cy = requests.get(self.alpha2_base_url + test_alpha2_cy, headers=self.user_agent_header).json() #Cyprus
 
@@ -119,36 +128,43 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         for subd in test_request_cy["CY"]:
             self.assertIsNot(test_request_cy["CY"][subd]["name"], None, 
                 "Expected subdivision name to not be None, got {}.".format(test_request_cy["CY"][subd]["name"]))
-            if not (test_request_cy["CY"][subd]["flag_url"] is None):
-                self.assertEqual(os.path.splitext(test_request_cy["CY"][subd]["flag_url"])[0], self.flag_base_url + "CY/" + subd, 
-                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "CY/" + subd, os.path.splitext(test_request_cy["CY"][subd]["flag_url"])[0])) 
-                self.assertEqual(requests.get(test_request_cy["CY"][subd]["flag_url"], headers=self.user_agent_header).status_code, 200, 
-                    "Flag URL invalid: {}.".format(test_request_cy["CY"][subd]["flag_url"]))
+            if not (test_request_cy["CY"][subd]["parentCode"] is None):
+                self.assertIn(test_request_cy["CY"][subd]["parentCode"], list(test_request_cy["CY"][subd].keys()), 
+                    "Parent code {} not found in list of subdivision codes.".format(test_request_cy["CY"][subd]["parentCode"]))
+            if not (test_request_cy["CY"][subd]["flagUrl"] is None):
+                self.assertEqual(os.path.splitext(test_request_cy["CY"][subd]["flagUrl"])[0], self.flag_base_url + "CY/" + subd, 
+                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "CY/" + subd, os.path.splitext(test_request_cy["CY"][subd]["flagUrl"])[0])) 
+                self.assertEqual(requests.get(test_request_cy["CY"][subd]["flagUrl"], headers=self.user_agent_header).status_code, 200, 
+                    "Flag URL invalid: {}.".format(test_request_cy["CY"][subd]["flagUrl"]))
             for key in list(test_request_cy["CY"][subd].keys()):
                 self.assertIn(key, self.correct_subdivision_keys, "Attribute {} not found in list of correct attributes:\n{}.".format(key, self.correct_subdivision_keys))
 
         #CY-01 - Lefkosia
         self.assertEqual(test_request_cy["CY"]["CY-01"]["name"], "Lefkosia", 
             "Expected subdivsion name to be Lefkosia, got {}.".format(test_request_cy["CY"]["CY-01"]["name"]))  
-        self.assertEqual(test_request_cy["CY"]["CY-01"]["parent_code"], None, 
-            "Expected subdivision parent code to be None, got {}.".format(test_request_cy["CY"]["CY-01"]["parent_code"]))
+        self.assertEqual(test_request_cy["CY"]["CY-01"]["localName"], "Lefkosia", 
+            "Expected subdivsion local name to be Lefkosia, got {}.".format(test_request_cy["CY"]["CY-01"]["localName"])) 
+        self.assertEqual(test_request_cy["CY"]["CY-01"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_cy["CY"]["CY-01"]["parentCode"]))
         self.assertEqual(test_request_cy["CY"]["CY-01"]["type"], "District", 
             "Expected subdivision type to be District, got {}.".format(test_request_cy["CY"]["CY-01"]["type"]))
-        self.assertEqual(test_request_cy["CY"]["CY-01"]["latlng"], [35.186, 33.382],
-            "Expected subdivision latlng to be [35.186, 33.382], got {}.".format(test_request_cy["CY"]["CY-01"]["latlng"]))
-        self.assertEqual(test_request_cy["CY"]["CY-01"]["flag_url"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/CY/CY-01.svg",
-            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/CY/CY-01.svg, got {}.".format(test_request_cy["CY"]["CY-01"]["flag_url"]))
+        self.assertEqual(test_request_cy["CY"]["CY-01"]["latLng"], [35.186, 33.382],
+            "Expected subdivision latLng to be [35.186, 33.382], got {}.".format(test_request_cy["CY"]["CY-01"]["latLng"]))
+        self.assertEqual(test_request_cy["CY"]["CY-01"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/CY/CY-01.svg",
+            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/CY/CY-01.svg, got {}.".format(test_request_cy["CY"]["CY-01"]["flagUrl"]))
         #CY-02 - Lemesos
         self.assertEqual(test_request_cy["CY"]["CY-02"]["name"], "Lemesos", 
             "Expected subdivsion name to be Lemesos, got {}.".format(test_request_cy["CY"]["CY-02"]["name"]))  
-        self.assertEqual(test_request_cy["CY"]["CY-02"]["parent_code"], None, 
-            "Expected subdivision parent code to be None, got {}.".format(test_request_cy["CY"]["CY-02"]["parent_code"]))
+        self.assertEqual(test_request_cy["CY"]["CY-02"]["localName"], "Lemesos", 
+            "Expected subdivsion local name to be Lemesos, got {}.".format(test_request_cy["CY"]["CY-02"]["localName"])) 
+        self.assertEqual(test_request_cy["CY"]["CY-02"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_cy["CY"]["CY-02"]["parentCode"]))
         self.assertEqual(test_request_cy["CY"]["CY-02"]["type"], "District", 
             "Expected subdivision type to be District, got {}.".format(test_request_cy["CY"]["CY-02"]["type"]))
-        self.assertEqual(test_request_cy["CY"]["CY-02"]["latlng"], [34.679, 33.041],
-            "Expected subdivision latlng to be [34.679, 33.041], got {}.".format(test_request_cy["CY"]["CY-02"]["latlng"]))
-        self.assertEqual(test_request_cy["CY"]["CY-02"]["flag_url"], None,
-            "Expected subdivision flag url to be None, got {}.".format(test_request_cy["CY"]["CY-02"]["flag_url"]))
+        self.assertEqual(test_request_cy["CY"]["CY-02"]["latLng"], [34.679, 33.041],
+            "Expected subdivision latLng to be [34.679, 33.041], got {}.".format(test_request_cy["CY"]["CY-02"]["latLng"]))
+        self.assertEqual(test_request_cy["CY"]["CY-02"]["flagUrl"], None,
+            "Expected subdivision flag url to be None, got {}.".format(test_request_cy["CY"]["CY-02"]["flagUrl"]))
 #3.) 
         test_request_lu = requests.get(self.alpha2_base_url + test_alpha2_lu, headers=self.user_agent_header).json() #Luxembourg
 
@@ -160,88 +176,111 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         for subd in test_request_lu["LU"]:
             self.assertIsNot(test_request_lu["LU"][subd]["name"], None, 
                 "Expected subdivision name to not be None, got {}.".format(test_request_lu["LU"][subd]["name"]))
-            if not (test_request_lu["LU"][subd]["flag_url"] is None):
-                self.assertEqual(os.path.splitext(test_request_lu["LU"][subd]["flag_url"])[0], self.flag_base_url + "LU/" + subd, 
-                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "LU/" + subd, os.path.splitext(test_request_lu["LU"][subd]["flag_url"])[0])) 
-                self.assertEqual(requests.get(test_request_lu["LU"][subd]["flag_url"], headers=self.user_agent_header).status_code, 200, 
-                    "Flag URL invalid: {}.".format(test_request_lu["LU"][subd]["flag_url"]))
+            self.assertEqual(test_request_lu["LU"][subd]["name"], test_request_lu["LU"][subd]["localName"],
+                "Expected subdivision's name and local name to be the same.")
+            if not (test_request_lu["LU"][subd]["parentCode"] is None):
+                self.assertIn(test_request_lu["LU"][subd]["parentCode"], list(test_request_lu["LU"][subd].keys()), 
+                    "Parent code {} not found in list of subdivision codes.".format(test_request_lu["LU"][subd]["parentCode"]))
+            if not (test_request_lu["LU"][subd]["flagUrl"] is None):
+                self.assertEqual(os.path.splitext(test_request_lu["LU"][subd]["flagUrl"])[0], self.flag_base_url + "LU/" + subd, 
+                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "LU/" + subd, os.path.splitext(test_request_lu["LU"][subd]["flagUrl"])[0])) 
+                self.assertEqual(requests.get(test_request_lu["LU"][subd]["flagUrl"], headers=self.user_agent_header).status_code, 200, 
+                    "Flag URL invalid: {}.".format(test_request_lu["LU"][subd]["flagUrl"]))
             for key in list(test_request_lu["LU"][subd].keys()):
                 self.assertIn(key, self.correct_subdivision_keys, "Attribute {} not found in list of correct attributes:\n{}.".format(key, self.correct_subdivision_keys)) 
 
         #LU-CA - Capellen
         self.assertEqual(test_request_lu["LU"]["LU-CA"]["name"], "Capellen", 
             "Expected subdivsion name to be Capellen, got {}.".format(test_request_lu["LU"]["LU-CA"]["name"]))  
-        self.assertEqual(test_request_lu["LU"]["LU-CA"]["parent_code"], None, 
-            "Expected subdivision parent code to be None, got {}.".format(test_request_lu["LU"]["LU-CA"]["parent_code"]))
+        self.assertEqual(test_request_lu["LU"]["LU-CA"]["localName"], "Capellen", 
+            "Expected subdivsion local name to be Capellen, got {}.".format(test_request_lu["LU"]["LU-CA"]["localName"])) 
+        self.assertEqual(test_request_lu["LU"]["LU-CA"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_lu["LU"]["LU-CA"]["parentCode"]))
         self.assertEqual(test_request_lu["LU"]["LU-CA"]["type"], "Canton", 
             "Expected subdivision type to be Canton, got {}.".format(test_request_lu["LU"]["LU-CA"]["type"]))
-        self.assertEqual(test_request_lu["LU"]["LU-CA"]["latlng"], [49.646, 5.991],
-            "Expected subdivision latlng to be [49.646, 5.991], got {}.".format(test_request_lu["LU"]["LU-CA"]["latlng"]))
-        self.assertEqual(test_request_lu["LU"]["LU-CA"]["flag_url"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/LU/LU-CA.svg",
-            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/LU/LU-CA.svg, got {}.".format(test_request_lu["LU"]["LU-CA"]["flag_url"]))
+        self.assertEqual(test_request_lu["LU"]["LU-CA"]["latLng"], [49.646, 5.991],
+            "Expected subdivision latLng to be [49.646, 5.991], got {}.".format(test_request_lu["LU"]["LU-CA"]["latLng"]))
+        self.assertEqual(test_request_lu["LU"]["LU-CA"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/LU/LU-CA.svg",
+            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/LU/LU-CA.svg, got {}.".format(test_request_lu["LU"]["LU-CA"]["flagUrl"]))
         #LU-LU - Luxembourg
         self.assertEqual(test_request_lu["LU"]["LU-LU"]["name"], "Luxembourg", 
             "Expected subdivsion name to be Luxembourg, got {}.".format(test_request_lu["LU"]["LU-LU"]["name"]))  
-        self.assertEqual(test_request_lu["LU"]["LU-LU"]["parent_code"], None, 
-            "Expected subdivision parent code to be None, got {}.".format(test_request_lu["LU"]["LU-LU"]["parent_code"]))
+        self.assertEqual(test_request_lu["LU"]["LU-LU"]["localName"], "Luxembourg", 
+            "Expected subdivsion local name to be Luxembourg, got {}.".format(test_request_lu["LU"]["LU-LU"]["localName"])) 
+        self.assertEqual(test_request_lu["LU"]["LU-LU"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_lu["LU"]["LU-LU"]["parentCode"]))
         self.assertEqual(test_request_lu["LU"]["LU-LU"]["type"], "Canton", 
             "Expected subdivision type to be Canton, got {}.".format(test_request_lu["LU"]["LU-LU"]["type"]))
-        self.assertEqual(test_request_lu["LU"]["LU-LU"]["latlng"], [49.815, 6.13],
-            "Expected subdivision latlng to be [49.815, 6.13], got {}.".format(test_request_lu["LU"]["LU-LU"]["latlng"]))
-        self.assertEqual(test_request_lu["LU"]["LU-LU"]["flag_url"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/LU/LU-LU.png",
-            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/LU/LU-LU.png, got {}.".format(test_request_lu["LU"]["LU-LU"]["flag_url"]))
+        self.assertEqual(test_request_lu["LU"]["LU-LU"]["latLng"], [49.815, 6.13],
+            "Expected subdivision latLng to be [49.815, 6.13], got {}.".format(test_request_lu["LU"]["LU-LU"]["latLng"]))
+        self.assertEqual(test_request_lu["LU"]["LU-LU"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/LU/LU-LU.png",
+            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/LU/LU-LU.png, got {}.".format(test_request_lu["LU"]["LU-LU"]["flagUrl"]))
 #4.)
         test_request_pa_rw = requests.get(self.alpha2_base_url + test_alpha2_pa_rw, headers=self.user_agent_header).json() #Panama and Rwanda
 
         self.assertIsInstance(test_request_pa_rw, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_pa_rw)))
         self.assertEqual(len(test_request_pa_rw), 2, "Expected output object of API to be of length 2, got {}.".format(len(test_request_pa_rw)))
         self.assertEqual(list(test_request_pa_rw.keys()), ["PA", "RW"], "Expected output object of API to contain only the PA and RW keys, got {}.".format(list(test_request_pa_rw.keys())))
-        self.assertEqual(list(test_request_pa_rw["PA"].keys()), ["PA-1", "PA-10", "PA-2", "PA-3", "PA-4", "PA-5", "PA-6", "PA-7", "PA-8", "PA-9", "PA-EM", "PA-KY", "PA-NB"], 
+        self.assertEqual(list(test_request_pa_rw["PA"].keys()), ["PA-1", "PA-10", "PA-2", "PA-3", "PA-4", "PA-5", "PA-6", "PA-7", "PA-8", "PA-9", "PA-EM", "PA-KY", "PA-NB", "PA-NT"], 
             "Expected list of subdivision codes doesn't match output.")        
         self.assertEqual(list(test_request_pa_rw["RW"].keys()), ["RW-01", "RW-02", "RW-03", "RW-04", "RW-05"], "Expected list of subdivision codes doesn't match output.")      
         for subd in test_request_pa_rw["PA"]:
             self.assertIsNot(test_request_pa_rw["PA"][subd]["name"], None, 
                 "Expected subdivision name to not be None, got {}.".format(test_request_pa_rw["PA"][subd]["name"]))
-            if not (test_request_pa_rw["PA"][subd]["flag_url"] is None):
-                self.assertEqual(os.path.splitext(test_request_pa_rw["PA"][subd]["flag_url"])[0], self.flag_base_url + "PA/" + subd, 
-                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "PA/" + subd, os.path.splitext(test_request_pa_rw["PA"][subd]["flag_url"])[0])) 
-                self.assertEqual(requests.get(test_request_pa_rw["PA"][subd]["flag_url"], headers=self.user_agent_header).status_code, 200, 
-                    "Flag URL invalid: {}.".format(test_request_pa_rw["PA"][subd]["flag_url"]))
+            self.assertEqual(test_request_pa_rw["PA"][subd]["name"], test_request_pa_rw["PA"][subd]["localName"],
+                "Expected subdivision's name and local name to be the same.")
+            if not (test_request_pa_rw["PA"][subd]["parentCode"] is None):
+                self.assertIn(test_request_pa_rw["PA"][subd]["parentCode"], list(test_request_pa_rw["PA"][subd].keys()), 
+                    "Parent code {} not found in list of subdivision codes.".format(test_request_pa_rw["PA"][subd]["parentCode"]))
+            if not (test_request_pa_rw["PA"][subd]["flagUrl"] is None):
+                self.assertEqual(os.path.splitext(test_request_pa_rw["PA"][subd]["flagUrl"])[0], self.flag_base_url + "PA/" + subd, 
+                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "PA/" + subd, os.path.splitext(test_request_pa_rw["PA"][subd]["flagUrl"])[0])) 
+                self.assertEqual(requests.get(test_request_pa_rw["PA"][subd]["flagUrl"], headers=self.user_agent_header).status_code, 200, 
+                    "Flag URL invalid: {}.".format(test_request_pa_rw["PA"][subd]["flagUrl"]))
             for key in list(test_request_pa_rw["PA"][subd].keys()):
                 self.assertIn(key, self.correct_subdivision_keys, "Attribute {} not found in list of correct attributes:\n{}.".format(key, self.correct_subdivision_keys)) 
         for subd in test_request_pa_rw["RW"]:
             self.assertIsNot(test_request_pa_rw["RW"][subd]["name"], None, 
                 "Expected subdivision name to not be None, got {}.".format(test_request_pa_rw["RW"][subd]["name"]))
-            if not (test_request_pa_rw["RW"][subd]["flag_url"] is None):
-                self.assertEqual(os.path.splitext(test_request_pa_rw["RW"][subd]["flag_url"])[0], self.flag_base_url + "RW/" + subd, 
-                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "RW/" + subd, os.path.splitext(test_request_pa_rw["RW"][subd]["flag_url"])[0])) 
-                self.assertEqual(requests.get(test_request_pa_rw["RW"][subd]["flag_url"], headers=self.user_agent_header).status_code, 200, 
-                    "Flag URL invalid: {}.".format(test_request_pa_rw["RW"][subd]["flag_url"]))
+            self.assertEqual(test_request_pa_rw["RW"][subd]["name"], test_request_pa_rw["RW"][subd]["localName"],
+                "Expected subdivision's name and local name to be the same.")
+            if not (test_request_pa_rw["RW"][subd]["parentCode"] is None):
+                self.assertIn(test_request_pa_rw["RW"][subd]["parentCode"], list(test_request_pa_rw["RW"][subd].keys()), 
+                    "Parent code {} not found in list of subdivision codes.".format(test_request_pa_rw["RW"][subd]["parentCode"]))
+            if not (test_request_pa_rw["RW"][subd]["flagUrl"] is None):
+                self.assertEqual(os.path.splitext(test_request_pa_rw["RW"][subd]["flagUrl"])[0], self.flag_base_url + "RW/" + subd, 
+                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "RW/" + subd, os.path.splitext(test_request_pa_rw["RW"][subd]["flagUrl"])[0])) 
+                self.assertEqual(requests.get(test_request_pa_rw["RW"][subd]["flagUrl"], headers=self.user_agent_header).status_code, 200, 
+                    "Flag URL invalid: {}.".format(test_request_pa_rw["RW"][subd]["flagUrl"]))
             for key in list(test_request_pa_rw["RW"][subd].keys()):
                 self.assertIn(key, self.correct_subdivision_keys, "Attribute {} not found in list of correct attributes:\n{}.".format(key, self.correct_subdivision_keys)) 
 
         #PA-4 - Chiriquí
         self.assertEqual(test_request_pa_rw["PA"]["PA-4"]["name"], "Chiriquí", 
-            "Expected subdivsion name to be Chiriquí, got {}.".format(test_request_pa_rw["PA"]["PA-4"]["name"]))  
-        self.assertEqual(test_request_pa_rw["PA"]["PA-4"]["parent_code"], None, 
-            "Expected subdivision parent code to be None, got {}.".format(test_request_pa_rw["PA"]["PA-4"]["parent_code"]))
+            "Expected subdivsion name to be Chiriquí, got {}.".format(test_request_pa_rw["PA"]["PA-4"]["name"])) 
+        self.assertEqual(test_request_pa_rw["PA"]["PA-4"]["localName"], "Chiriquí", 
+            "Expected subdivsion local name to be Chiriquí, got {}.".format(test_request_pa_rw["PA"]["PA-4"]["localName"]))  
+        self.assertEqual(test_request_pa_rw["PA"]["PA-4"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_pa_rw["PA"]["PA-4"]["parentCode"]))
         self.assertEqual(test_request_pa_rw["PA"]["PA-4"]["type"], "Province", 
             "Expected subdivision type to be Province, got {}.".format(test_request_pa_rw["PA"]["PA-4"]["type"]))
-        self.assertEqual(test_request_pa_rw["PA"]["PA-4"]["latlng"], [8.387, -82.28],
-            "Expected subdivision latlng to be [8.387, -82.28], got {}.".format(test_request_pa_rw["PA"]["PA-4"]["latlng"]))
-        self.assertEqual(test_request_pa_rw["PA"]["PA-4"]["flag_url"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/PA/PA-4.svg",
-            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/PA/PA-4.svg, got {}.".format(test_request_pa_rw["PA"]["PA-4"]["flag_url"]))
+        self.assertEqual(test_request_pa_rw["PA"]["PA-4"]["latLng"], [8.387, -82.28],
+            "Expected subdivision latLng to be [8.387, -82.28], got {}.".format(test_request_pa_rw["PA"]["PA-4"]["latLng"]))
+        self.assertEqual(test_request_pa_rw["PA"]["PA-4"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/PA/PA-4.svg",
+            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/PA/PA-4.svg, got {}.".format(test_request_pa_rw["PA"]["PA-4"]["flagUrl"]))
         #RW-03 - Northern 
         self.assertEqual(test_request_pa_rw["RW"]["RW-03"]["name"], "Northern", 
             "Expected subdivsion name to be Northern, got {}.".format(test_request_pa_rw["RW"]["RW-03"]["name"]))  
-        self.assertEqual(test_request_pa_rw["RW"]["RW-03"]["parent_code"], None, 
-            "Expected subdivision parent code to be None, got {}.".format(test_request_pa_rw["RW"]["RW-03"]["parent_code"]))
+        self.assertEqual(test_request_pa_rw["RW"]["RW-03"]["localName"], "Northern", 
+            "Expected subdivsion local name to be Northern, got {}.".format(test_request_pa_rw["RW"]["RW-03"]["localName"]))  
+        self.assertEqual(test_request_pa_rw["RW"]["RW-03"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_pa_rw["RW"]["RW-03"]["parentCode"]))
         self.assertEqual(test_request_pa_rw["RW"]["RW-03"]["type"], "Province", 
             "Expected subdivision type to be Province, got {}.".format(test_request_pa_rw["RW"]["RW-03"]["type"]))
-        self.assertEqual(test_request_pa_rw["RW"]["RW-03"]["latlng"], [-1.656, 29.882],
-            "Expected subdivision latlng to be [-1.656, 29.882], got {}.".format(test_request_pa_rw["RW"]["RW-03"]["latlng"]))
-        self.assertEqual(test_request_pa_rw["RW"]["RW-03"]["flag_url"], None,
-            "Expected subdivision flag url to be None, got {}.".format(test_request_pa_rw["RW"]["RW-03"]["flag_url"]))
+        self.assertEqual(test_request_pa_rw["RW"]["RW-03"]["latLng"], [-1.656, 29.882],
+            "Expected subdivision latLng to be [-1.656, 29.882], got {}.".format(test_request_pa_rw["RW"]["RW-03"]["latLng"]))
+        self.assertEqual(test_request_pa_rw["RW"]["RW-03"]["flagUrl"], None,
+            "Expected subdivision flag url to be None, got {}.".format(test_request_pa_rw["RW"]["RW-03"]["flagUrl"]))
 #5.) 
         test_request_error1 = requests.get(self.alpha2_base_url + test_alpha2_error_1, headers=self.user_agent_header).json() #ABCDE
 
@@ -295,11 +334,16 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         for subd in test_request_bj["BJ"]:
             self.assertIsNot(test_request_bj["BJ"][subd]["name"], None, 
                 "Expected subdivision name to not be None, got {}.".format(test_request_bj["BJ"][subd]["name"]))
-            if not (test_request_bj["BJ"][subd]["flag_url"] is None):
-                self.assertEqual(os.path.splitext(test_request_bj["BJ"][subd]["flag_url"])[0], self.flag_base_url + "BJ/" + subd, 
-                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "BJ/" + subd, os.path.splitext(test_request_bj["BJ"][subd]["flag_url"])[0])) 
-                self.assertEqual(requests.get(test_request_bj["BJ"][subd]["flag_url"], headers=self.user_agent_header).status_code, 200, 
-                    "Flag URL invalid: {}.".format(test_request_bj["BJ"][subd]["flag_url"]))
+            self.assertEqual(test_request_bj["BJ"][subd]["name"], test_request_bj["BJ"][subd]["localName"],
+                "Expected subdivision's name and local name to be the same.")
+            if not (test_request_bj["BJ"][subd]["parentCode"] is None):
+                self.assertIn(test_request_bj["BJ"][subd]["parentCode"], list(test_request_bj["BJ"][subd].keys()), 
+                    "Parent code {} not found in list of subdivision codes.".format(test_request_bj["BJ"][subd]["parentCode"]))
+            if not (test_request_bj["BJ"][subd]["flagUrl"] is None):
+                self.assertEqual(os.path.splitext(test_request_bj["BJ"][subd]["flagUrl"])[0], self.flag_base_url + "BJ/" + subd, 
+                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "BJ/" + subd, os.path.splitext(test_request_bj["BJ"][subd]["flagUrl"])[0])) 
+                self.assertEqual(requests.get(test_request_bj["BJ"][subd]["flagUrl"], headers=self.user_agent_header).status_code, 200, 
+                    "Flag URL invalid: {}.".format(test_request_bj["BJ"][subd]["flagUrl"]))
             for key in list(test_request_bj["BJ"][subd].keys()):
                 self.assertIn(key, self.correct_subdivision_keys, "Attribute {} not found in list of correct attributes:\n{}.".format(key, self.correct_subdivision_keys)) 
 #2.)
@@ -312,11 +356,16 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         for subd in test_request_tj["TJ"]:
             self.assertIsNot(test_request_tj["TJ"][subd]["name"], None, 
                 "Expected subdivision name to not be None, got {}.".format(test_request_tj["TJ"][subd]["name"]))
-            if not (test_request_tj["TJ"][subd]["flag_url"] is None):
-                self.assertEqual(os.path.splitext(test_request_tj["TJ"][subd]["flag_url"])[0], self.flag_base_url + "TJ/" + subd, 
-                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "TJ/" + subd, os.path.splitext(test_request_tj["TJ"][subd]["flag_url"])[0])) 
-                self.assertEqual(requests.get(test_request_tj["TJ"][subd]["flag_url"], headers=self.user_agent_header).status_code, 200, 
-                    "Flag URL invalid: {}.".format(test_request_tj["TJ"][subd]["flag_url"]))
+            self.assertEqual(test_request_tj["TJ"][subd]["name"], test_request_tj["TJ"][subd]["localName"],
+                "Expected subdivision's name and local name to be the same.")
+            if not (test_request_tj["TJ"][subd]["parentCode"] is None):
+                self.assertIn(test_request_tj["TJ"][subd]["parentCode"], list(test_request_tj["TJ"][subd].keys()), 
+                    "Parent code {} not found in list of subdivision codes.".format(test_request_tj["TJ"][subd]["parentCode"]))
+            if not (test_request_tj["TJ"][subd]["flagUrl"] is None):
+                self.assertEqual(os.path.splitext(test_request_tj["TJ"][subd]["flagUrl"])[0], self.flag_base_url + "TJ/" + subd, 
+                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "TJ/" + subd, os.path.splitext(test_request_tj["TJ"][subd]["flagUrl"])[0])) 
+                self.assertEqual(requests.get(test_request_tj["TJ"][subd]["flagUrl"], headers=self.user_agent_header).status_code, 200, 
+                    "Flag URL invalid: {}.".format(test_request_tj["TJ"][subd]["flagUrl"]))
             for key in list(test_request_tj["TJ"][subd].keys()):
                 self.assertIn(key, self.correct_subdivision_keys, "Attribute {} not found in list of correct attributes:\n{}.".format(key, self.correct_subdivision_keys)) 
 #3.) 
@@ -331,11 +380,16 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         for subd in test_request_sd["SD"]:
             self.assertIsNot(test_request_sd["SD"][subd]["name"], None, 
                 "Expected subdivision name to not be None, got {}.".format(test_request_sd["SD"][subd]["name"]))
-            if not (test_request_sd["SD"][subd]["flag_url"] is None):
-                self.assertEqual(os.path.splitext(test_request_sd["SD"][subd]["flag_url"])[0], self.flag_base_url + "SD/" + subd, 
-                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "SD/" + subd, os.path.splitext(test_request_sd["SD"][subd]["flag_url"])[0])) 
-                self.assertEqual(requests.get(test_request_sd["SD"][subd]["flag_url"], headers=self.user_agent_header).status_code, 200, 
-                    "Flag URL invalid: {}.".format(test_request_sd["SD"][subd]["flag_url"]))
+            self.assertEqual(test_request_sd["SD"][subd]["name"], test_request_sd["SD"][subd]["localName"],
+                "Expected subdivision's name and local name to be the same.")
+            if not (test_request_sd["SD"][subd]["parentCode"] is None):
+                self.assertIn(test_request_sd["SD"][subd]["parentCode"], list(test_request_sd["SD"][subd].keys()), 
+                    "Parent code {} not found in list of subdivision codes.".format(test_request_sd["SD"][subd]["parentCode"]))
+            if not (test_request_sd["SD"][subd]["flagUrl"] is None):
+                self.assertEqual(os.path.splitext(test_request_sd["SD"][subd]["flagUrl"])[0], self.flag_base_url + "SD/" + subd, 
+                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "SD/" + subd, os.path.splitext(test_request_sd["SD"][subd]["flagUrl"])[0])) 
+                self.assertEqual(requests.get(test_request_sd["SD"][subd]["flagUrl"], headers=self.user_agent_header).status_code, 200, 
+                    "Flag URL invalid: {}.".format(test_request_sd["SD"][subd]["flagUrl"]))
             for key in list(test_request_sd["SD"][subd].keys()):
                 self.assertIn(key, self.correct_subdivision_keys, "Attribute {} not found in list of correct attributes:\n{}.".format(key, self.correct_subdivision_keys)) 
 #4.)
@@ -348,11 +402,16 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         for subd in test_request_ml_ni["ML"]:
             self.assertIsNot(test_request_ml_ni["ML"][subd]["name"], None, 
                 "Expected subdivision name to not be None, got {}.".format(test_request_ml_ni["ML"][subd]["name"]))
-            if not (test_request_ml_ni["ML"][subd]["flag_url"] is None):
-                self.assertEqual(os.path.splitext(test_request_ml_ni["ML"][subd]["flag_url"])[0], self.flag_base_url + "ML/" + subd, 
-                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "ML/" + subd, os.path.splitext(test_request_ml_ni["ML"][subd]["flag_url"])[0])) 
-                self.assertEqual(requests.get(test_request_ml_ni["ML"][subd]["flag_url"], headers=self.user_agent_header).status_code, 200, 
-                    "Flag URL invalid: {}.".format(test_request_ml_ni["ML"][subd]["flag_url"]))
+            self.assertEqual(test_request_ml_ni["ML"][subd]["name"], test_request_ml_ni["ML"][subd]["localName"],
+                "Expected subdivision's name and local name to be the same.")
+            if not (test_request_ml_ni["ML"][subd]["parentCode"] is None):
+                self.assertIn(test_request_ml_ni["ML"][subd]["parentCode"], list(test_request_ml_ni["ML"][subd].keys()), 
+                    "Parent code {} not found in list of subdivision codes.".format(test_request_ml_ni["ML"][subd]["parentCode"]))            
+            if not (test_request_ml_ni["ML"][subd]["flagUrl"] is None):
+                self.assertEqual(os.path.splitext(test_request_ml_ni["ML"][subd]["flagUrl"])[0], self.flag_base_url + "ML/" + subd, 
+                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "ML/" + subd, os.path.splitext(test_request_ml_ni["ML"][subd]["flagUrl"])[0])) 
+                self.assertEqual(requests.get(test_request_ml_ni["ML"][subd]["flagUrl"], headers=self.user_agent_header).status_code, 200, 
+                    "Flag URL invalid: {}.".format(test_request_ml_ni["ML"][subd]["flagUrl"]))
             for key in list(test_request_ml_ni["ML"][subd].keys()):
                 self.assertIn(key, self.correct_subdivision_keys, "Attribute {} not found in list of correct attributes:\n{}.".format(key, self.correct_subdivision_keys)) 
 
@@ -361,11 +420,16 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         for subd in test_request_ml_ni["NI"]:
             self.assertIsNot(test_request_ml_ni["NI"][subd]["name"], None, 
                 "Expected subdivision name to not be None, got {}.".format(test_request_ml_ni["NI"][subd]["name"]))
-            if not (test_request_ml_ni["NI"][subd]["flag_url"] is None):
-                self.assertEqual(os.path.splitext(test_request_ml_ni["NI"][subd]["flag_url"])[0], self.flag_base_url + "NI/" + subd, 
-                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "NI/" + subd, os.path.splitext(test_request_ml_ni["NI"][subd]["flag_url"])[0])) 
-                self.assertEqual(requests.get(test_request_ml_ni["NI"][subd]["flag_url"], headers=self.user_agent_header).status_code, 200, 
-                    "Flag URL invalid: {}.".format(test_request_ml_ni["NI"][subd]["flag_url"]))
+            self.assertEqual(test_request_ml_ni["NI"][subd]["name"], test_request_ml_ni["NI"][subd]["localName"],
+                "Expected subdivision's name and local name to be the same.")
+            if not (test_request_ml_ni["NI"][subd]["parentCode"] is None):
+                self.assertIn(test_request_ml_ni["NI"][subd]["parentCode"], list(test_request_ml_ni["NI"][subd].keys()), 
+                    "Parent code {} not found in list of subdivision codes.".format(test_request_ml_ni["NI"][subd]["parentCode"]))    
+            if not (test_request_ml_ni["NI"][subd]["flagUrl"] is None):
+                self.assertEqual(os.path.splitext(test_request_ml_ni["NI"][subd]["flagUrl"])[0], self.flag_base_url + "NI/" + subd, 
+                    "Expected flag url to be {}, got {}.".format(self.flag_base_url + "NI/" + subd, os.path.splitext(test_request_ml_ni["NI"][subd]["flagUrl"])[0])) 
+                self.assertEqual(requests.get(test_request_ml_ni["NI"][subd]["flagUrl"], headers=self.user_agent_header).status_code, 200, 
+                    "Flag URL invalid: {}.".format(test_request_ml_ni["NI"][subd]["flagUrl"]))
             for key in list(test_request_ml_ni["NI"][subd].keys()):
                 self.assertIn(key, self.correct_subdivision_keys, "Attribute {} not found in list of correct attributes:\n{}.".format(key, self.correct_subdivision_keys)) 
 #5.)

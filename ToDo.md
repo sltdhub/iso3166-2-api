@@ -42,6 +42,9 @@
 - [X] Split up 'filter' section in api.md into 3 sections.
 - [X] Add app.url_map.strict_slashes = False
 - [X] Update comments to include v1/v2. 
+- [ ] Add local name attribute to object.
+- [X] Attributes section should just contain list of attributes.
+- [X] Update version and last updated.
 
 Future Additions
 ----------------
