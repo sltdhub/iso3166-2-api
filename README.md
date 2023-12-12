@@ -16,7 +16,7 @@
 
 The main API homepage and documentation is available via the URL:
 
-> https://iso3166-2-api.vercel.app/api
+> [https://iso3166-2-api.vercel.app/api](https://iso3166-2-api.vercel.app/api)
 
 Table of Contents
 -----------------

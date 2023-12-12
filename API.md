@@ -4,7 +4,7 @@
 
 The main API endpoint is:
 
-> https://iso3166-2-api.vercel.app/api
+> [https://iso3166-2-api.vercel.app/api](https://iso3166-2-api.vercel.app/api)
 
 The other endpoints available in the API are:
 * https://iso3166-2-api.vercel.app/api/all

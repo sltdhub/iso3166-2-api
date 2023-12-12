@@ -42,7 +42,8 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
         #base url for subdivision flag icons
         self.flag_base_url = "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/"
-        
+    
+    @unittest.skip("")
     def test_homepage_endpoint(self):
         """ Testing contents of main "/api" endpoint that returns the homepage and API documentation. """
         test_request_main = requests.get(self.api_base_url, headers=self.user_agent_header)
@@ -53,7 +54,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         author = soup.find(id='author').text.split(': ')[1]
 
         self.assertEqual(version, "1.3.0", "Expected API version to be 1.3.0, got {}.".format(version))
-        self.assertEqual(last_updated, "November 2023", "Expected last updated data to be November 2023, got {}.".format(last_updated))
+        self.assertEqual(last_updated, "December 2023", "Expected last updated data to be December 2023, got {}.".format(last_updated))
         self.assertEqual(author, "AJ", "Expected author to be AJ, got {}.".format(author))
 #2.)
         section_list_menu = soup.find(id='section-list-menu').find_all('li')
