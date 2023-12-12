@@ -45,6 +45,8 @@
 - [X] Add local name attribute to object.
 - [X] Attributes section should just contain list of attributes.
 - [X] Update version and last updated.
+- [X] Remove spacing between parameters and ':'.
+- [X] Remove references to different versions.
 
 Future Additions
 ----------------

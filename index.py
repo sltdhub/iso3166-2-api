@@ -43,7 +43,7 @@ else:
 #error message returned if issue retrieving updates json
 blob_not_found_error_message = {}
 blob_not_found_error_message["status_code"] = 400
-blob_not_found_error_message["message"] = "Error finding updates object in GCP Storage Bucket."
+blob_not_found_error_message["message"] = "Error finding ISO 3166-2 object in GCP Storage Bucket."
 
 #json object storing the error message, route and status code 
 error_message = {}
@@ -51,12 +51,11 @@ error_message["status"] = 400
 
 @app.route('/')
 @app.route('/api')
-@app.route('/api/v1')
-@app.route('/api/v2')
+@app.route('/api/')
 def home():
     """
     Default route for https://iso3166-2-api.vercel.app/. Main homepage for API displaying the 
-    purpose of API and its documentation. 
+    purpose of API and its documentation. Route can accept path with or without trailing slash.
 
     Parameters
     ==========
@@ -64,17 +63,18 @@ def home():
 
     Returns
     =======
-    :flask.render_template : html
+    :flask.render_template: html
       Flask html template for index.html page.
     """
     return render_template('index.html')
 
-@app.route('/v1/all', methods=['GET'])
 @app.route('/api/all', methods=['GET'])
-def all_v1():
+@app.route('/api/all/', methods=['GET'])
+def all():
     """
-    Flask route for '/api/all' path/endpoint. Return all ISO 3166-2 subdivision data attributes and 
-    values for all countries. Route can accept path with or without trailing slash.
+    Flask route for '/api/all' path/endpoint. Return all ISO 3166-2 subdivision data 
+    attributes and values for all countries. Route can accept path with or without 
+    trailing slash.
 
     Parameters
     ==========
@@ -82,9 +82,9 @@ def all_v1():
 
     Returns
     =======
-    :jsonify(all_iso3166_2) : json
-        jsonified version 1 ISO 3166-2 subdivision data.
-    :status_code : int
+    :jsonify(all_iso3166_2): json
+        jsonified ISO 3166-2 subdivision data.
+    :status_code: int
         response status code. 200 is a successful response, 400 means there was an 
         invalid parameter input. 
     """  
@@ -95,7 +95,9 @@ def all_v1():
     return jsonify(all_iso3166_2), 200
 
 @app.route('/api/name/<name>', methods=['GET'])
+@app.route('/api/name/<name>/', methods=['GET'])
 @app.route('/name/<name>', methods=['GET'])
+@app.route('/name/<name>/', methods=['GET'])
 def api_name(name):
     """
     Flask route for 'api/name' path/endpoint. Return all ISO 3166-2 subdivision data attributes and 
@@ -106,14 +108,14 @@ def api_name(name):
 
     Parameters
     ==========
-    :name : str/list
+    :name: str/list
         one or more country names as they are commonly known in English. 
 
     Returns
     =======
-    :iso3166_2 : json
+    :iso3166_2: json
         jsonified response of iso3166-2 data per input country name.
-    :status_code : int
+    :status_code: int
         response status code. 200 is a successful response, 400 means there was an 
         invalid parameter input. 
     """
@@ -220,27 +222,28 @@ def api_name(name):
     return jsonify(iso3166_2), 200
 
 @app.route('/api/alpha2/<alpha2>', methods=['GET'])
-@app.route('/api/<alpha2>', methods=['GET'])
+@app.route('/api/alpha2/<alpha2>/', methods=['GET'])
 @app.route('/alpha2/<alpha2>', methods=['GET'])
-def api_alpha2_v1(alpha2):
+@app.route('/alpha2/<alpha2>/', methods=['GET'])
+def api_alpha2(alpha2):
     """
-    Flask route for '/api/alpha2' path/endpoint. Return all version 1 ISO 3166-2 subdivision data for 
-    the inputted alpha-2 code/codes. If invalid alpha-2 code or no value input then return error. The 
+    Flask route for '/api/alpha2' path/endpoint. Return all ISO 3166-2 subdivision data for the
+    inputted alpha-2 code/codes. If invalid alpha-2 code or no value input then return error. The 
     endpoint can also accept a country in its 3 letter alpha-3 code form, which will then be converted 
     into its 2 letter alpha-2 counterpart. Route can accept path with or without trailing slash.
 
     Parameters
     ==========
-    :alpha2 : str/list
+    :alpha2: str/list
         2 letter alpha-2 country code or list of codes. Function can also accept 3 letter alpha-3 code.
 
     Returns
     =======
-    :iso3166_2 : json
+    :iso3166_2: json
         jsonified response of iso3166-2 data per input alpha-2 code.
-    :blob_not_found_error_message : dict 
+    :blob_not_found_error_message: dict 
         error message if issue finding iso3166-2 object json.  
-    :status_code : int
+    :status_code: int
         response status code. 200 is a successful response, 400 means there was an 
         invalid parameter input.
     """
@@ -332,14 +335,14 @@ def not_found(e):
 
     Parameters
     ==========
-    :e : int
+    :e: int
         error code.
 
     Returns
     =======
-    :flask.render_template : html
+    :flask.render_template: html
       Flask html template for 404.html page.
-    :status_code : int
+    :status_code: int
         response status code. 404 code implies page not found.
     """
     return render_template("404.html", path=request.url), 404

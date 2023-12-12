@@ -42,8 +42,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
         #base url for subdivision flag icons
         self.flag_base_url = "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/"
-    
-    @unittest.skip("")
+        
     def test_homepage_endpoint(self):
         """ Testing contents of main "/api" endpoint that returns the homepage and API documentation. """
         test_request_main = requests.get(self.api_base_url, headers=self.user_agent_header)
