@@ -62,7 +62,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
             self.assertIn(li.text.strip(), correct_section_menu, "Expected list element {} to be in list.".format(li))
 
     def test_alpha2_endpoint(self):
-        """ Testing alpha-2 endpoint, return all ISO 3166 data from input alpha-2 code/codes. """
+        """ Testing alpha-2 endpoint, return all ISO 3166 subdivision data from input alpha-2 code/codes. """
         test_alpha2_au = "AU" #Australia
         test_alpha2_cy = "CY" #Cyprus
         test_alpha2_lu = "LU" #Luxembourg
@@ -304,8 +304,8 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(test_request_error2["status"], 400, 
                 "Error status does not match expected:\n{}.".format(test_request_error2["status"]))
 
-    def test_name(self):
-        """ Testing name endpoint, return all ISO 3166 data from input alpha-2 name/names. """
+    def test_name_endpoint(self):
+        """ Testing name endpoint, return all ISO 3166 subdivision data from input alpha-2 name/names. """
         test_name_bj = "Benin"
         test_name_tj = "Tajikistan"
         test_name_sd = "Sudan"
@@ -456,8 +456,8 @@ class ISO3166_2_API_Tests(unittest.TestCase):
                 "Error status does not match expected:\n{}".format(test_request_error["status"]))
 
     @unittest.skip("Skipping /all endpoint tests to not overload server.")
-    def test_all(self):
-        """ Test 'all' endpoint which returns all data for all ISO 3166 countries. """
+    def test_all_endpoint(self):
+        """ Test 'all' endpoint which returns all subdivision data for all ISO 3166 countries. """
 #1.)
         test_request_all = requests.get(self.all_base_url, headers=self.user_agent_header).json()
 

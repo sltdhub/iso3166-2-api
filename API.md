@@ -1,6 +1,6 @@
 # ISO 3166-2 API 🌎
 
-![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=iso3166-2)
+![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=iso3166-2-api)
 
 The main API endpoint is:
 
@@ -15,9 +15,9 @@ Three paths/endpoints are available in the API - `/api/all`, `/api/alpha2` and `
 
 * The `/api/all` path/endpoint returns all of the ISO 3166 subdivision data for all countries.
 
-* The `/api/alpha2` endpoint accepts the 2 letter alpha-2 country code appended to the path/endpoint e.g. <i>/api/alpha2/JP</i>. A single alpha-2 code or list of them can be passed to the API e.g. <i>/api/alpha2/FR,DE,HU,ID,MA</i>. For redundancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be appended to the path e.g. <i>/api/alpha2/FRA,DEU,HUN,IDN,MAR</i>. If an invalid alpha-2 code is input then an error will be returned.
+* The `/api/alpha2` endpoint accepts the 2 letter alpha-2 country code appended to the path/endpoint e.g. `/api/alpha2/JP`. A single alpha-2 code or list of them can be passed to the API e.g. `/api/alpha2/FR,DE,HU,ID,MA`. For redundancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be appended to the path e.g. `/api/alpha2/FRA,DEU,HUN,IDN,MAR`. If an invalid alpha-2 code is input then an error will be returned.
 
-* The `/api/name` endpoint accepts the country/territory name as it is most commonly known in english, according to the ISO 3166-1. The name can similarly be appended to the **name** path/endpoint e.g. <i>/api/name/Denmark</i>. A single country name or list of them can be passed into the API e.g. <i>/name/France,Moldova,Benin</i>. A closeness function is utilised so the most approximate name from the input will be used e.g. Sweden will be used if input is <i>/api/name/Swede</i>. If no country is found from the closeness function or an invalid name is input then an error will be returned.
+* The `/api/name` endpoint accepts the country/territory name as it is most commonly known in english, according to the ISO 3166-1. The name can similarly be appended to the **name** path/endpoint e.g. `/api/name/Denmark`. A single country name or list of them can be passed into the API e.g. `/api/name/France,Moldova,Benin`. A closeness function is utilised so the most approximate name from the input will be used e.g. Sweden will be used if input is `/api/name/Swede`. If no country is found from the closeness function or an invalid name is input then an error will be returned.
 
 * The main API endpoint (`/` or `/api`) will return the homepage and API documentation.
 
