@@ -55,12 +55,15 @@ The main API endpoint is:
 
 The other endpoints available in the API are:
 * https://iso3166-2-api.vercel.app/api/all
+* https://iso3166-2-api.vercel.app/api/subd/<input_subdivision>
 * https://iso3166-2-api.vercel.app/api/alpha2/<input_alpha2>
 * https://iso3166-2-api.vercel.app/api/name/<input_name>
 
-Three paths/endpoints are available in the API - `/api/all`, `/api/alpha2` and `/api/name`.
+Three paths/endpoints are available in the API - `/api/all`, `/api/subd`, `/api/alpha2` and `/api/name`.
 
 * The `/api/all` path/endpoint returns all of the ISO 3166 subdivision data for all countries.
+
+* The `/api/subd` endpoint acceptst the ISO 3166-2 subdivision codes, e.g `/api/subd/GB-ABD`. You can also input a list of subdivision code and the data for each will be returned e.g `/api/subd/IE-MO,FI-17,RO-AG`. If the input subdivision code is not in the correct format then an error will be raised. Similarly if an invalid subdivision code that doesn't exist is input then an error will be raised.
 
 * The `/api/alpha2` endpoint accepts the 2 letter alpha-2 country code appended to the path/endpoint e.g. `/api/alpha2/JP`. A single alpha-2 code or list of them can be passed to the API e.g. `/api/alpha2/FR,DE,HU,ID,MA`. For redundancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be appended to the path e.g. `/api/alpha2/FRA,DEU,HUN,IDN,MAR`. If an invalid alpha-2 code is input then an error will be returned.
 
@@ -86,9 +89,7 @@ Requirements
 * [flask][flask] >= 2.3.2
 * [requests][requests] >= 2.28.1
 * [iso3166][iso3166] >= 2.1.1
-* [google-auth][google-auth] >= 2.17.3
-* [google-cloud-storage][google-cloud-storage] >= 2.8.0
-* [google-api-python-client][google-api-python-client] >= 2.86.0
+* [iso3166-2][iso3166_2] >= 1.4.0
 
 Issues
 ------
@@ -118,6 +119,7 @@ Support
 [python]: https://www.python.org/downloads/release/python-360/
 [requests]: https://requests.readthedocs.io/
 [iso3166]: https://github.com/deactivated/python-iso3166
+[iso3166_2]: https://github.com/amckenna41/iso3166-2
 [google-auth]: https://cloud.google.com/python/docs/reference
 [google-cloud-storage]: https://cloud.google.com/python/docs/reference
 [google-api-python-client]: https://cloud.google.com/python/docs/reference
@@ -126,3 +128,4 @@ Support
 [attributes]: https://github.com/amckenna41/iso3166-2-api/ATTRIBUTES.md 
 [api_md]: https://github.com/amckenna41/iso3166-2-api/API.md 
 [updates_md]: https://github.com/amckenna41/iso3166-2/blob/main/UPDATES.md
+[medium]: https://ajmckenna69.medium.com/iso3166-2-71a13d9157f7

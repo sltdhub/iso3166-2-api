@@ -54,6 +54,7 @@
                 <li class="scroll-to-link" data-target="content-attributes"><a>Attributes</a></li>
                 <li class="scroll-to-link" data-target="content-endpoints"><a>Endpoints</a></li>
                 <li class="scroll-to-link" data-target="content-all" style="padding-left: 5%;"><a>All</a></li>
+                <li class="scroll-to-link" data-target="content-subdivision-code" style="padding-left: 5%;"><a>Subdivision Code</a></li>
                 <li class="scroll-to-link" data-target="content-code" style="padding-left: 5%;"><a>Alpha-2 Code</a></li>
                 <li class="scroll-to-link" data-target="content-name" style="padding-left: 5%;"><a>Name</a></li>
                 <li class="scroll-to-link" data-target="content-credits"><a>Credits</a></li>
@@ -81,7 +82,7 @@
             <div class="overflow-hidden content-section" id="content-attributes">
                 <h1>Attributes</h1>
                 <p>
-                    The list of data attributes supported by the API, along with a description of each is below:
+                    The list of data attributes supported by the API for each ISO 3166-2 code entry, along with a description of each is below:
                     <ul style="color:#D6F0F0">
                         <li>Code - subdivision code, according to the ISO 3166-2.</li>
                         <li>Name - subdivision name.</li>
@@ -110,9 +111,15 @@
                         </thead>
                         <tbody>
                         <tr>
+                            <td>https://iso3166-2-api.vercel.app/api/subd/{iso3166_2_code}</td>
+                            <td>
+                                Return the subdivision data for a specific input ISO 3166-2 code.
+                            </td>     
+                        </tr>
+                        <tr>
                             <td>https://iso3166-2-api.vercel.app/api/all</td>
                             <td>
-                            Return all suddivision data attributes for all countries in the ISO 3166-2.
+                                Return all suddivision data attributes for all countries in the ISO 3166-2.
                             </td>
                         </tr>
                         <tr>
@@ -143,6 +150,20 @@
                 </p>
             </div>
 
+            <!-- Subdivision code endpoint section -->
+            <div class="overflow-hidden content-section" id="content-subdivision-code">
+                <h1>Subdivision Code</h1>
+                <p>
+                    The /subd endpoint returns all the subdivision data for the inputted subdivision, according to its ISO 3166-2 subdivision code. A comma seperated
+                    list of codes can also be input. <br><br>
+                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/subd/{iso3166_2_code}</code>
+                    <button style="cursor: pointer;" id="copy-text-btn2" data-api-url="https://iso3166-2-api.vercel.app/api/subd/"><i class="fa fa-clone"></i></button> <br><br>
+                    <a href="https://iso3166-2-api.vercel.app/api/subd/GB-ABD" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/subd/GB-ABD</code></a> <br>
+                    <a href="https://iso3166-2-api.vercel.app/api/subd/LV-041" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/subd/LV-041</code></a> <br>
+                    <a href="https://iso3166-2-api.vercel.app/api/subd/UZ-NG,UZ-TK,UZ-XO" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/subd/UZ-NG,UZ-TK,UZ-XO</code></a>
+                </p>
+            </div>
+
             <!-- Alpha-2 code endpoint section -->
             <div class="overflow-hidden content-section" id="content-code">
                 <h1>alpha-2</h1>
@@ -151,9 +172,9 @@
                     list of country codes can also be input. For redundancy the 3 letter alpha-3 code can also be accepted as input. <br><br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/{alpha2}</code>
                     <button style="cursor: pointer;" id="copy-text-btn2" data-api-url="https://iso3166-2-api.vercel.app/api/alpha2/"><i class="fa fa-clone"></i></button> <br><br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/AD</code> <br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/DE</code> <br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/ZA,ZM</code> 
+                    <a href="https://iso3166-2-api.vercel.app/api/alpha2/AD" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/AD</code></a> <br>
+                    <a href="https://iso3166-2-api.vercel.app/api/alpha2/DE" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/DE</code></a> <br>
+                    <a href="https://iso3166-2-api.vercel.app/api/alpha2/YE,ZA,ZM" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha2/YE,ZA,ZM</code></a>
                 </p>
             </div>
 
@@ -165,9 +186,9 @@
                     seperated list of country names can also be input. <br> <br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/{name}</code> 
                     <button style="cursor: pointer;" id="copy-text-btn3" data-api-url="https://iso3166-2-api.vercel.app/api/name/"><i class="fa fa-clone"></i></button> <br><br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Ireland</code> <br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Jamaica</code> <br>
-                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Panama,Rwanda,Zambia</code> 
+                    <a href="https://iso3166-2-api.vercel.app/api/name/Ireland" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Ireland</code></a> <br>
+                    <a href="https://iso3166-2-api.vercel.app/api/name/Jamaica" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Jamaica</code></a> <br>
+                    <a href="https://iso3166-2-api.vercel.app/api/name/Panama,Rwanda,Zambia" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Panama,Rwanda,Zambia</code></a>
                 </p>
             </div>
 

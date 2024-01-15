@@ -15,6 +15,8 @@ class ISO3166_2_API_Tests(unittest.TestCase):
     ==========
     test_homepage_endpoint:
         testing main endpoint that returns the homepage and API documentation. 
+    test_subdivision_endpoint:
+        testing correct objects are returned from /subd API endpoint using a variety of inputs.
     test_alpha2_endpoint:
         testing correct objects are returned from /alpha2 API endpoint using a variety of inputs.
     test_name_endpoint:
@@ -34,6 +36,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.api_base_url = "https://iso3166-2-api.vercel.app/api/"
         # self.api_base_url = "https://iso3166-2-api-amckenna41.vercel.app/api/" 
         self.alpha2_base_url = self.api_base_url + "alpha2/"
+        self.subd_base_url = self.api_base_url + "subd/"
         self.name_base_url = self.api_base_url + "name/"
         self.all_base_url = self.api_base_url + "all"
 
@@ -44,7 +47,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.flag_base_url = "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/"
         
     def test_homepage_endpoint(self):
-        """ Testing contents of main "/api" endpoint that returns the homepage and API documentation. """
+        """ Testing contents of main /api endpoint that returns the homepage and API documentation. """
         test_request_main = requests.get(self.api_base_url, headers=self.user_agent_header)
         soup = BeautifulSoup(test_request_main.content, 'html.parser')
 #1.)
@@ -52,17 +55,17 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         last_updated = soup.find(id='last-updated').text.split(': ')[1]
         author = soup.find(id='author').text.split(': ')[1]
 
-        self.assertEqual(version, "1.3.0", "Expected API version to be 1.3.0, got {}.".format(version))
+        self.assertEqual(version, "1.4.0", "Expected API version to be 1.4.0, got {}.".format(version))
         self.assertEqual(last_updated, "December 2023", "Expected last updated data to be December 2023, got {}.".format(last_updated))
         self.assertEqual(author, "AJ", "Expected author to be AJ, got {}.".format(author))
 #2.)
         section_list_menu = soup.find(id='section-list-menu').find_all('li')
-        correct_section_menu = ["About", "Attributes", "Endpoints", "All", "Alpha-2 Code", "Name", "Credits", "Contributing"]
+        correct_section_menu = ["About", "Attributes", "Endpoints", "All", "Subdivision Code", "Alpha-2 Code", "Name", "Credits", "Contributing"]
         for li in section_list_menu:
             self.assertIn(li.text.strip(), correct_section_menu, "Expected list element {} to be in list.".format(li))
 
     def test_alpha2_endpoint(self):
-        """ Testing alpha-2 endpoint, return all ISO 3166 subdivision data from input alpha-2 code/codes. """
+        """ Testing /alpha2 endpoint, return all ISO 3166 subdivision data from input alpha-2 code/codes. """
         test_alpha2_au = "AU" #Australia
         test_alpha2_cy = "CY" #Cyprus
         test_alpha2_lu = "LU" #Luxembourg
@@ -286,7 +289,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
         self.assertIsInstance(test_request_error1, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_error1)))
         self.assertEqual(len(test_request_error1), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_error1)))
-        self.assertEqual(test_request_error1["message"], 'Invalid 2 letter alpha-2 code input: ' + test_alpha2_error_1 + ".", 
+        self.assertEqual(test_request_error1["message"], "Invalid 2 letter alpha-2 code input: {}.".format(test_alpha2_error_1), 
                 "Error message does not match expected:\n{}".format(test_request_error1["message"]))
         self.assertEqual(test_request_error1["path"], self.alpha2_base_url + test_alpha2_error_1, 
                 "Error path does not match expected:\n{}.".format(test_request_error1["path"]))
@@ -297,33 +300,120 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
         self.assertIsInstance(test_request_error2, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_error2)))
         self.assertEqual(len(test_request_error2), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_error2)))
-        self.assertEqual(test_request_error2["message"], 'Invalid 2 letter alpha-2 code input: ' + test_alpha2_error_2 + ".", 
+        self.assertEqual(test_request_error2["message"], "Invalid 2 letter alpha-2 code input: {}.".format(test_alpha2_error_2), 
                 "Error message does not match expected:\n{}".format(test_request_error2["message"]))
         self.assertEqual(test_request_error2["path"], self.alpha2_base_url + test_alpha2_error_2, 
                 "Error path does not match expected:\n{}.".format(test_request_error2["path"]))
         self.assertEqual(test_request_error2["status"], 400, 
                 "Error status does not match expected:\n{}.".format(test_request_error2["status"]))
 
+    def test_subdivision_endpoint(self):
+        """ Testing /subd endpoint, return all ISO 3166 subdivision data from input subdivision code/codes. """
+        test_subd_jm_05 = "JM-05"
+        test_subd_pa_03 = "PA-3"
+        test_subd_ss_ew = "SS-EW"
+        test_subd_tv_nkf = "TV-NKF"
+        test_subd_gb_xyz = "GB-XYZ"
+        test_subd_xx_yy = "XX-YY"
+#1.)
+        test_request_jm_05 = requests.get(self.subd_base_url + test_subd_jm_05, headers=self.user_agent_header).json() #JM-05
+
+        self.assertIsInstance(test_request_jm_05, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_jm_05)))
+        self.assertEqual(len(test_request_jm_05), 1, "Expected output object of API to be of length 1, got {}.".format(len(test_request_jm_05)))
+        self.assertEqual(list(test_request_jm_05.keys()), ["JM-05"], "Expected output object of API to contain only the JM-05 key, got {}.".format(list(test_request_jm_05.keys())))
+
+        #JM-05 - Saint Mary
+        self.assertEqual(test_request_jm_05["JM-05"]["name"], "Saint Mary", 
+            "Expected subdivsion name to be New South Wales, got {}.".format(test_request_jm_05["JM-05"]["name"]))  
+        self.assertEqual(test_request_jm_05["JM-05"]["localName"], "Saint Mary", 
+            "Expected subdivsion local name to be Saint Mary, got {}.".format(test_request_jm_05["JM-05"]["localName"]))  
+        self.assertEqual(test_request_jm_05["JM-05"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_jm_05["JM-05"]["parentCode"]))
+        self.assertEqual(test_request_jm_05["JM-05"]["type"], "Parish", 
+            "Expected subdivision type to be Parish, got {}.".format(test_request_jm_05["JM-05"]["type"]))
+        self.assertEqual(test_request_jm_05["JM-05"]["latLng"], [18.309, -76.964],
+            "Expected subdivision latLng to be [18.309, -76.964], got {}.".format(test_request_jm_05["JM-05"]["latLng"]))
+        self.assertEqual(test_request_jm_05["JM-05"]["flagUrl"], None,
+            "Expected subdivision flag url to be None, got {}.".format(test_request_jm_05["JM-05"]["flagUrl"]))
+#2)
+        test_request_pa_03 = requests.get(self.subd_base_url + test_subd_pa_03, headers=self.user_agent_header).json() #PA-3
+
+        #PA-3 - Colón
+        self.assertEqual(test_request_pa_03["PA-3"]["name"], "Colón", 
+            "Expected subdivsion name to be Colón, got {}.".format(test_request_pa_03["PA-3"]["name"]))  
+        self.assertEqual(test_request_pa_03["PA-3"]["localName"], "Colón", 
+            "Expected subdivsion local name to be Colón, got {}.".format(test_request_pa_03["PA-3"]["localName"]))  
+        self.assertEqual(test_request_pa_03["PA-3"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_pa_03["PA-3"]["parentCode"]))
+        self.assertEqual(test_request_pa_03["PA-3"]["type"], "Province", 
+            "Expected subdivision type to be Province, got {}.".format(test_request_pa_03["PA-3"]["type"]))
+        self.assertEqual(test_request_pa_03["PA-3"]["latLng"], [9.359, -79.9],
+            "Expected subdivision latLng to be [9.359, -79.9], got {}.".format(test_request_pa_03["PA-3"]["latLng"]))
+        self.assertEqual(test_request_pa_03["PA-3"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/PA/PA-3.svg",
+            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/PA/PA-3.svg, got {}.".format(test_request_pa_03["PA-3"]["flagUrl"]))
+#3.)
+        test_request_ss_ew = requests.get(self.subd_base_url + test_subd_ss_ew, headers=self.user_agent_header).json() #SS-EW
+
+        #SS-EW - Western Equatoria
+        self.assertEqual(test_request_ss_ew["SS-EW"]["name"], "Western Equatoria", 
+            "Expected subdivsion name to be Western Equatoria, got {}.".format(test_request_ss_ew["SS-EW"]["name"]))  
+        self.assertEqual(test_request_ss_ew["SS-EW"]["localName"], "Western Equatoria", 
+            "Expected subdivsion local name to be Western Equatoria, got {}.".format(test_request_ss_ew["SS-EW"]["localName"]))  
+        self.assertEqual(test_request_ss_ew["SS-EW"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_ss_ew["SS-EW"]["parentCode"]))
+        self.assertEqual(test_request_ss_ew["SS-EW"]["type"], "State", 
+            "Expected subdivision type to be State, got {}.".format(test_request_ss_ew["SS-EW"]["type"]))
+        self.assertEqual(test_request_ss_ew["SS-EW"]["latLng"], [5.347, 28.299],
+            "Expected subdivision latLng to be [5.347, 28.299], got {}.".format(test_request_ss_ew["SS-EW"]["latLng"]))
+        self.assertEqual(test_request_ss_ew["SS-EW"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/SS/SS-EW.png",
+            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/SS/SS-EW.png, got {}.".format(test_request_ss_ew["SS-EW"]["flagUrl"]))
+#4.)
+        test_request_tv_nkf = requests.get(self.subd_base_url + test_subd_tv_nkf, headers=self.user_agent_header).json() #TV-NKF
+
+        #TV-NKF - Western Equatoria
+        self.assertEqual(test_request_tv_nkf["TV-NKF"]["name"], "Nukufetau", 
+            "Expected subdivsion name to be Nukufetau, got {}.".format(test_request_tv_nkf["TV-NKF"]["name"]))  
+        self.assertEqual(test_request_tv_nkf["TV-NKF"]["localName"], "Nukufetau", 
+            "Expected subdivsion local name to be Nukufetau, got {}.".format(test_request_tv_nkf["TV-NKF"]["localName"]))  
+        self.assertEqual(test_request_tv_nkf["TV-NKF"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_tv_nkf["TV-NKF"]["parentCode"]))
+        self.assertEqual(test_request_tv_nkf["TV-NKF"]["type"], "Island council", 
+            "Expected subdivision type to be Island Council, got {}.".format(test_request_tv_nkf["TV-NKF"]["type"]))
+        self.assertEqual(test_request_tv_nkf["TV-NKF"]["latLng"], [-8, 178.5],
+            "Expected subdivision latLng to be [-8, 178.5], got {}.".format(test_request_tv_nkf["TV-NKF"]["latLng"]))
+        self.assertEqual(test_request_tv_nkf["TV-NKF"]["flagUrl"], None,
+            "Expected subdivision flag url to be None, got {}.".format(test_request_tv_nkf["TV-NKF"]["flagUrl"]))
+#5.)       
+        test_request_gb_xyz = requests.get(self.subd_base_url + test_subd_gb_xyz, headers=self.user_agent_header).json() #GB-XYZ
+
+        self.assertIsInstance(test_request_gb_xyz, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_gb_xyz)))
+        self.assertEqual(len(test_request_gb_xyz), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_gb_xyz)))
+        self.assertEqual(test_request_gb_xyz["message"], "Subdivision code {} not found in list of available subdivisions for GB.".format(test_subd_gb_xyz), 
+                "Error message does not match expected:\n{}".format(test_request_gb_xyz["message"]))
+        self.assertEqual(test_request_gb_xyz["path"], self.subd_base_url + test_subd_gb_xyz, 
+                "Error path does not match expected:\n{}".format(test_request_gb_xyz["path"]))
+        self.assertEqual(test_request_gb_xyz["status"], 400, 
+                "Error status does not match expected:\n{}".format(test_request_gb_xyz["status"]))
+#6.)
+        test_request_xx_yy = requests.get(self.subd_base_url + test_subd_xx_yy, headers=self.user_agent_header).json() #XX-YY
+
+        self.assertIsInstance(test_request_xx_yy, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_xx_yy)))
+        self.assertEqual(len(test_request_xx_yy), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_xx_yy)))
+        self.assertEqual(test_request_xx_yy["message"], "Subdivision code {} not found in list of available subdivisions for XX.".format(test_subd_xx_yy), 
+                "Error message does not match expected:\n{}".format(test_request_xx_yy["message"]))
+        self.assertEqual(test_request_xx_yy["path"], self.subd_base_url + test_subd_xx_yy, 
+                "Error path does not match expected:\n{}".format(test_request_xx_yy["path"]))
+        self.assertEqual(test_request_xx_yy["status"], 400, 
+                "Error status does not match expected:\n{}".format(test_request_xx_yy["status"]))
+
     def test_name_endpoint(self):
-        """ Testing name endpoint, return all ISO 3166 subdivision data from input alpha-2 name/names. """
+        """ Testing /name endpoint, return all ISO 3166 subdivision data from input alpha-2 name/names. """
         test_name_bj = "Benin"
         test_name_tj = "Tajikistan"
         test_name_sd = "Sudan"
         test_name_ml_ni = "Mali, Nicaragua"
         test_name_error1 = "ABCDEF"
         test_name_error2 = "12345"
-        name_exceptions_converted = {"Brunei Darussalam": "Brunei", "Bolivia, Plurinational State of": "Bolivia", 
-                                     "Bonaire, Sint Eustatius and Saba": "Caribbean Netherlands", "Congo, Democratic Republic of the": "DR Congo",
-                                     "Congo": "Republic of the Congo", "Côte d'Ivoire": "Ivory Coast", "Cabo Verde": "Cape Verde", "Falkland Islands (Malvinas)": 
-                                     "Falkland Islands", "Micronesia, Federated States of" : "Micronesia", "United Kingdom of Great Britain and Northern Ireland": "United Kingdom",
-                                     "South Georgia and the South Sandwich Islands": "South Georgia", "Iran, Islamic Republic of": "Iran",
-                                     "Korea, Democratic People's Republic of": "North Korea", "Korea, Republic of": "South Korea",
-                                     "Lao People's Democratic Republic": "Laos", "Moldova, Republic of": "Moldova", "Saint Martin (French part)": "Saint Martin",
-                                     "Macao": "Macau", "Pitcairn": "Pitcairn Islands", "Palestine, State of": "Palestine", "Russian Federation": "Russia", "Sao Tome and Principe": "São Tomé and Príncipe",
-                                     "Sint Maarten (Dutch part)": "Sint Maarten", "Syrian Arab Republic": "Syria", "French Southern Territories": "French Southern and Antarctic Lands",
-                                     "Türkiye": "Turkey", "Taiwan, Province of China": "Taiwan", "Tanzania, United Republic of": "Tanzania", "United States of America": "United States",
-                                     "Holy See": "Vatican City", "Venezuela, Bolivarian Republic of": "Venezuela", "Virgin Islands, British": "British Virgin Islands",
-                                     "Virgin Islands, U.S.": "United States Virgin Islands", "Viet Nam": "Vietnam"}
 #1.)
         test_request_bj = requests.get(self.name_base_url + test_name_bj, headers=self.user_agent_header).json() #Benin
 
@@ -437,7 +527,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
         self.assertIsInstance(test_request_error, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_error)))
         self.assertEqual(len(test_request_error), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_error)))
-        self.assertEqual(test_request_error["message"], 'Country name ' + test_name_error1.title() + " not found in the ISO 3166.", 
+        self.assertEqual(test_request_error["message"], "Country name {} not found in the ISO 3166.".format(test_name_error1.title()), 
                 "Error message does not match expected:\n{}".format(test_request_error["message"]))
         self.assertEqual(test_request_error["path"], self.name_base_url + test_name_error1, 
                 "Error path does not match expected:\n{}".format(test_request_error["path"]))
@@ -448,7 +538,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
         self.assertIsInstance(test_request_error, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_error)))
         self.assertEqual(len(test_request_error), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_error)))
-        self.assertEqual(test_request_error["message"], 'Country name ' + test_name_error2.title() + " not found in the ISO 3166.", 
+        self.assertEqual(test_request_error["message"], "Country name {} not found in the ISO 3166.".format(test_name_error2.title()), 
                 "Error message does not match expected:\n{}".format(test_request_error["message"]))
         self.assertEqual(test_request_error["path"], self.name_base_url + test_name_error2, 
                 "Error path does not match expected:\n{}".format(test_request_error["path"]))
@@ -457,7 +547,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
     @unittest.skip("Skipping /all endpoint tests to not overload server.")
     def test_all_endpoint(self):
-        """ Test 'all' endpoint which returns all subdivision data for all ISO 3166 countries. """
+        """ Test /all endpoint which returns all subdivision data for all ISO 3166 countries. """
 #1.)
         test_request_all = requests.get(self.all_base_url, headers=self.user_agent_header).json()
 

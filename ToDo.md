@@ -47,6 +47,10 @@
 - [X] Update version and last updated.
 - [X] Remove spacing between parameters and ':'.
 - [X] Remove references to different versions.
+- [X] Remove blob and GCP functionality and just use iso3166_2 software.
+- [X] Make example links clickable.
+- [X] Set request url path at start of endpoint function.
+- [X] In unit tests - update request errors text.
 
 Future Additions
 ----------------
