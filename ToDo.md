@@ -51,9 +51,52 @@
 - [X] Make example links clickable.
 - [X] Set request url path at start of endpoint function.
 - [X] In unit tests - update request errors text.
+- [X] Update table of contents.
+- [ ] For usage for API on docs, add examples for other languages - similar to https://countrystatecity.in/docs/api/states-by-country/.
+- [X] Add example Error and Not Found response - https://countrystatecity.in/docs/api/states-by-country/
+- [X] Copy API.md from iso3166-2.
+- [X] Multiple subdivisions not returning in API.
+- [X] Search via subdivision name - might need to update /name endpoint.
+- [X] Move country name endpoint to /country_name
+- [X] Update API.md for /subd endpoint.
+- [X] For /alpha endpoint, allow search via numeric code.
+- [X] Change /alpha2 endpoint to /alpha since you can search via alpha2, alpha3, numeric.
+- [X] Change /subd to /subdivision
+- [X] Update API unit tests.
+- [X] Update index.html with new endpoint changes.
+- [ ] Update docs with new endpoint changes.
+- [ ] Update demo.
+- [X] For updated/ alpha endpoint, allow mismtach search of codes.
+- [X] Update /alpha error message return.
+- [X] Update API.md with example returns.
+- [X] Update use of iso3166-2 in index.py.
+- [X] Create comment in index.py of the list of endpoints available.
+- [ ] Test example links on api homepage work after deployment.
+- [X] In API, should the overall country code be returned or subdivision code for /subdivison endpoints - do example tests to see how it looks when returned.
+- [X] In error handler func, if path has /alpha2 or /alpha3 or /numeric, suggest that endpoints should be /alpha.
+- [X] When searching via subd name, lower case, remove spaces, remove accents and any unicode characters.
+- [X] https://iso3166-2-api-amckenna41.vercel.app/api/alpha - should return error ("No alpha code input" etc), rather than retunring 404 error as the endpoint is technically correct. 
+- [X] Remove additional app.routes for each endpoint with trailing slashes.
+- [X] /name - add subdivision code as key.
+- [X] /name - mulitple subdivision names not working.
+- [X] /subdivision - make subdivision code the main key.
+- [X] https://iso3166-2-api-amckenna41.vercel.app/api/name/Berlin - returns Bern and not Berlin. If exact match found then return it else return closest match.
+- [X] Instead of getting approximate subdivision, should we just get exact?
+- [X] Need to add an exception object for subdivision names so that those with commas already in their subd name are searchable e.g "GB-ABC - Armagh City, Banbridge and Craigavon", "Madrid, Comunidad de""
+- [X] If no comma in initial subdivison name input parameter for /name endpoint then skip name exception code.
+- [X] ES - for some subdivisions, spelling mistake in name (catalan names added but not english).
+- [X] /name error when inputting subdivsion with accent/unicode characters - change library to unidecode.
+- [X] Read over index.py
+- [X] For similarly named subdivisions, ensure all subdivison codes are returned e.g Saint George, Saint Patrick, Bolivar, Sucre, saint andrew etc.
+<!-- >>> for d in abc.all:
+...     for e in abc.all[d]:
+...             if (unidecode(abc.all[d][e]["name"]).lower().replace(' ' ,'') not in new_list):
+...                     new_list.append(unidecode(abc.all[d][e]["name"]).lower().replace(' ' ,''))
+...             else:
+...                     dup_list.append(unidecode(abc.all[d][e]["name"]).lower().replace(' ' ,'')) -->
 
 Future Additions
 ----------------
 - [ ] /list endpoint that returns list of all codes and their names.
 - [ ] Create frontend with jsvectormap
-- [ ] Add population & area per subdivision.
+- [ ] Search via lat and long and return subdivision data.

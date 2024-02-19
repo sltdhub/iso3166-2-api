@@ -1,5 +1,4 @@
 # iso3166-2-api 🌎
-
 <!-- ![Vercel](https://vercelbadge.vercel.app/api/amckenna41/iso3166-2-api) -->
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=iso3166-2-api)
 [![pytest](https://github.com/amckenna41/iso3166-2-api/workflows/Building%20and%20Testing/badge.svg)](https://github.com/amckenna41/iso3166-2-api/actions?query=workflowBuilding%20and%20Testing)
@@ -22,19 +21,22 @@ The main API homepage and documentation is available via the URL: <b>[https://is
 
 Table of Contents
 -----------------
-  * [Introduction](#introduction)
-  * [API](#api)
-  * [Staying up to date](#staying-up-to-date)
-  * [Requirements](#requirements)
-  * [Issues](#Issues)
-  * [Contact](#contact)
-  * [References](#references)
+- [Introduction](#introduction)
+- [API](#api)
+- [Staying up to date](#staying-up-to-date)
+- [Requirements](#requirements)
+- [Issues](#issues)
+- [Contact](#contact)
+- [References](#references)
 
 Introduction
 ------------
 This repo contains the front and backend of the API created for the [`iso3166-2`](https://github.com/amckenna41/iso3166-2) repository. The API returns a plethora of subdivison data for all countries in the ISO 3166-2 standard. Utilising the custom-built [`iso3166-2`](https://github.com/amckenna41/iso3166-2) software that incorporates data from the ISO 3166-2. Built using the Python [Flask][flask] framework and hosted on the [Vercel][vercel] platform.
 
-[`iso3166-2`](https://github.com/amckenna41/iso3166-2) is a lightweight custom-built Python package, and accompanying API, that can be used to access all of the world's ISO 3166-2 subdivision data. Here, subdivision can be used interchangably with regions/states/provinces etc. Currently, the package and API supports data from 250 countries/territories, according to the ISO 3166-1 standard. The full list of additional subdivision data attributes supported are:
+[`iso3166-2`](https://github.com/amckenna41/iso3166-2) is a lightweight custom-built Python package, and accompanying API, that can be used to access all of the world's ISO 3166-2 subdivision data. Here, subdivision can be used interchangably with regions/states/provinces etc. Currently, the package and API support subdivision data from **250** officially assigned code elements within the ISO 3166-1, with **200** of these countries having recognised subdivisions (50 entires have 0 subdivisions), totalling **5,039** subdivisions across the whole dataset. Transitional reservations are not included and only 4 of the exceptional reservations, that have now been officially assigned, are included: AX (Aland Islands), GG (Guernsey), IM (Isle of Man) and JE (Jersey) [[3]](#references). The ISO 3166-2 was first published in 1998 and as of November 2023 there are 5,039 codes defined in it [[2]](#references).
+
+The full list of additional subdivision data attributes supported are:
+
 * Name (subdivsion name)
 * Local name (subdivision name in local language)
 * Code (subdivision code)
@@ -45,8 +47,6 @@ This repo contains the front and backend of the API created for the [`iso3166-2`
 
 The ISO 3166 standard by the ISO defines codes for the names of countries, dependent territories, special areas of geographical interest, consolidated into the ISO 3166-1 standard [[1]](#references), and their principal subdivisions (e.g., provinces, states, departments, regions), which comprise the ISO 3166-2 standard [[2]](#references). The ISO 3166-1 was first published in 1974 and currently comprises 249 countries, 193 of which are sovereign states that are members of the United Nations [[1]](#references). 
 
-The ISO 3166-2 was first published in 1998 and as of November 2023 there are 5,039 codes defined in it [[2]](#references).
-
 API
 ---
 The main API endpoint is:
@@ -55,19 +55,22 @@ The main API endpoint is:
 
 The other endpoints available in the API are:
 * https://iso3166-2-api.vercel.app/api/all
-* https://iso3166-2-api.vercel.app/api/subd/<input_subdivision>
-* https://iso3166-2-api.vercel.app/api/alpha2/<input_alpha2>
-* https://iso3166-2-api.vercel.app/api/name/<input_name>
+* https://iso3166-2-api.vercel.app/api/alpha/<input_alpha>
+* https://iso3166-2-api.vercel.app/api/country_name/<input_country_name>
+* https://iso3166-2-api.vercel.app/api/subdivision/<input_subdivision>
+* https://iso3166-2-api.vercel.app/api/subdivision_name/<input_subdivision_name>
 
 Three paths/endpoints are available in the API - `/api/all`, `/api/subd`, `/api/alpha2` and `/api/name`.
 
 * The `/api/all` path/endpoint returns all of the ISO 3166 subdivision data for all countries.
 
-* The `/api/subd` endpoint acceptst the ISO 3166-2 subdivision codes, e.g `/api/subd/GB-ABD`. You can also input a list of subdivision code and the data for each will be returned e.g `/api/subd/IE-MO,FI-17,RO-AG`. If the input subdivision code is not in the correct format then an error will be raised. Similarly if an invalid subdivision code that doesn't exist is input then an error will be raised.
+* The `/api/alpha` endpoint accepts the 2 letter alpha-2, 3 letter alpha-3 and or numeric ISO 3166-1 country codes appended to the path/endpoint e.g. `/api/alpha/JP`. A single alpha-2, alpha-3 or numeric code or list of them can be passed to the API e.g. `/api/alpha/FR,DE,HU,ID,MA`, `/api/alpha2/FRA,DEU,HUN,IDN,MAR` and `/api/428,504,638`. If an invalid country code is input then an error will be returned.
 
-* The `/api/alpha2` endpoint accepts the 2 letter alpha-2 country code appended to the path/endpoint e.g. `/api/alpha2/JP`. A single alpha-2 code or list of them can be passed to the API e.g. `/api/alpha2/FR,DE,HU,ID,MA`. For redundancy, the 3 letter alpha-3 counterpart for each country's alpha-2 code can also be appended to the path e.g. `/api/alpha2/FRA,DEU,HUN,IDN,MAR`. If an invalid alpha-2 code is input then an error will be returned.
+* The `/api/country_name` endpoint accepts the country/territory name as it is most commonly known in english, according to the ISO 3166-1. The name can similarly be appended to the **country_name** path/endpoint e.g. `/api/country_name/Denmark`. A single country name or list of them can be passed into the API e.g. `/api/country_name/France,Moldova,Benin`. A closeness function is utilised so the most approximate name from the input will be used e.g. Sweden will be used if input is `/api/country_name/Swede`. If no country is found from the closeness function or an invalid name is input then an error will be returned.
 
-* The `/api/name` endpoint accepts the country/territory name as it is most commonly known in english, according to the ISO 3166-1. The name can similarly be appended to the **name** path/endpoint e.g. `/api/name/Denmark`. A single country name or list of them can be passed into the API e.g. `/api/name/France,Moldova,Benin`. A closeness function is utilised so the most approximate name from the input will be used e.g. Sweden will be used if input is `/api/name/Swede`. If no country is found from the closeness function or an invalid name is input then an error will be returned.
+* The `/api/subdivision` endpoint acceptst the ISO 3166-2 subdivision codes, e.g `/api/subdivision/GB-ABD`. You can also input a list of subdivision codes from the same or different countries and the data for each will be returned e.g `/api/subdivision/IE-MO,FI-17,RO-AG`. If the input subdivision code is not in the correct format then an error will be raised. Similarly if an invalid subdivision code that doesn't exist is input then an error will be raised.
+
+* The `/api/subdivision_name/` endpoint acceptst the ISO 3166-2 subdivision names, e.g `/api/subdivision_name/Derry`. You can also input a list of subdivision name from the same or different countries and the data for each will be returned e.g `/api/subdivision_name/Paris,Frankfurt,Rimini`. A closeness function is utilised to find the matching subdivision name, the most approximate subdivisions may be returned including multiple matches e.g... If an invalid subdivision name that doesn't match any is input then an error will be raised.
 
 * The main API endpoint (`/` or `/api`) will return the homepage and API documentation.
 
@@ -90,6 +93,7 @@ Requirements
 * [requests][requests] >= 2.28.1
 * [iso3166][iso3166] >= 2.1.1
 * [iso3166-2][iso3166_2] >= 1.4.0
+* [unidecode][unidecode] >= 1.3.8
 
 Issues
 ------
@@ -120,6 +124,7 @@ Support
 [requests]: https://requests.readthedocs.io/
 [iso3166]: https://github.com/deactivated/python-iso3166
 [iso3166_2]: https://github.com/amckenna41/iso3166-2
+[unidecode]: https://pypi.org/project/Unidecode/
 [google-auth]: https://cloud.google.com/python/docs/reference
 [google-cloud-storage]: https://cloud.google.com/python/docs/reference
 [google-api-python-client]: https://cloud.google.com/python/docs/reference
