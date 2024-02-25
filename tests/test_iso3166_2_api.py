@@ -67,7 +67,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         author = soup.find(id='author').text.split(': ')[1]
 
         self.assertEqual(version, "1.5.0", "Expected API version to be 1.5.0, got {}.".format(version))
-        self.assertEqual(last_updated, "January 2024", "Expected last updated data to be January 2024, got {}.".format(last_updated))
+        self.assertEqual(last_updated, "February 2024", "Expected last updated data to be February 2024, got {}.".format(last_updated))
         self.assertEqual(author, "AJ", "Expected author to be AJ, got {}.".format(author))
 #2.)
         section_list_menu = soup.find(id='section-list-menu').find_all('li')
@@ -362,7 +362,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
         self.assertIsInstance(test_request_error1, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_error1)))
         self.assertEqual(len(test_request_error1), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_error1)))
-        self.assertEqual(test_request_error1["message"], "Invalid ISO 3166-1 alpha country code input: {}.".format(test_alpha_error_1), 
+        self.assertEqual(test_request_error1["message"], "Invalid ISO 3166-1 alpha country code input, cannot convert into corresponding alpha-2 code: {}.".format(test_alpha_error_1), 
                 "Error message does not match expected:\n{}".format(test_request_error1["message"]))
         self.assertEqual(test_request_error1["path"], self.alpha_base_url + test_alpha_error_1, 
                 "Error path does not match expected:\n{}.".format(test_request_error1["path"]))
@@ -373,7 +373,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
         self.assertIsInstance(test_request_error2, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_error2)))
         self.assertEqual(len(test_request_error2), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_error2)))
-        self.assertEqual(test_request_error2["message"], "Invalid ISO 3166-1 numeric country code input: {}.".format(test_alpha_error_2), 
+        self.assertEqual(test_request_error2["message"], "Invalid ISO 3166-1 numeric country code input, cannot convert into corresponding alpha-2 code: {}.".format(test_alpha_error_2), 
                 "Error message does not match expected:\n{}".format(test_request_error2["message"]))
         self.assertEqual(test_request_error2["path"], self.alpha_base_url + test_alpha_error_2, 
                 "Error path does not match expected:\n{}.".format(test_request_error2["path"]))
@@ -509,16 +509,16 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
     def test_subdivision_name_endpoint(self):
         """ Testing /name endpoint, return all ISO 3166 subdivision data from input subdivision name. """
-        test_subdivision_azua = "Azua" #DO-02
-        test_subdivision_cakaudrove = "Cakaudrove" #FJ-03
-        test_subdivision_felidhu_atoll = "Felidhu Atoll" #MV-04
-        test_subdivision_gelderland_overijssel = "Gelderland, Overijssel" #NL-GE, NL-OV
+        test_subdivision_name_azua = "Azua" #DO-02
+        test_subdivision_name_cakaudrove = "Cakaudrove" #FJ-03
+        test_subdivision_name_gelderland_overijssel = "Gelderland, Overijssel" #NL-GE, NL-OV
+        test_subdivision_name_ciudad = "Ciudad"
         test_subdivision_madrid_armaghcity = "Madrid, Comunidad de, Armagh City, Banbridge and Craigavon" #ES-MD, GB-ABC
-        test_subdivision_error1 = "blahblahblah"
-        test_subdivision_error2 = "1234"
-        test_subdivision_error3 = ""
+        test_subdivision_name_error1 = "blahblahblah"
+        test_subdivision_name_error2 = "1234"
+        test_subdivision_name_error3 = ""
 #1.)
-        test_request_azua = requests.get(self.subdivision_name_base_url + test_subdivision_azua, headers=self.user_agent_header).json() #DO-02 - Azua
+        test_request_azua = requests.get(self.subdivision_name_base_url + test_subdivision_name_azua, headers=self.user_agent_header).json() #DO-02 - Azua
 
         self.assertIsInstance(test_request_azua, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_azua)))
         self.assertEqual(list(test_request_azua.keys()), ["DO-02"], "Expected output object of API to contain only the DO-02 key, got {}.".format(list(test_request_azua.keys())))
@@ -537,7 +537,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(test_request_azua["DO-02"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/DO/DO-02.png",
             "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/DO/DO-02.png, got {}.".format(test_request_azua["DO-02"]["flagUrl"]))
 #2.)
-        test_request_cakaudrove = requests.get(self.subdivision_name_base_url + test_subdivision_cakaudrove, headers=self.user_agent_header).json() #FJ-03 - Cakaudrove
+        test_request_cakaudrove = requests.get(self.subdivision_name_base_url + test_subdivision_name_cakaudrove, headers=self.user_agent_header).json() #FJ-03 - Cakaudrove
 
         self.assertIsInstance(test_request_cakaudrove, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_cakaudrove)))
         self.assertEqual(list(test_request_cakaudrove.keys()), ["FJ-03"], "Expected output object of API to contain only the FJ-03 key, got {}.".format(list(test_request_cakaudrove.keys())))
@@ -556,26 +556,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(test_request_cakaudrove["FJ-03"]["flagUrl"], None,
             "Expected subdivision flag url to be None, got {}.".format(test_request_cakaudrove["FJ-03"]["flagUrl"]))
 #3.)
-        test_request_felidhu_atoll = requests.get(self.subdivision_name_base_url + test_subdivision_felidhu_atoll, headers=self.user_agent_header).json() #MV-04 - Felidhu Atoll
-
-        self.assertIsInstance(test_request_felidhu_atoll, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_felidhu_atoll)))
-        self.assertEqual(list(test_request_felidhu_atoll.keys()), ["MV-04"], "Expected output object of API to contain only the MV-04 key, got {}.".format(list(test_request_felidhu_atoll.keys())))
-
-        #MV-04 - Felidhu Atoll
-        self.assertEqual(test_request_felidhu_atoll["MV-04"]["name"], "Felidhu Atoll", 
-            "Expected subdivsion name to be Felidhu Atoll, got {}.".format(test_request_felidhu_atoll["MV-04"]["name"]))  
-        self.assertEqual(test_request_felidhu_atoll["MV-04"]["localName"], "Felidhu Atoll", 
-            "Expected subdivsion local name to be Felidhu Atoll, got {}.".format(test_request_felidhu_atoll["MV-04"]["localName"]))  
-        self.assertEqual(test_request_felidhu_atoll["MV-04"]["parentCode"], None, 
-            "Expected subdivision parent code to be None, got {}.".format(test_request_felidhu_atoll["MV-04"]["parentCode"]))
-        self.assertEqual(test_request_felidhu_atoll["MV-04"]["type"], "Administrative atoll", 
-            "Expected subdivision type to be Administrative atoll, got {}.".format(test_request_felidhu_atoll["MV-04"]["type"]))
-        self.assertEqual(test_request_felidhu_atoll["MV-04"]["latLng"], [3.396, 73.512],
-            "Expected subdivision latLng to be [3.396, 73.512], got {}.".format(test_request_felidhu_atoll["MV-04"]["latLng"]))
-        self.assertEqual(test_request_felidhu_atoll["MV-04"]["flagUrl"], None,
-            "Expected subdivision flag url to be None, got {}.".format(test_request_felidhu_atoll["MV-04"]["flagUrl"]))
-#4.)
-        test_request_gelderland_overijssel = requests.get(self.subdivision_name_base_url + test_subdivision_gelderland_overijssel, headers=self.user_agent_header).json() #NL-GE - Gelderland, NL-OV - Overijssel
+        test_request_gelderland_overijssel = requests.get(self.subdivision_name_base_url + test_subdivision_name_gelderland_overijssel, headers=self.user_agent_header).json() #NL-GE - Gelderland, NL-OV - Overijssel
 
         self.assertIsInstance(test_request_gelderland_overijssel, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_gelderland_overijssel)))
         self.assertEqual(list(test_request_gelderland_overijssel.keys()), ["NL-GE", "NL-OV"], "Expected output object of API to contain only the NL-GE and NL-OV key, got {}.".format(list(test_request_gelderland_overijssel.keys())))
@@ -606,6 +587,38 @@ class ISO3166_2_API_Tests(unittest.TestCase):
             "Expected subdivision latLng to be [52.439, 6.502], got {}.".format(test_request_gelderland_overijssel["NL-OV"]["latLng"]))
         self.assertEqual(test_request_gelderland_overijssel["NL-OV"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/NL/NL-OV.svg",
             "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/NL/NL-OV.svg, got {}.".format(test_request_gelderland_overijssel["NL-OV"]["flagUrl"]))
+#4.)
+        test_request_ciudad = requests.get(self.subdivision_name_base_url + test_subdivision_name_ciudad, headers=self.user_agent_header, params={"likeness": "70"}).json() #Ciudad - likeness score of 70
+
+        self.assertIsInstance(test_request_ciudad, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_ciudad)))
+        self.assertEqual(list(test_request_ciudad.keys()), ["AR-C", "ES-CR", "ES-VC", "MX-CMX"], "Expected output object of API to contain only the AR-C, ES-CR, ES-VC and MX-CMX key, got {}.".format(list(test_request_ciudad.keys())))
+
+        #AR-C - Ciudad Autonoma de Buenos Aires
+        self.assertEqual(test_request_ciudad["AR-C"]["name"], "Ciudad Autónoma de Buenos Aires", 
+            "Expected subdivsion name to be Ciudad Autónoma de Buenos Aires, got {}.".format(test_request_ciudad["AR-C"]["name"]))  
+        self.assertEqual(test_request_ciudad["AR-C"]["localName"], "Ciudad Autónoma de Buenos Aires", 
+            "Expected subdivsion local name to be Ciudad Autónoma de Buenos Aires, got {}.".format(test_request_ciudad["AR-C"]["localName"]))  
+        self.assertEqual(test_request_ciudad["AR-C"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_ciudad["AR-C"]["parentCode"]))
+        self.assertEqual(test_request_ciudad["AR-C"]["type"], "City", 
+            "Expected subdivision type to be City, got {}.".format(test_request_ciudad["AR-C"]["type"]))
+        self.assertEqual(test_request_ciudad["AR-C"]["latLng"], [-34.604, -58.382],
+            "Expected subdivision latLng to be [-34.604, -58.382], got {}.".format(test_request_ciudad["AR-C"]["latLng"]))
+        self.assertEqual(test_request_ciudad["AR-C"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/AR/AR-C.svg",
+            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/AR/AR-C.svg, got {}.".format(test_request_ciudad["AR-C"]["flagUrl"]))
+        #MX-CMX - Ciudad de Mexico
+        self.assertEqual(test_request_ciudad["MX-CMX"]["name"], "Ciudad de México", 
+            "Expected subdivsion name to be Ciudad de México, got {}.".format(test_request_ciudad["MX-CMX"]["name"]))  
+        self.assertEqual(test_request_ciudad["MX-CMX"]["localName"], "Ciudad de México", 
+            "Expected subdivsion local name to be Ciudad de México, got {}.".format(test_request_ciudad["MX-CMX"]["localName"]))  
+        self.assertEqual(test_request_ciudad["MX-CMX"]["parentCode"], None, 
+            "Expected subdivision parent code to be None, got {}.".format(test_request_ciudad["MX-CMX"]["parentCode"]))
+        self.assertEqual(test_request_ciudad["MX-CMX"]["type"], "Federal entity", 
+            "Expected subdivision type to be Federal entity, got {}.".format(test_request_ciudad["MX-CMX"]["type"]))
+        self.assertEqual(test_request_ciudad["MX-CMX"]["latLng"], [19.433, -99.133],
+            "Expected subdivision latLng to be [19.433, -99.133], got {}.".format(test_request_ciudad["MX-CMX"]["latLng"]))
+        self.assertEqual(test_request_ciudad["MX-CMX"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/MX/MX-CMX.svg",
+            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/MX/MX-CMX.svg, got {}.".format(test_request_ciudad["MX-CMX"]["flagUrl"]))
 #5.)
         test_request_madrid_armaghcity = requests.get(self.subdivision_name_base_url + test_subdivision_madrid_armaghcity, headers=self.user_agent_header).json() #ES-MD - Madrid, GB-ABC - Armagh City, Banbridge and Craigavon
 
@@ -639,35 +652,37 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(test_request_madrid_armaghcity["GB-ABC"]["flagUrl"], None,
             "Expected subdivision flag url to be None, got {}.".format(test_request_madrid_armaghcity["GB-ABC"]["flagUrl"]))
 #6.)
-        test_request_subdivision_error1 = requests.get(self.subdivision_base_url + test_subdivision_error1, headers=self.user_agent_header).json() #blahblahblah
+        test_request_subdivision_error1 = requests.get(self.subdivision_name_base_url + test_subdivision_name_error1, headers=self.user_agent_header).json() #blahblahblah
 
         self.assertIsInstance(test_request_subdivision_error1, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_subdivision_error1)))
         self.assertEqual(len(test_request_subdivision_error1), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_subdivision_error1)))
-        self.assertEqual(test_request_subdivision_error1["message"], "All subdivision codes must be in the format XX-Y, XX-YY or XX-YYY: {}.".format(test_subdivision_error1.upper()), 
+        self.assertEqual(test_request_subdivision_error1["message"], "No valid subdivision found for input name: {}. Try using the query strig parameter '?likeness' and "
+                         "reduce the likeness score to expand the search space, e.g '?likeness=0.3' will return subdivisions that have a 30% match to the input name.".format(test_subdivision_name_error1), 
                 "Error message does not match expected:\n{}".format(test_request_subdivision_error1["message"]))
-        self.assertEqual(test_request_subdivision_error1["path"], self.subdivision_base_url + test_subdivision_error1, 
+        self.assertEqual(test_request_subdivision_error1["path"], self.subdivision_name_base_url + test_subdivision_name_error1, 
                 "Error path does not match expected:\n{}".format(test_request_subdivision_error1["path"]))
         self.assertEqual(test_request_subdivision_error1["status"], 400, 
                 "Error status does not match expected:\n{}".format(test_request_subdivision_error1["status"]))
 #6.)
-        test_request_subdivision_error2 = requests.get(self.subdivision_base_url + test_subdivision_error2, headers=self.user_agent_header).json() #1234
+        test_request_subdivision_error2 = requests.get(self.subdivision_name_base_url + test_subdivision_name_error2, headers=self.user_agent_header).json() #1234
 
         self.assertIsInstance(test_request_subdivision_error2, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_subdivision_error2)))
         self.assertEqual(len(test_request_subdivision_error2), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_subdivision_error2)))
-        self.assertEqual(test_request_subdivision_error2["message"],  "All subdivision codes must be in the format XX-Y, XX-YY or XX-YYY: {}.".format(test_subdivision_error2), 
+        self.assertEqual(test_request_subdivision_error2["message"],  "No valid subdivision found for input name: {}. Try using the query strig parameter '?likeness' and "
+                         "reduce the likeness score to expand the search space, e.g '?likeness=0.3' will return subdivisions that have a 30% match to the input name.".format(test_subdivision_name_error2), 
                 "Error message does not match expected:\n{}".format(test_request_subdivision_error2["message"]))
-        self.assertEqual(test_request_subdivision_error2["path"], self.subdivision_base_url + test_subdivision_error2, 
+        self.assertEqual(test_request_subdivision_error2["path"], self.subdivision_name_base_url + test_subdivision_name_error2, 
                 "Error path does not match expected:\n{}".format(test_request_subdivision_error2["path"]))
         self.assertEqual(test_request_subdivision_error2["status"], 400, 
                 "Error status does not match expected:\n{}".format(test_request_subdivision_error2["status"]))
 #7.)
-        test_request_subdivision_error3 = requests.get(self.subdivision_base_url + test_subdivision_error3, headers=self.user_agent_header).json() #""
+        test_request_subdivision_error3 = requests.get(self.subdivision_name_base_url + test_subdivision_name_error3, headers=self.user_agent_header).json() #""
 
         self.assertIsInstance(test_request_subdivision_error3, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_subdivision_error3)))
         self.assertEqual(len(test_request_subdivision_error3), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_subdivision_error3)))
-        self.assertEqual(test_request_subdivision_error3["message"], "The subdivision input parameter cannot be empty.",
+        self.assertEqual(test_request_subdivision_error3["message"], "The subdivision name input parameter cannot be empty.",
                 "Error message does not match expected:\n{}".format(test_request_subdivision_error3["message"]))
-        self.assertEqual(test_request_subdivision_error3["path"], self.subdivision_base_url + test_subdivision_error3, 
+        self.assertEqual(test_request_subdivision_error3["path"], self.subdivision_name_base_url + test_subdivision_name_error3, 
                 "Error path does not match expected:\n{}".format(test_request_subdivision_error3["path"]))
         self.assertEqual(test_request_subdivision_error3["status"], 400, 
                 "Error status does not match expected:\n{}".format(test_request_subdivision_error3["status"]))

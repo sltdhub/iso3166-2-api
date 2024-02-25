@@ -88,12 +88,13 @@ The list of ISO 3166 updates was last updated on <strong>Nov 2023</strong>. A lo
 
 Requirements
 ------------
-* [python][python] >= 3.7
+* [python][python] >= 3.8
 * [flask][flask] >= 2.3.2
 * [requests][requests] >= 2.28.1
 * [iso3166][iso3166] >= 2.1.1
 * [iso3166-2][iso3166_2] >= 1.4.0
 * [unidecode][unidecode] >= 1.3.8
+* [thefuzz][thefuzz] >= 0.22.1
 
 Issues
 ------

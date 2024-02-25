@@ -45,7 +45,7 @@
             <div class="content-infos">
                 <!-- version and last updated info -->
                 <div class="info" id="version"><b>Version:</b> 1.5.0</div>
-                <div class="info" id="last-updated"><b>Last Updated:</b> January 2024</div>
+                <div class="info" id="last-updated"><b>Last Updated:</b> February 2024</div>
                 <div class="info" id="author"><b>Developer/Maintainer:</b> <a href="https://github.com/amckenna41/" target="_blank">AJ</a></div>
             </div>
             <!-- list of available sections in API documentation -->
@@ -208,11 +208,14 @@
                 <h1>subdivision name</h1>
                 <p>
                     The /name endpoint returns all the subdivision data attribute values for a country according to its subdivision name, as it is commonly known in English. A comma 
-                    seperated list of subdivision names can also be input. <br> <br>
+                    seperated list of subdivision names can also be input. This endpoint also has the <i>likeness score</i> (`?likeness=`) query string parameter that can be appended to the URL. 
+                    This can be set between 1 - 100, representing a % of likeness to the input name the return subdivisions should be, e.g: a likeness score of 90 will return fewer 
+                    potential matches whose name only match to a high degree compared to a score of 10 which will create a larger search space, thus returning more potential subdivision 
+                    matches. A default likeness of 100 (exact match) is used, if no match found then this is reduced to 90. <br> <br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/{input_subdivision_name}</code> 
                     <button style="cursor: pointer;" id="copy-text-btn3" data-api-url="https://iso3166-2-api.vercel.app/api/name/"><i class="fa fa-clone"></i></button> <br><br>
                     <a href="https://iso3166-2-api.vercel.app/api/name/Satakunta" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Satakunta</code></a> <br>
-                    <a href="https://iso3166-2-api.vercel.app/api/name/Cavan" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Cavan</code></a> <br>
+                    <a href="https://iso3166-2-api.vercel.app/api/name/Cavan?likeness=70" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Cavan?likeness=70</code></a> <br>
                     <a href="https://iso3166-2-api.vercel.app/api/name/Goiás,Paraíba,São Paulo" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/name/Goiás,Paraíba,São Paulo</code></a>
                 </p>
             </div>

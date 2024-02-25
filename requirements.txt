@@ -1,5 +1,6 @@
 flask
 requests
 unidecode
+thefuzz
 iso3166
 iso3166-2
