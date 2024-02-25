@@ -126,6 +126,7 @@ Support
 [iso3166]: https://github.com/deactivated/python-iso3166
 [iso3166_2]: https://github.com/amckenna41/iso3166-2
 [unidecode]: https://pypi.org/project/Unidecode/
+[thefuzz]: https://github.com/seatgeek/thefuzz/tree/master
 [google-auth]: https://cloud.google.com/python/docs/reference
 [google-cloud-storage]: https://cloud.google.com/python/docs/reference
 [google-api-python-client]: https://cloud.google.com/python/docs/reference
