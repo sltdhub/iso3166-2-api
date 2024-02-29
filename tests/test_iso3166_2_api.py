@@ -67,7 +67,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         author = soup.find(id='author').text.split(': ')[1]
 
         self.assertEqual(version, "1.5.0", "Expected API version to be 1.5.0, got {}.".format(version))
-        self.assertEqual(last_updated, "February 2024", "Expected last updated data to be February 2024, got {}.".format(last_updated))
+        self.assertEqual(last_updated, "March 2024", "Expected last updated data to be March 2024, got {}.".format(last_updated))
         self.assertEqual(author, "AJ", "Expected author to be AJ, got {}.".format(author))
 #2.)
         section_list_menu = soup.find(id='section-list-menu').find_all('li')

@@ -359,7 +359,7 @@ def api_country_name(country_name=""):
                 break
             else:
                 #return error if country name not found
-                error_message["message"] = "Invalid country name input: {}.".format(name_)
+                error_message["message"] = "Invalid country name input: {}.".format(name)
                 return jsonify(error_message), 400                
 
         #use iso3166 package to find corresponding alpha-2 code from its name
@@ -379,10 +379,10 @@ def api_subdivision_name(subdivision_name=""):
     """
     Flask route for '/api/name' path/endpoint. Return all ISO 3166-2 subdivision data attributes and 
     values for inputted subdivision name/names. When searching for the sought subdivision name, a 
-    closeness function is used to find the exact match within the dataset, if this returns nothing 
-    then the dataset is searched for subdivision names that match 90% or more, the first match will
-    then be returned. If no matching subdivision name found or input is empty then return an error. 
-    Route can accept path with or without trailing slash.
+    fuzzy search algorithm is used via "thefuzz" package that finds the exact match within the 
+    dataset, if this returns nothing then the dataset is searched for subdivision names that match 
+    90% or more, the first match will then be returned. If no matching subdivision name found or 
+    input is empty then return an error. Route can accept path with or without trailing slash.
 
     Parameters
     ==========
@@ -428,7 +428,7 @@ def api_subdivision_name(subdivision_name=""):
             search_likeness = float(search_likeness)
 
     #decode any unicode or accent characters using utf-8 encoding, lower case and remove additional whitespace
-    subdivision_name = unidecode(unquote_plus(subdivision_name).lower().replace(' ', ''))
+    subdivision_name_ = unidecode(unquote_plus(subdivision_name).lower().replace(' ', ''))
 
     #object to store the subdivision name and its corresponding alpha-2 code and subdivision code (name: alpha_2, code: subd_code)
     all_subdivision_names = {}
@@ -459,27 +459,27 @@ def api_subdivision_name(subdivision_name=""):
             all_subdivision_names_list.append(unidecode(unquote_plus(all_iso3166_2[alpha_2][subd]["name"]).lower().replace(' ', '')))
 
             #if comma in official subdivision name, append to the exception list, which is needed if a comma seperated list of names are input
-            if (',' in subdivision_name):
+            if (',' in subdivision_name_):
                 if (',' in unidecode(all_iso3166_2[alpha_2][subd]["name"].lower().replace(' ', ''))):
                     subdivision_name_expections.append(unidecode(all_iso3166_2[alpha_2][subd]["name"].lower().replace(' ', '')))      
                     
     #only execute subdivision name exception code if comma is in input param
-    if (',' in subdivision_name):
+    if (',' in subdivision_name_):
         #sort exceptions list alphabetically 
         subdivision_name_expections.sort()
 
         #temp var to track input subdivision name 
-        temp_subdivision_name = subdivision_name
+        temp_subdivision_name = subdivision_name_
 
         #iterate over all subdivision names exceptions (those with a comma in them), append to seperate list if input param is one
         for sub_name in subdivision_name_expections:
             if (sub_name in temp_subdivision_name):
                 subdivision_name_expections_input.append(sub_name)
                 #remove current subdivision name from temp var, strip of commas
-                subdivision_name = temp_subdivision_name.replace(sub_name, '').strip(',')
+                subdivision_name_ = temp_subdivision_name.replace(sub_name, '').strip(',')
 
     #sort all subdivision names codes
-    subdivision_names = sorted([subdivision_name])
+    subdivision_names = sorted([subdivision_name_])
     
     #split multiple subdivision names into list
     subdivision_names = subdivision_names[0].split(',')
