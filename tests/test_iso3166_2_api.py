@@ -656,7 +656,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
         self.assertIsInstance(test_request_subdivision_error1, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_subdivision_error1)))
         self.assertEqual(len(test_request_subdivision_error1), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_subdivision_error1)))
-        self.assertEqual(test_request_subdivision_error1["message"], "No valid subdivision found for input name: {}. Try using the query strig parameter '?likeness' and "
+        self.assertEqual(test_request_subdivision_error1["message"], "No valid subdivision found for input name: {}. Try using the query string parameter '?likeness' and "
                          "reduce the likeness score to expand the search space, e.g '?likeness=0.3' will return subdivisions that have a 30% match to the input name.".format(test_subdivision_name_error1), 
                 "Error message does not match expected:\n{}".format(test_request_subdivision_error1["message"]))
         self.assertEqual(test_request_subdivision_error1["path"], self.subdivision_name_base_url + test_subdivision_name_error1, 
@@ -668,7 +668,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
 
         self.assertIsInstance(test_request_subdivision_error2, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_subdivision_error2)))
         self.assertEqual(len(test_request_subdivision_error2), 3, "Expected output object of API to be of length 3, got {}.".format(len(test_request_subdivision_error2)))
-        self.assertEqual(test_request_subdivision_error2["message"],  "No valid subdivision found for input name: {}. Try using the query strig parameter '?likeness' and "
+        self.assertEqual(test_request_subdivision_error2["message"],  "No valid subdivision found for input name: {}. Try using the query string parameter '?likeness' and "
                          "reduce the likeness score to expand the search space, e.g '?likeness=0.3' will return subdivisions that have a 30% match to the input name.".format(test_subdivision_name_error2), 
                 "Error message does not match expected:\n{}".format(test_request_subdivision_error2["message"]))
         self.assertEqual(test_request_subdivision_error2["path"], self.subdivision_name_base_url + test_subdivision_name_error2, 
