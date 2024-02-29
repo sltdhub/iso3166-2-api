@@ -51,26 +51,26 @@ API
 ---
 The main API endpoint is:
 
-> https://iso3166-2-api.vercel.app/api
+> [https://iso3166-2-api.vercel.app/api](https://iso3166-2-api.vercel.app/api)
 
 The other endpoints available in the API are:
 * https://iso3166-2-api.vercel.app/api/all
 * https://iso3166-2-api.vercel.app/api/alpha/<input_alpha>
 * https://iso3166-2-api.vercel.app/api/country_name/<input_country_name>
 * https://iso3166-2-api.vercel.app/api/subdivision/<input_subdivision>
-* https://iso3166-2-api.vercel.app/api/subdivision_name/<input_subdivision_name>
+* https://iso3166-2-api.vercel.app/api/name/<input_subdivision_name>
 
-Three paths/endpoints are available in the API - `/api/all`, `/api/subd`, `/api/alpha2` and `/api/name`.
+Five paths/endpoints are available in the API - `/api/all`, `/api/alpha`, `/api/country_name`, `/api/subdivision` and `/api/name`.
 
 * The `/api/all` path/endpoint returns all of the ISO 3166 subdivision data for all countries.
 
-* The `/api/alpha` endpoint accepts the 2 letter alpha-2, 3 letter alpha-3 and or numeric ISO 3166-1 country codes appended to the path/endpoint e.g. `/api/alpha/JP`. A single alpha-2, alpha-3 or numeric code or list of them can be passed to the API e.g. `/api/alpha/FR,DE,HU,ID,MA`, `/api/alpha2/FRA,DEU,HUN,IDN,MAR` and `/api/428,504,638`. If an invalid country code is input then an error will be returned.
+* The `/api/alpha` endpoint accepts the 2 letter alpha-2, 3 letter alpha-3 and or numeric ISO 3166-1 country codes appended to the path/endpoint e.g. `/api/alpha/JP`. A single alpha-2, alpha-3 or numeric code or list of them can be passed to the API e.g. `/api/alpha/FR,DE,HU,ID,MA`, `/api/alpha/FRA,DEU,HUN,IDN,MAR` and `/api/alpha/428,504,638`. If an invalid country code is input then an error will be returned.
 
-* The `/api/country_name` endpoint accepts the country/territory name as it is most commonly known in english, according to the ISO 3166-1. The name can similarly be appended to the **country_name** path/endpoint e.g. `/api/country_name/Denmark`. A single country name or list of them can be passed into the API e.g. `/api/country_name/France,Moldova,Benin`. A closeness function is utilised so the most approximate name from the input will be used e.g. Sweden will be used if input is `/api/country_name/Swede`. If no country is found from the closeness function or an invalid name is input then an error will be returned.
+* The `/api/country_name` endpoint accepts the country/territory name as it is most commonly known in english, according to the ISO 3166-1 e.g. `/api/country_name/Denmark`. A single country name or list of them can be passed into the API e.g. `/api/country_name/France,Moldova,Benin`. A closeness function is utilised so the most approximate name from the input will be used e.g. Sweden will be used if input is `/api/country_name/Swede`. If no country is found from the closeness function or an invalid name is input then an error will be returned.
 
-* The `/api/subdivision` endpoint acceptst the ISO 3166-2 subdivision codes, e.g `/api/subdivision/GB-ABD`. You can also input a list of subdivision codes from the same or different countries and the data for each will be returned e.g `/api/subdivision/IE-MO,FI-17,RO-AG`. If the input subdivision code is not in the correct format then an error will be raised. Similarly if an invalid subdivision code that doesn't exist is input then an error will be raised.
+* The `/api/subdivision` endpoint accepts the ISO 3166-2 subdivision codes, e.g `/api/subdivision/GB-ABD`. You can also input a list of subdivision codes from the same and or different countries and the data for each will be returned e.g `/api/subdivision/IE-MO,FI-17,RO-AG`. If the input subdivision code is not in the correct format then an error will be raised. Similarly if an invalid subdivision code that doesn't exist is input then an error will be raised.
 
-* The `/api/subdivision_name/` endpoint acceptst the ISO 3166-2 subdivision names, e.g `/api/subdivision_name/Derry`. You can also input a list of subdivision name from the same or different countries and the data for each will be returned e.g `/api/subdivision_name/Paris,Frankfurt,Rimini`. A closeness function is utilised to find the matching subdivision name, the most approximate subdivisions may be returned including multiple matches e.g... If an invalid subdivision name that doesn't match any is input then an error will be raised.
+* The `/api/name/` endpoint accepts the ISO 3166-2 subdivision names, e.g `/api/name/Derry`. You can also input a list of subdivision name from the same or different countries and the data for each will be returned e.g `/api/name/Paris,Frankfurt,Rimini`. A closeness function is utilised to find the matching subdivision name, if no exact name match found then the most approximate subdivisions will be returned. Some subdivisions may have the same name, in this case eahc subdivision and its data will be returned e.g `/api/name/Saint George,Sucre`. This endpoint also has the likeness score (`?likeness=`) query string parameter that can be appended to the URL. This can be set between 1 - 100, representing a % of likeness to the input name the return subdivisions should be, e.g: a likeness score of 90 will return fewer potential matches whose name only match to a high degree compared to a score of 10 which will create a larger search space, thus returning more potential subdivision matches. A default likeness of 100 (exact match) is used, if no match found then this is reduced to 90. If an invalid subdivision name that doesn't match any is input then an error will be raised.
 
 * The main API endpoint (`/` or `/api`) will return the homepage and API documentation.
 
@@ -92,7 +92,7 @@ Requirements
 * [flask][flask] >= 2.3.2
 * [requests][requests] >= 2.28.1
 * [iso3166][iso3166] >= 2.1.1
-* [iso3166-2][iso3166_2] >= 1.4.0
+* [iso3166-2][iso3166_2] >= 1.5.0
 * [unidecode][unidecode] >= 1.3.8
 * [thefuzz][thefuzz] >= 0.22.1
 

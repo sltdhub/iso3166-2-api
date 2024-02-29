@@ -3,7 +3,7 @@ from urllib.parse import unquote_plus
 import iso3166
 from iso3166_2 import *
 import re
-from thefuzz import process
+from thefuzz import fuzz, process
 from unidecode import unidecode
 
 #initialise Flask app
@@ -274,7 +274,7 @@ def api_country_name(country_name=""):
     alpha2_code = []
     names = []
 
-    #remove unicode space (%20) from input parameter
+    #decode any unicode or accent characters using utf-8 encoding, lower case and remove additional whitespace
     name = unidecode(unquote_plus(country_name)).replace('%20', ' ').title()
 
     #set path for current request url 
@@ -350,11 +350,11 @@ def api_country_name(country_name=""):
         
         #iterate over all found country matches, look for exact matches, if none found then look for ones that have likeness score>=90
         for match in all_country_name_matches:
-            #use default likeness score of 100 (exact) followed by 85 if no exact matches found
+            #use default likeness score of 100 (exact) followed by 90 if no exact matches found
             if (match[1] == 100):
                 name_matches.append(match[0])
                 break
-            elif (match[1] >= 85):
+            elif (match[1] >= 90):
                 name_matches.append(match[0])
                 break
             else:
@@ -362,11 +362,8 @@ def api_country_name(country_name=""):
                 error_message["message"] = "Invalid country name input: {}.".format(name_)
                 return jsonify(error_message), 400                
 
-        #get highest matching name from name matches array
-        matching_name = name_matches[0]
-
         #use iso3166 package to find corresponding alpha-2 code from its name
-        alpha2_code.append(iso3166.countries_by_name[matching_name.upper()].alpha2)
+        alpha2_code.append(iso3166.countries_by_name[name_matches[0].upper()].alpha2)
     
     #get country data from ISO 3166-2 object, using alpha-2 code
     for code in alpha2_code:
@@ -501,7 +498,7 @@ def api_subdivision_name(subdivision_name=""):
     for subdiv in subdivision_names: 
 
         #using thefuzz library, get all subdivisions that match the input subdivision names
-        all_subdivision_name_matches = process.extract(subdiv, all_subdivision_names_list)
+        all_subdivision_name_matches = process.extract(subdiv, all_subdivision_names_list, scorer=fuzz.ratio) #partial_ratio
 
         #iterate over all found subdivision matches, look for exact matches, if none found then look for ones that have likeness score>=90
         for match in all_subdivision_name_matches:
@@ -527,7 +524,7 @@ def api_subdivision_name(subdivision_name=""):
 
     #return error if no matching subdivisions found from input name    
     if (output_subdivisions == {}):
-        error_message["message"] = "No valid subdivision found for input name: {}. Try using the query strig parameter '?likeness' and reduce the likeness score to expand the"\
+        error_message["message"] = "No valid subdivision found for input name: {}. Try using the query string parameter '?likeness' and reduce the likeness score to expand the"\
             " search space, e.g '?likeness=0.3' will return subdivisions that have a 30% match to the input name.".format(subdivision_name)
         error_message['path'] = request.url
         return jsonify(error_message), 400  

@@ -94,6 +94,7 @@
 - [X] Update "no valid subdivision found" error message to include suggestion of reducing the likeness value.
 - [X] Error when passing names with accents into /name endpoint e.g. https://iso3166-2-api.vercel.app/api/name/Goiás,Paraíba,São Paulo & https://iso3166-2-api.vercel.app/api/name/Goi%C3%A1s
 - [X] In /name endpoint, remove repeated references to .lower().replace() etc.
+- [X] Change thefuzz scorer ratio.
 <!-- >>> for d in abc.all:
 ...     for e in abc.all[d]:
 ...             if (unidecode(abc.all[d][e]["name"]).lower().replace(' ' ,'') not in new_list):

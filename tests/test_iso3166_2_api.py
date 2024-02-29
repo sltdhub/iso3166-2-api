@@ -559,7 +559,7 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         test_request_gelderland_overijssel = requests.get(self.subdivision_name_base_url + test_subdivision_name_gelderland_overijssel, headers=self.user_agent_header).json() #NL-GE - Gelderland, NL-OV - Overijssel
 
         self.assertIsInstance(test_request_gelderland_overijssel, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_gelderland_overijssel)))
-        self.assertEqual(list(test_request_gelderland_overijssel.keys()), ["NL-GE", "NL-OV"], "Expected output object of API to contain only the NL-GE and NL-OV key, got {}.".format(list(test_request_gelderland_overijssel.keys())))
+        self.assertEqual(list(test_request_gelderland_overijssel.keys()), ["NL-GE", "NL-OV"], "Expected output object of API to contain only the NL-GE and NL-OV keys, got {}.".format(list(test_request_gelderland_overijssel.keys())))
 
         #NL-GE - Gelderland
         self.assertEqual(test_request_gelderland_overijssel["NL-GE"]["name"], "Gelderland", 
@@ -588,24 +588,24 @@ class ISO3166_2_API_Tests(unittest.TestCase):
         self.assertEqual(test_request_gelderland_overijssel["NL-OV"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/NL/NL-OV.svg",
             "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/NL/NL-OV.svg, got {}.".format(test_request_gelderland_overijssel["NL-OV"]["flagUrl"]))
 #4.)
-        test_request_ciudad = requests.get(self.subdivision_name_base_url + test_subdivision_name_ciudad, headers=self.user_agent_header, params={"likeness": "70"}).json() #Ciudad - likeness score of 70
+        test_request_ciudad = requests.get(self.subdivision_name_base_url + test_subdivision_name_ciudad, headers=self.user_agent_header, params={"likeness": "50"}).json() #Ciudad - likeness score of 50
 
         self.assertIsInstance(test_request_ciudad, dict, "Expected output object of API to be type dict, got {}.".format(type(test_request_ciudad)))
-        self.assertEqual(list(test_request_ciudad.keys()), ["AR-C", "ES-CR", "ES-VC", "MX-CMX"], "Expected output object of API to contain only the AR-C, ES-CR, ES-VC and MX-CMX key, got {}.".format(list(test_request_ciudad.keys())))
+        self.assertEqual(list(test_request_ciudad.keys()), ["AO-CAB", "AZ-CUL", "ES-CR", "MX-CMX", "ZW-MI"], "Expected output object of API to contain only the AO-CAB, AZ-CUL, ES-CR, MX-CMX and ZW-MI keys, got {}.".format(list(test_request_ciudad.keys())))
 
-        #AR-C - Ciudad Autonoma de Buenos Aires
-        self.assertEqual(test_request_ciudad["AR-C"]["name"], "Ciudad Autónoma de Buenos Aires", 
-            "Expected subdivsion name to be Ciudad Autónoma de Buenos Aires, got {}.".format(test_request_ciudad["AR-C"]["name"]))  
-        self.assertEqual(test_request_ciudad["AR-C"]["localName"], "Ciudad Autónoma de Buenos Aires", 
-            "Expected subdivsion local name to be Ciudad Autónoma de Buenos Aires, got {}.".format(test_request_ciudad["AR-C"]["localName"]))  
-        self.assertEqual(test_request_ciudad["AR-C"]["parentCode"], None, 
-            "Expected subdivision parent code to be None, got {}.".format(test_request_ciudad["AR-C"]["parentCode"]))
-        self.assertEqual(test_request_ciudad["AR-C"]["type"], "City", 
-            "Expected subdivision type to be City, got {}.".format(test_request_ciudad["AR-C"]["type"]))
-        self.assertEqual(test_request_ciudad["AR-C"]["latLng"], [-34.604, -58.382],
-            "Expected subdivision latLng to be [-34.604, -58.382], got {}.".format(test_request_ciudad["AR-C"]["latLng"]))
-        self.assertEqual(test_request_ciudad["AR-C"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/AR/AR-C.svg",
-            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/AR/AR-C.svg, got {}.".format(test_request_ciudad["AR-C"]["flagUrl"]))
+        #ES-CR - Ciudad Real
+        self.assertEqual(test_request_ciudad["ES-CR"]["name"], "Ciudad Real", 
+            "Expected subdivsion name to be Ciudad Real, got {}.".format(test_request_ciudad["ES-CR"]["name"]))  
+        self.assertEqual(test_request_ciudad["ES-CR"]["localName"], "Ciudad Real", 
+            "Expected subdivsion local name to be Ciudad Real, got {}.".format(test_request_ciudad["ES-CR"]["localName"]))  
+        self.assertEqual(test_request_ciudad["ES-CR"]["parentCode"], "ES-CM", 
+            "Expected subdivision parent code to be ES-CM, got {}.".format(test_request_ciudad["ES-CR"]["parentCode"]))
+        self.assertEqual(test_request_ciudad["ES-CR"]["type"], "Province", 
+            "Expected subdivision type to be Province, got {}.".format(test_request_ciudad["ES-CR"]["type"]))
+        self.assertEqual(test_request_ciudad["ES-CR"]["latLng"], [38.985, -3.927],
+            "Expected subdivision latLng to be [38.985, -3.927], got {}.".format(test_request_ciudad["ES-CR"]["latLng"]))
+        self.assertEqual(test_request_ciudad["ES-CR"]["flagUrl"], "https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/ES/ES-CR.svg",
+            "Expected subdivision flag url to be https://github.com/amckenna41/iso3166-flag-icons/blob/main/iso3166-2-icons/ES/ES-CR.svg, got {}.".format(test_request_ciudad["ES-CR"]["flagUrl"]))
         #MX-CMX - Ciudad de Mexico
         self.assertEqual(test_request_ciudad["MX-CMX"]["name"], "Ciudad de México", 
             "Expected subdivsion name to be Ciudad de México, got {}.".format(test_request_ciudad["MX-CMX"]["name"]))  
