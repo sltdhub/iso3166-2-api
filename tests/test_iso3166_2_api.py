@@ -5,8 +5,6 @@ import getpass
 import os
 from importlib.metadata import metadata
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from requests_html import HTMLSession
 import unittest
 unittest.TestLoader.sortTestMethodsUsing = None
 
