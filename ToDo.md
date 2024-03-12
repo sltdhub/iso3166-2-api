@@ -64,14 +64,14 @@
 - [X] Change /subd to /subdivision
 - [X] Update API unit tests.
 - [X] Update index.html with new endpoint changes.
-- [ ] Update docs with new endpoint changes.
+- [X] Update docs with new endpoint changes.
 - [ ] Update demo.
 - [X] For updated/ alpha endpoint, allow mismtach search of codes.
 - [X] Update /alpha error message return.
 - [X] Update API.md with example returns.
 - [X] Update use of iso3166-2 in index.py.
 - [X] Create comment in index.py of the list of endpoints available.
-- [ ] Test example links on api homepage work after deployment.
+- [X] Test example links on api homepage work after deployment.
 - [X] In API, should the overall country code be returned or subdivision code for /subdivison endpoints - do example tests to see how it looks when returned.
 - [X] In error handler func, if path has /alpha2 or /alpha3 or /numeric, suggest that endpoints should be /alpha.
 - [X] When searching via subd name, lower case, remove spaces, remove accents and any unicode characters.
@@ -96,6 +96,8 @@
 - [X] In /name endpoint, remove repeated references to .lower().replace() etc.
 - [X] Change thefuzz scorer ratio.
 - [X] In output error message, ensure name is same as input param
+- [X] Pull sw version from pypi, similar to how the markdown badges are gotten: [![iso3166_2](https://img.shields.io/pypi/v/iso3166-2)](https://pypi.org/project/iso3166-2/)
+- [ ] Need to create a session in selenium to test version of API, since it is dynamically gotten from the software.
 <!-- >>> for d in abc.all:
 ...     for e in abc.all[d]:
 ...             if (unidecode(abc.all[d][e]["name"]).lower().replace(' ' ,'') not in new_list):

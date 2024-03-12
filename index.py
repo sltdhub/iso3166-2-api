@@ -215,24 +215,19 @@ def api_alpha(alpha=""):
 
     #iterate over each input alpha codes, convert to equivalent alpha-2 codes if applicable, return error if invalid code
     for code in range(0, len(alpha_code)):
-        #api can accept numeric code for country, this has to be converted into its alpha-2 counterpart
-        if (alpha_code[0].isdigit()):
+        #api can accept alpha-3 or numeric codes for country, this has to be converted into its alpha-2 counterpart
+        if (len(alpha_code[code]) == 3):
             temp_code = convert_to_alpha2(alpha_code[code])
-            #return error message if invalid numeric code input
-            if (temp_code is None):
+            #return error message if invalid alpha-3 code input
+            if (temp_code is None and alpha_code[0].isdigit()):
                 error_message["message"] = f"Invalid ISO 3166-1 numeric country code input, cannot convert into corresponding alpha-2 code: {''.join(alpha_code[code])}."
                 return jsonify(error_message), 400
+            #return error message if invalid numeric code input
+            if (temp_code is None):
+                error_message["message"] = f"Invalid ISO 3166-2 alpha-3 country code input, cannot convert into corresponding alpha-2 code: {''.join(alpha_code[code])}."
+                return jsonify(error_message), 400
             alpha_code[code] = temp_code
-        else:
-            #api can accept 3 letter alpha-3 code for country, this has to be converted into its alpha-2 counterpart
-            if (len(alpha_code[code]) == 3):
-                temp_code = convert_to_alpha2(alpha_code[code])
-                #return error message if invalid alpha-3 code input
-                if (temp_code is None):
-                    error_message["message"] = f"Invalid ISO 3166-2 alpha-3 country code input, cannot convert into corresponding alpha-2 code: {''.join(alpha_code[code])}."
-                    return jsonify(error_message), 400
-                alpha_code[code] = temp_code
-
+            print("alpha_code[code]", alpha_code[code])
         #use regex to validate format of alpha-2 codes - if invalid then return error
         if not (bool(re.match(r"^[A-Z]{2}$", alpha_code[code]))) or (alpha_code[code] not in list(iso3166.countries_by_alpha2.keys())):
             error_message["message"] = f"Invalid ISO 3166-1 alpha country code input, cannot convert into corresponding alpha-2 code: {''.join(alpha_code[code])}."

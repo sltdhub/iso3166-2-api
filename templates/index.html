@@ -24,8 +24,32 @@
 
     <!-- highlight syntax on page load -->
     <script>hljs.initHighlightingOnLoad();</script>
-</head>
 
+    <!-- pull software version from pypi server -->
+    <script>
+        let version = "";
+
+        //make get request to pypi json endpoint
+        fetch("https://pypi.org/pypi/iso3166-2/json")
+            .then(response => { 
+            if (!response.ok) { 
+                throw new Error("Error making GET request to PyPI server"); 
+            } 
+            return response.json();
+            })
+            .then(data => { 
+                version = data['info']['version']
+            })
+            .catch(error => { 
+                console.error("Error making GET request to PyPI server: ", error);});
+                        
+        //set version to its element after page load
+        window.onload = function() {
+            document.getElementById("version").innerHTML = "<b>Version: </b>" + version;
+        }
+    </script>
+    
+</head>
 <!-- left hand menu section -->
 <body class="one-content-column-version">
     <div class="left-menu">
@@ -44,7 +68,8 @@
         <div class="content-menu">
             <div class="content-infos">
                 <!-- version and last updated info -->
-                <div class="info" id="version"><b>Version:</b> 1.5.0</div>
+                <!-- <div class="info" id="version"><b>Version:</b> 1.5.3</div> -->
+                <div class="info" id="version"></div>
                 <div class="info" id="last-updated"><b>Last Updated:</b> March 2024</div>
                 <div class="info" id="author"><b>Developer/Maintainer:</b> <a href="https://github.com/amckenna41/" target="_blank">AJ</a></div>
             </div>
