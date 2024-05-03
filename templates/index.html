@@ -23,33 +23,9 @@
     <script src= "{{ url_for('static', filename='js/script.js') }}"></script>
 
     <!-- highlight syntax on page load -->
-    <script>hljs.initHighlightingOnLoad();</script>
-
-    <!-- pull software version from pypi server -->
-    <script>
-        let version = "";
-
-        //make get request to pypi json endpoint
-        fetch("https://pypi.org/pypi/iso3166-2/json")
-            .then(response => { 
-            if (!response.ok) { 
-                throw new Error("Error making GET request to PyPI server"); 
-            } 
-            return response.json();
-            })
-            .then(data => { 
-                version = data['info']['version']
-            })
-            .catch(error => { 
-                console.error("Error making GET request to PyPI server: ", error);});
-                        
-        //set version to its element after page load
-        window.onload = function() {
-            document.getElementById("version").innerHTML = "<b>Version: </b>" + version;
-        }
-    </script>
-    
+    <script>hljs.initHighlightingOnLoad();</script>    
 </head>
+
 <!-- left hand menu section -->
 <body class="one-content-column-version">
     <div class="left-menu">
@@ -70,8 +46,9 @@
                 <!-- version and last updated info -->
                 <!-- <div class="info" id="version"><b>Version:</b> 1.5.3</div> -->
                 <div class="info" id="version"></div>
-                <div class="info" id="last-updated"><b>Last Updated:</b> March 2024</div>
-                <div class="info" id="author"><b>Developer/Maintainer:</b> <a href="https://github.com/amckenna41/" target="_blank">AJ</a></div>
+                <!-- <div class="info" id="last-updated"><b>Last Updated:</b> March 2024</div> -->
+                <div class="info" id="last-updated"></div>
+                <div class="info" id="author" style="visibility:hidden;"><b>Developer/Maintainer:</b> <a href="https://github.com/amckenna41/" target="_blank">AJ</a></div>
             </div>
             <!-- list of available sections in API documentation -->
             <ul id="section-list-menu">
@@ -97,9 +74,11 @@
             <div class="overflow-hidden content-section" id="content-about" style="font-size: 1.333em;">
                 <h1>About</h1>
                 <p> 
-                    The ISO 3166-2 API is a custom-built, open-source and free to use RESTful API that provides programmatic access to a plethora of subdivision data attributes for all ISO 3166-2 countries/territories.
-                    For each country, the API returns its subdivisions' codes, names, local names, types, parent codes, latitude/longitudes and flags. The API accepts the alpha 2 letter, 3 letter and numeric variations 
-                    of the ISO 3166-1 country codes as well as via the ISO 3166-2 subdivision codes. It can also accept the country name and subdivision name, as they are commonly known in English.
+                    The ISO 3166-2 API is a custom-built, open-source and free to use RESTful API that provides programmatic access to a plethora of subdivision data attributes 
+                    for all ISO 3166-2 countries/territories. For each country, the API returns its subdivisions' codes, names, local names, types, parent codes, 
+                    latitude/longitudes and flags. The API accepts the alpha-2, alpha-3 and numeric variations of the ISO 3166-1 country codes, this will return all the 
+                    subdivision data for the sought country. The country name can also be used to search for the sought country's subdivision data. Finally, the ISO 3166-2 
+                    subdivision name and code can be used to search for a sought subdivision.
                     <br><br>A demo of the API and Python software is available <a href="https://colab.research.google.com/drive/1btfEx23bgWdkUPiwdwlDqKkmUp1S-_7U?usp=sharing" target="_blank">here</a>.<br>
                     Source code available <a href="https://github.com/amckenna41/iso3166-2-api" target="_blank">here</a>.
                 </p>
@@ -140,32 +119,32 @@
                         <tr>
                             <td>https://iso3166-2-api.vercel.app/api/all</td>
                             <td>
-                                Return all suddivision data attributes for all countries in the ISO 3166-2.
+                                Return all subdivision data attributes for all countries in the ISO 3166-2.
                             </td>
                         </tr>
                         <tr>
                             <td>https://iso3166-2-api.vercel.app/api/alpha/{input_alpha}</td>
                             <td>
                                 Return all subdivision data attributes for country/countries with the matching ISO 3166-1 2 letter alpha-2, 3 letter alpha-3 or numeric country 
-                                code. A comma seperated list of country codes can also be input.
+                                code. A comma separated list of country codes can also be input.
                             </td>
                         </tr>
                         <tr>
                             <td>https://iso3166-2-api.vercel.app/api/country_name/{input_country_name}</td>
                             <td>
-                                Return all subdivision data attributes for input country name, as it is commonly known in English. A comma seperated list of country names can also be input.
+                                Return all subdivision data attributes for input country name, as it is commonly known in English. A comma separated list of country names can also be input.
                             </td>
                         </tr>
                         <tr>
                             <td>https://iso3166-2-api.vercel.app/api/subdivision/{input_subdivision_code}</td>
                             <td>
-                                Return the subdivision data for a specific input via its ISO 3166-2 code. A comma seperated list of subdivision codes can also be input.
+                                Return the subdivision data for a specific input via its ISO 3166-2 code. A comma separated list of subdivision codes can also be input.
                             </td>     
                         </tr>
                         <tr>
                             <td>https://iso3166-2-api.vercel.app/api/name/{input_subdivision_name}</td>
                             <td>
-                                Return all subdivision data attributes for input subdivision name, as it is commonly known in English. A comma seperated list of subdivision names can also be input.
+                                Return all subdivision data attributes for input subdivision name, as it is commonly known in English. A comma separated list of subdivision names can also be input.
                             </td>
                         </tr>
                         </tbody>
@@ -188,7 +167,7 @@
                 <h1>country alpha code</h1>
                 <p>
                     The /alpha endpoint returns all the subdivision data attribute values for the country with the matching 2 letter alpha-2, 3 letter alpha-3 or numeric country codes. 
-                    A comma seperated list of varying country codes can also be input. <br><br>
+                    A comma separated list of varying country codes can also be input. <br><br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha/{alpha}</code>
                     <button style="cursor: pointer;" id="copy-text-btn2" data-api-url="https://iso3166-2-api.vercel.app/api/alpha2/"><i class="fa fa-clone"></i></button> <br><br>
                     <a href="https://iso3166-2-api.vercel.app/api/alpha/AD" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha/AD</code></a> <br>
@@ -205,7 +184,7 @@
                 <h1>country name</h1>
                 <p>
                     The /country_name endpoint returns all the subdivision data attribute values for a country according to its name as it is commonly known in English. A comma 
-                    seperated list of country names can also be input. <br> <br>
+                    separated list of country names can also be input. <br> <br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/country_name/{country_name}</code> 
                     <button style="cursor: pointer;" id="copy-text-btn3" data-api-url="https://iso3166-2-api.vercel.app/api/name/"><i class="fa fa-clone"></i></button> <br><br>
                     <a href="https://iso3166-2-api.vercel.app/api/country_name/Ireland" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/country_name/Ireland</code></a> <br>
@@ -218,7 +197,7 @@
             <div class="overflow-hidden content-section" id="content-subdivision-code">
                 <h1>Subdivision Code</h1>
                 <p>
-                    The /subdivision endpoint returns all the subdivision data for the inputted subdivision, according to its ISO 3166-2 subdivision code. A comma seperated
+                    The /subdivision endpoint returns all the subdivision data for the inputted subdivision, according to its ISO 3166-2 subdivision code. A comma separated
                     list of codes can also be input. <br><br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/subdivision/{subdivision}</code>
                     <button style="cursor: pointer;" id="copy-text-btn2" data-api-url="https://iso3166-2-api.vercel.app/api/subdivision/"><i class="fa fa-clone"></i></button> <br><br>
@@ -233,7 +212,7 @@
                 <h1>subdivision name</h1>
                 <p>
                     The /name endpoint returns all the subdivision data attribute values for a country according to its subdivision name, as it is commonly known in English. A comma 
-                    seperated list of subdivision names can also be input. This endpoint also has the <i>likeness score</i> (`?likeness=`) query string parameter that can be appended to the URL. 
+                    separated list of subdivision names can also be input. This endpoint also has the <i>likeness score</i> (`?likeness=`) query string parameter that can be appended to the URL. 
                     This can be set between 1 - 100, representing a % of likeness to the input name the return subdivisions should be, e.g: a likeness score of 90 will return fewer 
                     potential matches whose name only match to a high degree compared to a score of 10 which will create a larger search space, thus returning more potential subdivision 
                     matches. A default likeness of 100 (exact match) is used, if no match found then this is reduced to 90. <br> <br>

@@ -98,6 +98,18 @@
 - [X] In output error message, ensure name is same as input param
 - [X] Pull sw version from pypi, similar to how the markdown badges are gotten: [![iso3166_2](https://img.shields.io/pypi/v/iso3166-2)](https://pypi.org/project/iso3166-2/)
 - [ ] Need to create a session in selenium to test version of API, since it is dynamically gotten from the software.
+- [X] Parameter typing https://docs.python.org/3/library/typing.html
+- [X] Double check spelling using code-spell-checker extension
+- [X] Automatically split path string via comma ',', e.g line 211 of index.py can be removed after. For alpha code and country name etc.
+- [X] Need to move version script code from index html to script.js.
+- [X] Update API.md path/endpoint description similar to that of iso3166-updates-api
+- [X] Ensure that if no parameter value provided for some of the endpoints that a specific error is returned, rather than returning all of the data.
+- [X] reorder app.routes to be more consistent.
+- [X] If checking for alpha2_code == [], check if we need this as an error might be raised for getting here so unneeded comparison.
+- [X] Add parameter typing for function returns: def api_alpha(input_alpha: str="") -> tuple[dict, int]:
+- [X] Switch string formatting to f string.
+- [X] Programmatically pull last updated date from pypi.
+- [X] In unit tests - add subdivision codes to unit test string for Expected list of subdivision codes doesn't match output
 <!-- >>> for d in abc.all:
 ...     for e in abc.all[d]:
 ...             if (unidecode(abc.all[d][e]["name"]).lower().replace(' ' ,'') not in new_list):

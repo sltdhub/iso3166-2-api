@@ -1,5 +1,39 @@
+let version = "";
+let lastUpdated = "";
+let timestamp = "";
+var monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+//make get request to pypi json endpoint
+fetch("https://pypi.org/pypi/iso3166-2/json")
+    .then(response => { 
+    if (!response.ok) { 
+        throw new Error("Error making GET request to PyPI server"); 
+    } 
+    return response.json();
+    })
+    .then(data => { 
+        //parse version from pypi object
+        version = data['info']['version']
+
+        //timestamp for latest published release of software on pypi
+        timestamp = new Date (String(data['releases'][version][0]['upload_time']) + "Z")
+        
+        //extract month and year from software release timestamp
+        lastUpdated = monthNames[timestamp.getMonth()] + " " + timestamp.getFullYear()
+    })
+    .catch(error => { 
+        console.error("Error making GET request to PyPI server: ", error);});
 
 window.onload = function(){ 
+
+    //delay for author element to allow for Version and Last Updated metadata to be pulled from pypi first
+    setTimeout(function(){
+        document.getElementById('author').style.visibility = "visible";
+        },30);
+
+    //set version to its element after page load
+    document.getElementById("version").innerHTML = "<b>Version: </b>" + version;
+    document.getElementById("last-updated").innerHTML = "<b>Last Updated: </b>" + lastUpdated;
 
     //iterate over each menu section element, highlight it and scroll to it on page when hovered over & clicked
     [].forEach.call(document.querySelectorAll('.scroll-to-link'), function (div) {
