@@ -31,6 +31,8 @@ error_message["status"] = 400
 iso3166_2_instance = ISO3166_2()
 all_iso3166_2 = iso3166_2_instance.all
 
+# print(f"Using version {iso3166_2_instance.__version__} of ISO 3166-2 software.")
+
 @app.route('/')
 @app.route('/api')
 def home() -> str:
@@ -520,6 +522,36 @@ def api_country_name(country_name="") -> tuple[dict, int]:
     #get country data from ISO 3166-2 object, using alpha-2 code
     for code in alpha2_code:
         iso3166_2[code] = all_iso3166_2[code]
+
+    return jsonify(iso3166_2), 200
+
+@app.route('/api/list_subdivisions', methods=['GET'])
+@app.route('/list_subdivisions', methods=['GET'])
+def api_list_subdivisions() -> tuple[dict, int]:
+    """
+    Flask route for '/api/list_subdivisions' path/endpoint. Return all ISO 3166 country codes and 
+    a list of just their subdivision codes. Route can accept path with or without trailing slash.
+    
+    Parameters
+    ==========
+
+    Returns
+    =======
+    :iso3166_2: json
+        jsonified response of iso3166-2 country codes and their subdivision codes.
+    :status_code: int
+        response status code. 200 is a successful response, 400 means there was an 
+        invalid parameter input. 
+    """
+    iso3166_2 = {}
+
+    #iterate through each country code, append its subdivisions to export object
+    for country in all_iso3166_2:
+        iso3166_2[country] = []
+        for subdivision in all_iso3166_2[country]:
+            print("iso3166_2[country]", iso3166_2[country])
+            print("subdivision",subdivision)
+            iso3166_2[country].append(subdivision)
 
     return jsonify(iso3166_2), 200
 

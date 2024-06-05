@@ -65,7 +65,7 @@
 - [X] Update API unit tests.
 - [X] Update index.html with new endpoint changes.
 - [X] Update docs with new endpoint changes.
-- [ ] Update demo.
+- [X] Update demo.
 - [X] For updated/ alpha endpoint, allow mismtach search of codes.
 - [X] Update /alpha error message return.
 - [X] Update API.md with example returns.
@@ -88,7 +88,6 @@
 - [X] /name error when inputting subdivsion with accent/unicode characters - change library to unidecode.
 - [X] Read over index.py
 - [X] For similarly named subdivisions, ensure all subdivison codes are returned e.g Saint George, Saint Patrick, Bolivar, Sucre, saint andrew etc.
-- [X] Update medium article.
 - [X] Query string parameter where you can set the likeness cutoff point, lowering the likeness threshold when searching for a name that might be in multiple subdivision names. Add api unit tests.
 - [X] Look into fuzzy search module for getting similar subdivision names.
 - [X] Update "no valid subdivision found" error message to include suggestion of reducing the likeness value.
@@ -110,15 +109,15 @@
 - [X] Switch string formatting to f string.
 - [X] Programmatically pull last updated date from pypi.
 - [X] In unit tests - add subdivision codes to unit test string for Expected list of subdivision codes doesn't match output
-<!-- >>> for d in abc.all:
-...     for e in abc.all[d]:
-...             if (unidecode(abc.all[d][e]["name"]).lower().replace(' ' ,'') not in new_list):
-...                     new_list.append(unidecode(abc.all[d][e]["name"]).lower().replace(' ' ,''))
-...             else:
-...                     dup_list.append(unidecode(abc.all[d][e]["name"]).lower().replace(' ' ,'')) -->
+- [X] In index.html, update number of endpoints. Increase size of Endpoint column in endpoints section.
+- [X] Reorder Credits and Contributing section.
+- [X] Print out __version__ of ISO 3166-2 sw.
+- [X] /list endpoint that returns list of all codes and their names. Returns each country code and list of their subdivision codes. Unit tests.
+- [X] Update medium article.
 
 Future Additions
 ----------------
-- [ ] /list endpoint that returns list of all codes and their names.
 - [ ] Create frontend with jsvectormap
 - [ ] Search via lat and long and return subdivision data.
+- [ ] Incorporate restcountries keys and or exlcude default attributes.
+- [X] Add changelog

@@ -60,8 +60,9 @@
                 <li class="scroll-to-link" data-target="content-country-name" style="padding-left: 5%;"><a>Country name</a></li>
                 <li class="scroll-to-link" data-target="content-subdivision-code" style="padding-left: 5%;"><a>Subdivision code</a></li>
                 <li class="scroll-to-link" data-target="content-subdivision-name" style="padding-left: 5%;"><a>Subdivision name</a></li>
-                <li class="scroll-to-link" data-target="content-credits"><a>Credits</a></li>
+                <li class="scroll-to-link" data-target="content-list-subdivisions" style="padding-left: 5%;"><a>List subdivision codes</a></li>
                 <li class="scroll-to-link" data-target="content-contributing"><a>Contributing</a></li>
+                <li class="scroll-to-link" data-target="content-credits"><a>Credits</a></li>
             </ul>
         </div>
     </div>
@@ -105,7 +106,7 @@
             <div class="overflow-hidden content-section" id="content-endpoints">
                 <h2>Endpoints</h2>
                 <p>
-                    The ISO 3166-2 API currently has the following 3 endpoints:
+                    The ISO 3166-2 API currently has the following 6 endpoints:
                 </p>
                     <!-- html table outlining available endpoints -->
                     <table>
@@ -147,6 +148,12 @@
                                 Return all subdivision data attributes for input subdivision name, as it is commonly known in English. A comma separated list of subdivision names can also be input.
                             </td>
                         </tr>
+                        <tr>
+                            <td>https://iso3166-2-api.vercel.app/api/list_subdivisions</td>
+                            <td>
+                                Return all subdivision codes for all countries.
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -166,7 +173,7 @@
             <div class="overflow-hidden content-section" id="content-country-code">
                 <h1>country alpha code</h1>
                 <p>
-                    The /alpha endpoint returns all the subdivision data attribute values for the country with the matching 2 letter alpha-2, 3 letter alpha-3 or numeric country codes. 
+                    The /alpha endpoint returns all the subdivision data attribute values for the country with the matching ISO 3166-1 2 letter alpha-2, 3 letter alpha-3 or numeric country codes. 
                     A comma separated list of varying country codes can also be input. <br><br>
                     <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/alpha/{alpha}</code>
                     <button style="cursor: pointer;" id="copy-text-btn2" data-api-url="https://iso3166-2-api.vercel.app/api/alpha2/"><i class="fa fa-clone"></i></button> <br><br>
@@ -224,14 +231,17 @@
                 </p>
             </div>
 
-            <!-- Credits section -->
-            <div class="overflow-hidden content-section" id="content-credits">
-                <h1>Credits</h1>
+            <!-- Subdivision codes list endpoint section -->
+            <div class="overflow-hidden content-section" id="content-list-subdivisions">
+                <h1>list subdivision codes</h1>
                 <p>
-                    The Python software and accompanying API were solely developed by <a href="https://github.com/amckenna41/" target="_blank">me</a> : ). 
+                    The /list_subdivisions endpoint returns all the subdivision codes for all countries. <br> <br>
+                    <code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/list_subdivisions</code> 
+                    <button style="cursor: pointer;" id="copy-text-btn3" data-api-url="https://iso3166-2-api.vercel.app/api/list_subdivisions/"><i class="fa fa-clone"></i></button> <br><br>
+                    <!-- <a href="https://iso3166-2-api.vercel.app/api/list_subdivisions" target="_blank"><code style="padding-right: 10px;" class="higlighted break-word">https://iso3166-2-api.vercel.app/api/list_subdivisions</code></a> <br> -->
                 </p>
             </div>
-
+            
             <!-- Contributing section-->
             <div class="overflow-hidden content-section" id="content-contributing">
                 <h1>Contributing</h1>
@@ -240,6 +250,15 @@
                     email <a href= "mailto: amckenna41@qub.ac.uk">amckenna41@qub.ac.uk</a>.
                 </p>
             </div>
+
+            <!-- Credits section -->
+            <div class="overflow-hidden content-section" id="content-credits">
+                <h1>Credits</h1>
+                <p>
+                    The Python software and accompanying API were solely developed by <a href="https://github.com/amckenna41/" target="_blank">me</a> : ). 
+                </p>
+            </div>
+
         </div>
     </div>
     <!-- GitHub corner ribbon (http://tholman.com/github-corners/) -->

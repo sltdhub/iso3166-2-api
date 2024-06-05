@@ -59,8 +59,9 @@ The other endpoints available in the API are:
 * https://iso3166-2-api.vercel.app/api/country_name/<input_country_name>
 * https://iso3166-2-api.vercel.app/api/subdivision/<input_subdivision>
 * https://iso3166-2-api.vercel.app/api/name/<input_subdivision_name>
+* https://iso3166-2-api.vercel.app/api/list_subdivisions
 
-Five paths/endpoints are available in the API - `/api/all`, `/api/alpha`, `/api/country_name`, `/api/subdivision` and `/api/name`.
+Six paths/endpoints are available in the API - `/api/all`, `/api/alpha`, `/api/country_name`, `/api/subdivision`, `/api/name` and `/api/list_subdivisions`.
 
 * `/api/all`: get all of the ISO 3166 subdivision data for all countries.
 
@@ -71,6 +72,8 @@ Five paths/endpoints are available in the API - `/api/all`, `/api/alpha`, `/api/
 * `/api/subdivision`: get all of the ISO 3166 subdivision data for 1 or more ISO 3166-2 subdivision codes, e.g `/api/subdivision/GB-ABD`. You can also input a comma separated list of subdivision codes from the same and or different countries and the data for each will be returned e.g `/api/subdivision/IE-MO,FI-17,RO-AG`. If the input subdivision code is not in the correct format then an error will be raised. Similarly if an invalid subdivision code that doesn't exist is input then an error will be raised.
 
 * `/api/name/`: get all of the ISO 3166 subdivision data for 1 or more ISO 3166-2 subdivision names, e.g `/api/name/Derry`. You can also input a comma separated list of subdivision name from the same or different countries and the data for each will be returned e.g `/api/name/Paris,Frankfurt,Rimini`. A closeness function is utilised to find the matching subdivision name, if no exact name match found then the most approximate subdivisions will be returned. Some subdivisions may have the same name, in this case each subdivision and its data will be returned e.g `/api/name/Saint George` (this example returns 5 subdivisions). This endpoint also has the likeness score (`?likeness=`) query string parameter that can be appended to the URL. This can be set between 1 - 100, representing a % of likeness to the input name the return subdivisions should be, e.g: a likeness score of 90 will return fewer potential matches whose name only match to a high degree compared to a score of 10 which will create a larger search space, thus returning more potential subdivision matches. A default likeness of 100 (exact match) is used, if no matching subdivision is found then this is reduced to 90. If an invalid subdivision name that doesn't match any is input then an error will be raised.
+
+* `/api/list_subdivisions`: get list of all the subdivision codes for all countries. 
 
 * `/api`: main homepage and API documentation.
 
@@ -84,7 +87,7 @@ An important thing to note about the ISO 3166-2 and its subdivision codes/names 
 
 The [`iso3166-updates`](https://github.com/amckenna41/iso3166-updates) repo is another open-source software package and accompanying API that pulls the latest updates and changes for any and all countries in the ISO 3166 from a variety of data sources including the ISO website itself. A script is called every few months to check for any updates/changes to the subdivisions, which are communicated via the ISO's Online Browsing Platform [[4]](#references), and will then be manually incorporated into the [`iso3166-2`](https://github.com/amckenna41/iso3166-2) and dataset. Please visit the repository home page for more info about the purpose and process of the software and API - [`iso3166-updates`](https://github.com/amckenna41/iso3166-updates).
 
-The list of ISO 3166 updates was last updated on <strong>March 2024</strong>. A log of the latest ISO 3166 updates can be seen in the [UPDATES.md][updates_md].
+The list of ISO 3166 updates was last updated on <strong>June 2024</strong>. A log of the latest ISO 3166 updates can be seen in the [UPDATES.md][updates_md].
 
 Requirements
 ------------
