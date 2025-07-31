@@ -4,3 +4,4 @@ unidecode
 thefuzz
 iso3166
 iso3166-2
+aws_lambda_wsgi
